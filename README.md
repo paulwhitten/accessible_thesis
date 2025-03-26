@@ -83,3 +83,20 @@ manage text lines so they don't get too long.
 
 I used this website to submit sample thesis to see what issues existed.
 https://pave-pdf.org/index.html?lang=en
+
+
+### Memory issue when building
+
+Issue with inability to compile,  The following was found in the `thesis.log` file:
+
+```
+TeX capacity exceeded, sorry [main memory size=5000000].
+```
+
+Had to modify `/some/path/to/texlive/some/subpath/web2c/texmf.cnf` for the `main_memory = 5000000` line to `main_memory = 10000000`
+
+and then run:
+
+```
+sudo fmtutil-sys --all
+```
