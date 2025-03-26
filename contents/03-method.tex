@@ -49,7 +49,7 @@ training data, bother leveraging storage, and having an explainable processing
 stage.
 
 \begin{figure}[H]
-    \centerline{\includegraphics[width=14.2cm, alt={A concept tree of the explainable methods}]{./images/method-intro-dot.png}}
+    \centerline{\includegraphics[width=13.5cm, alt={A concept tree of the explainable methods}]{./images/method-intro-dot.png}}
     \caption{A tree representing the explainable method concepts (such as explainable processing, unexplainable component, explainable property, and property transforms), techniques (such as KNN and voting), and metrics (like correspondence, balance factor, effectiveness, confidence, and explainability). Storage and dimensionality of the datasets are also reflected.}
     \label{fig:method_concepts}
 \end{figure}
@@ -186,7 +186,7 @@ Explainable Properties artifacts.
 
 
 \begin{figure}[h]
-    %\centering
+    \centering
     \includegraphics[width=9.0cm, alt={A diagram of a property transform}]{./images/property_transform.png}
     \caption{A property transformation modifies the input to produce output that highlights an explainable property.}
     \label{fig:property_transform_ex}
@@ -227,7 +227,7 @@ important to preserve the label of training samples. In the methods here, the
 order of training samples was preserved, so labels remained unchanged.
 
 \begin{figure}[h]
-    %\centering
+    \centering
     \includegraphics[width=12.0cm, alt={A diagram illustrating the transformation of training data}]{./images/property-trans-training-db-dot.png}
     \caption{Transforming and storing training data.}
     \label{fig:property_trans_training}
@@ -249,7 +249,7 @@ model hyperparameters. It may be necessary to revisit and reconsider property
 transform settings.
 
 \begin{figure}[h]
-    %\centering
+    \centering
     \includegraphics[width=13.0cm, alt={A diagram illustrating transforms connected to inferece engines in the property-based architecture}]{./images/property-ml-dot.png}
     \caption{Property transform ML models connected to property transforms begin to form the initial phases of the explainable property-based architecture.}
     \label{fig:property_ml}
@@ -459,26 +459,25 @@ explainability based on how much it contributed to the decision.
 
 This next section poses an explainable property-based architecture based on the
 property-based explainable methodology. Figure~\ref{fig:xai_arch} depicts the
-explainable architecture, composed of produced artifacts in green from the steps
-of the property-based methodology in Figure~\ref{fig:prop_xai_flow}. The
-architecture in Figure~\ref{fig:xai_arch} has explainable and unexplainable
-contributions. Consider each horizontal element in the architecture incident on
-the Decision-Making Process as a Pre-Decision Flow (PDF) of the explainable
-system. An explainable PDF would contain one Property Transform and one
-Inference Engine (IE) related to an explainable property. An unexplainable PDF
-would consist of only one IE.  An explainable property and transform are lacking
-for an unexplainable PDF. The $1$ through $m$ explainable PDFs in the
-architecture are depicted as green, while the single unexplainable PDF is
-represented in yellow as $IE_u$. Again, explainable PDFs are related to
-properties that contribute to the explainability of the system. Often,
-explainable PDFs provide mediocre recognition results compared to an IE trained
-against untransformed data. The mediocre performance is often because a property
-may not pertain to each class. E.g., the ellipse property does not apply to a
-well-formed digit one.
+explainable architecture, composed of produced artifacts from the steps of the
+property-based methodology in Figure~\ref{fig:prop_xai_flow}. The architecture
+in Figure~\ref{fig:xai_arch} has explainable and unexplainable contributions.
+Consider each horizontal element in the architecture incident on the
+Decision-Making Process as a Pre-Decision Flow (PDF) of the explainable system.
+An explainable PDF would contain one Property Transform and one Inference Engine
+(IE) related to an explainable property. An unexplainable PDF would consist of
+only one IE.  An explainable property and transform are lacking for an
+unexplainable PDF. The $1$ through $n$ explainable PDFs in the architecture are
+depicted, while the single unexplainable PDF is represented at the bottom
+as $IE_u$. Again, explainable PDFs are related to properties that contribute to
+the explainability of the system. Often, explainable PDFs provide mediocre
+recognition results compared to an IE trained against untransformed data. The
+mediocre performance is often because a property may not pertain to each class.
+E.g., the ellipse property does not apply to a well-formed digit one.
 
-\begin{figure}[t]
-    %\centering
-    \includegraphics[width=15.0cm, alt={The property-based explainable architecture consisting of transforms, inference engines, a voter or decision making process, and an XAI block}]{images/xai-pipeline.png}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15.0cm, alt={The property-based explainable architecture consisting of transforms, inference engines, a voter or decision making process, and an XAI block}]{images/pbe_arch_general.png}
     \caption{Property-Based Explainable AI Architecture}
     \label{fig:xai_arch}
 \end{figure}
@@ -500,16 +499,16 @@ The second stage of the architecture is the Property Inferencing stage. In
 Property Inferencing, IEs are used to make decisions based on local data. An IE
 may use an appropriate ML algorithm. IEs in this work are MLP, SVM, CNN, or
 ResNet models. Explainable IEs are trained on transformed training data. The
-unexplainable IE, $IE_u$, is trained on untransformed input. Training data and
-training results are stored in a knowledgebase (KB) as depicted at the bottom of
-Figure~\ref{fig:xai_arch}.
+unexplainable IE, $IE_u$, is trained on untransformed input. Metrics from
+training are stored in a knowledgebase (KB) and used by Decision-Making and XAI
+as depicted at the bottom of Figure~\ref{fig:xai_arch}.
 
 Local decisions from Property Inferencing are passed to Decision-Making, where a
 global decision is made and assigned a confidence. The Decision-Making process
 may use a probabilistic voting scheme described in the methodology to make a
 global decision.
 
-The Explainability phase in the explainable Architecture,
+The Explainability, XAI, phase in the explainable Architecture,
 Figure~\ref{fig:xai_arch}, composes the textual rationale related to the
 explainable properties contributing to decisions. This is done by constructing
 phrases indicating the properties related to the opinions for each class that
@@ -518,8 +517,9 @@ received a vote. The explainability measure, $Ex(c)$ from
 measure indicates how explainable each decision for a class, $c$, is based on
 the relation to an explainable property of the flows that suggested $c$. The
 user is finally presented with the ranked recognition results, the confidence of
-the decisions, the rationale for a decision, and the level of explainability for
-each decision. Sample explainable results are presented in Section
+the decisions, the rationale for a decision, the level of explainability for
+each decision, and how the architecture has historically failed for the current
+predicß. Sample explainable results are presented in Section
 \ref{ch:handwriting_results}.
 
 \subsection{Communicating when the Explainable Property-Based Architecture Fails}
@@ -722,7 +722,7 @@ the explanation routine will indicate the conflict.
 
 \subsection{Case Based Explainable Architecture}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=14.0cm, alt={The case-based explainable architecture consisting of a trained ML model, a training index, a query routine, and an explanation routine}]{./images/case-based-xai-arch.png}
     \caption{A case-based explainable architecture.}
