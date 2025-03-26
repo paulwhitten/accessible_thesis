@@ -1,95 +1,186 @@
-\chapter{Introduction}
+\chapter{Introduction}\label{ch:intro}
 \pagenumbering{arabic} % needed to begin traditional numbering
 % remove below this line and add your intro.
 
-This thesis is written in \LaTeX\cite{knuthwebsite}. There is an example of
-an accessible figure in Figure \ref{fig:logo}.
+\section{Motivation}
 
-\lipsum[3]
+Recent advances in Artificial Intelligence (AI) have produced results that can
+exceed human performance in many tasks. As a result, AI has been widely adopted
+in automated decision-making systems and enjoys success in many tasks.
+Healthcare, transportation, financial decisions, and other domains use AI.
+Despite the positive results, there is a significant need to build more trust in
+AI. Among other controls such as governance and human oversight of AI, trust
+will come from building systems that have the ability to explain decisions. 
 
-\section{Some Section Name}
+There are many varying thoughts on trust in general and as it applies to AI in
+the literature. A widely used understanding of trust is accepting the risk of
+decisions, information, or actions from another entity. For example, total trust
+in information implies zero risk. Trust involves vulnerability, subjecting
+oneself to the entity's trustworthiness for the given level of acceptable
+risk\cite{gambetta2000can, mayer1995integrative,
+lockey2021review, glikson2020human}.
 
-\lipsum[1]
+Recognizing the importance of building trust in AI, the Defense Advanced
+Research Projects Agency (DARPA) launched an explainable artificial intelligence
+(XAI) program in May 2017. The intent was to increase trust in AI by creating
+more human-understandable AI systems through the use of effective
+explanations\cite{dw2019darpa}.
 
-We can reference Figure \ref{fig:logo} just like that. The figure should also
-have alt text for accessibility as provided by the alt tag.
+% About a dozen research teams participated in the program.
 
-\begin{figure}[hbt!]
-    \centering
-    \includegraphics[width=.5\textwidth,alt={This is alt text for a figure of the CWRU logo.}]{./images/cwru_logo.eps}
-    \caption{This is a figure of the CWRU logo.}
-    \label{fig:logo}
-\end{figure}
+Machine Learning (ML) is a branch of Artificial Intelligence (AI) constructed to
+glean patterns from data effectively. A traditional ML system, such as a neural
+network (NN), lacks intrinsic knowledge and understanding of the domain
+(concepts and methods) to which it is applied. The system learns by training it
+to recognize future samples and make decisions based on the training data. ML
+results can be impressive. However, an explanation of decisions is required to
+build trust\cite{dw2019darpa}.
 
-\lipsum[1]
+In contrast, generalizing a human subject matter expert's (SME) decision is
+often backed by experience, expertise, and competence in the domain. Over time,
+a human becomes an SME through learning concepts and methods related to the
+domain. The SME builds an understanding and practices applying those concepts
+and methods in the domain. The SME builds competence in the domain by learning
+and applying the complexities and nuances of the field. An essential element of
+competence and trust in an SME is the ability to explain actions and decisions.
+A human SME articulates decisions and actions related to concepts, methods,
+complexities, and nuances in the domain\cite{hardovs2018exactly}.
 
-An interesting table shown as Table \ref{table:mnist_example1_ex}. The table is
-pretty big but we shrink to the linewidth using the resizebox command.
+Transparency in automated systems, that make important decisions, is needed for
+trust and human acceptance of the decisions of those systems. Explainability is
+necessary for trust in these systems. Without an explanation, the decision of an
+AI is suspect. As part of our critical, questioning nature, humans require an
+explanation to trust a decision. An explanation should clarify and justify a
+decision. Explanations may additionally pose alternatives and rationale for
+selecting among them\cite{2019_EU_ethics_gl_trustworthy_ai}.
 
-\begin{table}[h!]
-        \renewcommand{\arraystretch}{1.3}
-        \captionof{table}{Explainability Matrix for MNIST Example one}\label{table:mnist_example1_ex}
-        \centering
-        \resizebox{\linewidth}{!}{%
-        \begin{tabular}{| c | c | c | c | c | c || c | c | c |}
-        \cline{4-9}
-        \multicolumn{3}{c}{} & \multicolumn{3}{|c||}{PDF Effectiveness} & \multicolumn{3}{c|}{PDF Explainability} \\
-        \hline
-        $F_j$ & Property & Class Vote & $E(j,0)$ & $E(j,4)$ & $E(j,9)$ & $Ex(0)$ & $Ex(4)$ & $Ex(9)$ \\
-        \hline
-        \hline
-        $F_1$ & Stroke & $4$ &  & $1.0$ &  &  & $1.0$ & \\ 
-        \hline
-        $F_2$ & Circle & $0$ & $0.039$ &  &  & $1.0$ &  & \\
-        \hline
-        $F_3$ & Crossing & $0$ & $0.018$ &  &  & $1.0$ &  & \\
-        \hline
-        $F_4$ & Ellipse & $0$ & $0.004$ &  &  & $1.0$ &  & \\
-        \hline
-        $F_5$ & Ell-Cir & $0$ & $0.069$ &  &  & $1.0$ &  & \\
-        \hline
-        $F_6$ & Endpoint & $4$ &  & $0.974$ &  &  & $1.0$ & \\
-        \hline
-        $F_7$ & Encl. Reg. & $0$ & $0.021$ &  &  & $1.0$ &  & \\
-        \hline
-        $F_8$ & Line & $9$ &  &  & $0.496$ &  &  & $1.0$ \\
-        \hline
-        $F_9$& Convex Hull & $4$ &  & $0.826$ &  &  & $1.0$ & \\
-        \hline
-        $F_{10}$& Corner & $4$ &  & $0.538$ &  &  & $1.0$ & \\
-        \hline
-        $F_{11}$& No Property & $4$ &  & $1.0$ &  &  & $0.0$ & \\
-        \hline
-        \hline
-        \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $0.151$ & $4.337$ & $0.496$ & $0.151$ & $3.337$ & $0.496$ \\
-        \cline{0-8}
-        \multicolumn{3}{|c|}{Confidence / Explainability} & $3.03\%$ & $87.0\%$ & $9.96\%$ & $100\%$ & $76.9\%$ & $100\%$ \\
-        \cline{0-8}
-        \end{tabular}
-        }
-\end{table}
+Increasing trust in automated systems is critical for their continued and future
+use in important applications. Explainability is a primary area in AI that
+improves trust in decisions. With robust explainability, AI systems will be
+trusted and widely used. Improving the explainability of AI systems will realize
+the goal of increasing human trust in AI systems.
 
-\lipsum[1]
+% Trustworthiness in AI
+% is established through adherence to ethical principles. The four primary ethical
+% principles of AI include human autonomy, avoidance of harm, fairness, and
+% explicability \cite{2019_EU_ethics_gl_trustworthy_ai, reinhardt2023trust,
+% smuha2019eu, floridi2022unified}. An explicable system can be accounted for and
+% understood. The explaicability principle of AI entails the ability of a system
+% to explain a decision.  ML acts as an opaque box and cannot explain decisions.
+% AI systems have attempted to address explainability through various means.
 
-\begin{table}[h!]
-    \renewcommand{\arraystretch}{1.3}
-    \captionof{table}{Explanation for MNIST Example two} \label{table:mnist_example2_explanation}
-    %\centering
-    %\resizebox{\columnwidth}{!}{%
-    \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
-    \hline
-     Class & Confidence & Explainability & Explainable Description \\
-    \hline \hline
-    $2$ & $93.1\%$ & $80.0\%$ & Confidence is high for interpreting this character as a two due to the stroke, endpoint, convex hull, corner, and line properties. \\ 
-    \hline
-    $8$ & $5.37\%$ & $100\%$ & Confidence is low for interpreting this character as an eight due to the ellipse-circle property. \\
-    \hline
-    $0$ & $1.53\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the circle, fill, crossing, and ellipse properties. \\
-    \hline
-    \end{tabular}
-    %}
-\end{table}
 
-\section{Another Section Name}
+% Competence is gauged by critically examining outcomes.
+% Should this be related to an example like the medical field? 
 
-\lipsum[1]
+
+
+% The motivation of this work is toward increasing trust in ML systems
+% through developing methods for improving explanations.
+
+\section{Problem Definition}
+
+% See "Explainable Artificial Intelligence: a Systematic Review" by Volone and Longo.
+% Methods are classified as stage, scope, problem type, input data and output format.
+
+Explainability is needed to improve trust and reduce risk. It is currently not
+possible to use the internals of the ML model to glean explanations. This work
+aims to devise an approach and methodology to explain the reasoning of a system
+making automated decisions.
+
+Training an ML model yields two parts: static and dynamic. The static portion of
+the model, which remains unchanged during training, includes the model
+architecture and hyperparameters. The dynamic part of the model changes during
+training and consists of the weights and biases, often referred to as
+parameters. Reasoning about the model hyperparameters and parameters in
+formulating an explanation is challenging. As a result, ML is considered an
+opaque box that cannot be trusted. Explainability is needed to improve trust.
+
+With the popularity of AI increasing, there is a significant focus on developing
+AI explainability\cite{dw2019darpa}. By providing improved explainable methods,
+there will be increased trust in AI. Increased trust will significantly benefit
+the adoption of AI systems. 
+
+Research into XAI has produced a variety of explainable methods with differing
+approaches. An initial means of organizing explainable methods depends on the
+stage or when the explainable method executes. An ante-hoc XAI is intrinsically
+explainable, while a post-hoc XAI is typically an unexplainable AI algorithm
+that performs some analysis after training and inferencing to explain
+results\cite{RETZLAFF2024101243}. XAI architectures intrinsically designed to be
+explainable and justify decisions are more transparent and likely to be trusted.
+
+XAI methods may be further organized based on the types of AI on which they
+operate. Model-agnostic methods are general and operate on a variety of AI
+types, while model-specific methods operate on specific types of AI
+models\cite{arrieta2020explainable}. A general method and architecture suitable
+across AI types is favorable over model-specific methods.
+
+The explanations of XAI methods have varied. Some explainable results have been
+visual. In one case, a system performs a post-hoc analysis and outputs a visual
+representation highlighting input features affecting the decision as a salience
+map. Other explanations have been data-driven, presenting feature relevance as
+an explanation. Explanations may also be text-based\cite{vilone2020explainable}.
+Text-based explanations are preferred over other forms because they are less
+open to interpretation.
+
+XAI methods have produced results with varying degrees of success. Despite the
+attempts of the methods, explanations still need to be improved to enhance
+trustworthiness. The goal of this work is to develop ante-hoc, model-agnostic
+methods for explaining or justifying ML system decisions in plain terms using
+text-based explanations, which a layperson can reasonably interpret.
+
+This work first takes a widely researched historical recognition problem,
+recognizing handwritten characters, and adds the goal of providing textual
+explanations for decisions. First, the property-based explainable method and
+architecture are presented in the context of handwriting recognition.
+
+A second, more specific problem of explainably recognizing hardware trojans from
+gate-level netlists follows the handwriting recognition study. In the case of
+explainable detecting hardware trojans, the property-based explainable
+architecture is applied and evaluated. An alternative case-based explainable
+architecture is also posed and compared to the property-based method.
+
+\section{Outline}
+
+This section outlines the flow of this work. This dissertation consists of nine
+chapters, including this introductory chapter.
+
+Chapter \ref{ch:background} will provide background by reviewing the basic
+concepts of ML. An examination of existing Explainable Artificial Intelligence
+methods will follow. Other related areas of handwriting recognition, handwriting
+datasets, digital image processing, performance metrics, and hardware trojans
+are detailed.
+
+Chapter \ref{ch:methods} provides a detailed overview of two methods used for
+explainable recognition. The first property-based explainable method has
+advantages in high dimensional space where explainable properties are used to
+reason about and justify results. The second case-based method has benefits in
+lower dimensional applications and provides training cases like application
+input in support of decisions.
+
+Chapter \ref{ch:handwriting} applies the property-based methodology to
+handwritten characters by first using the handwritten digits in MNIST and then
+expanding to handwritten characters in the EMNIST dataset. Later in the chapter,
+the case-based method is applied to MNIST digits.
+
+Chapter \ref{ch:trojan} applies the methodologies to explainable hardware trojan
+detection from the Trust-Hub hardware trojan database. First, the application of
+the property-based method is outlined, and then the case-based method is
+detailed.
+
+Chapter \ref{ch:handwriting_results} presents the results of the methods on
+handwritten characters. Initially, the general results of the architectures on
+handwritten characters are outlined in terms of explainability and recognition
+accuracy. The presentation of detailed examples of handwritten character
+detection results of the architecture with explainable output follows.
+
+Chapter \ref{ch:trojan_results} presents the results of applying the
+property-based and case-based explainable methodologies to hardware trojans.
+
+Chapter \ref{ch:discussion} further discusses and compares the property and
+case-based architectures. The strengths and challenges of each of the
+architectures in the two applications are outlined. The property and case-based
+methods are then compared to a popular explainable method called LIME.
+
+Conclusions are presented in Chapter \ref{ch:conclusions} followed by
+references.

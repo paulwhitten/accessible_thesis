@@ -2,15 +2,45 @@
 \addcontentsline{toc}{chapter}{Abstract}
 \pagestyle{plain} % this line is needed to remove CONTENTS from page headers
 
+Artificial Intelligence (AI) has achieved results surpassing human capabilities
+in recognition tasks. Systems have widely integrated Machine Learning (ML), a
+field of AI, achieving outstanding results. Despite their success, ML systems
+are opaque boxes and remain untrusted by humans. To establish better trust,
+decisions in automated systems must be explainable.
 
+This research approaches the problem of improving ML's explainability by
+introducing two explainable methods and architectures. The first is a
+property-based explainable method that provides the rationale for decisions
+through reasoning about explainable properties. The second is a case-based
+explainable method in which related training cases justify decisions. Following
+the methods results in producing the components to construct the explainable
+architectures. Herein, the explainable architectures are applied to the common
+research problem of recognizing handwritten characters and a more focused
+application of detecting hardware trojans in gate-level netlists.
 
-%remove the following and add your abstract text here...
-Dissertation abstracts must not exceed 350 words, thesis abstracts
-150\cite{cwru_grad_studies}.
+As the methods are applied, their strengths and tradeoffs emerge. The
+property-based explainable method benefits representational learning
+applications with data that has many dimensions, while the case-based
+explainable method excels in applications with few dimensions, requires low
+effort to implement, and higher relative recognition accuracy than the
+property-based method.
 
-\lipsum[1]
+Applying the property-based explainable architecture to MNIST achieved a
+recognition accuracy of 97.3\% with an average explainability of 76.8\%. The
+case-based architecture had an accuracy of 98.4\% with a correspondence factor of
+97.9\% on MNIST. The case-based architecture produced a 97.4\% correspondence
+factor for training cases on Trust-Hub hardware trojans.
 
-
+In addition to the methods, this work presents several contributions in the form
+of concepts, techniques, and metrics. Contributions include explainable property
+transforms, probabilistic voting, an explainable knowledgebase, an explainable
+training index, techniques for unbalanced training data, handling ambiguous
+training data, indicating cases where the system may fail, and an unexplainable
+component to mitigate performance loss. Metrics presented include ($E_{PARS}$)
+the effectiveness of decision systems to recognize a class, an explainability
+metric, and the correspondence of training samples to the prediction. Leveraging
+the explainable methods and contributions will improve human trust in and
+adoption of decision-making systems.
 
 \thispagestyle{plain} % this line is needed to remove the CONTENTS from the final abstract page header
 }

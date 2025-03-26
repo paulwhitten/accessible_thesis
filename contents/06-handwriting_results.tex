@@ -1,0 +1,2230 @@
+\chapter{Handwriting Results} \label{ch:handwriting_results}
+% remove below this line and add your concluding remarks
+
+This chapter presents the results of applying the property-based methodology to
+images of handwritten characters.  Overall MNIST results are first presented
+followed by detailed explainable examples.  A summary of EMNIST results will be
+followed by detailed explainable results of handwritten characters. 
+
+\section{Property-Based Explainable Results on Handwritten Characters}
+
+\subsection{MNIST Results}
+\label{sec:mnist_results}
+
+Four types of inference engines were used in the property-based methodology.
+Inference engine types included:
+
+\begin{itemize}
+    \item Multilayer perceptrons (MLP)
+    \item Support vector machines (SVM)
+    \item Convolutional neural networks (CNN)
+    \item Deep residual learning (Resnet50)
+\end{itemize}
+
+Table \ref{tab:mnist_accuracy_results} outlines the overall recognition accuracy
+observed with arrangements of the various inference engine types used.  Each row
+in the table represents inference engine types as indicated in the first column.
+The second column, labeled 1 Unexplainable, provides the baseline performance of
+a single ML model in a representational learning configuration acting on
+untransformed application input.  The SVM is the poorest performing at $97.9\%$
+accuracy. The MLP is next with with $98.3\%$ accuracy.  The CNN baseline performs the
+best overall with a $99.4\%$ accuracy followed by Resnet50 with $98.9\%$ accuracy.
+
+The third column of Table \ref{tab:mnist_accuracy_results} presents the accuracy
+results of the property based explainable architecture with ten explainable
+property transformations. Again, SVM has the lowest accuracy, $95.4\%$, with the
+MLP performing slightly better at $96.2\%$ recognition accuracy.  The
+explainable SVM system is only $2.5\%$ behind the unexplainable baseline.  The
+Resnet50 system performs best in this configuration with only a $1.3\%$ drop
+from the unexplainable Resent50 benchmark.  The explainable CNN sees a $2.1\%$
+decline from the unexplainable benchmark.
+
+The final column in Table \ref{tab:mnist_accuracy_results} illustrates the
+improvement on accuracy of adding one unexplainable flow to the system.  Observe
+that many of the systems approach the recognition accuracy of the benchmark,
+especially Resnet50.
+
+\begin{table}
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Accuracy of models and architectures on MNIST}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|l|c|c|c|}
+        \cline{2-4}
+        \multicolumn{1}{c|}{} & \multicolumn{3}{c|}{Architecture} \\
+        \hline
+        Model Type & 1 Unexplainable & 10 Explainable & \parbox[t]{3.3cm}{10 Explainable\\1 Unexplainable}\\
+        \hline
+        \hline
+        MLP & $98.3$ & $96.2$ & $97.9$ \\
+        \hline
+        SVM & $97.9$ & $95.4$ & $97.3$ \\
+        \hline
+        CNN & $99.4$ & $97.3$ & $98.7$ \\
+        \hline
+        Resnet50 & $98.9$ & $97.6$ & $98.8$ \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab:mnist_accuracy_results}
+\end{table}
+
+\begin{table}
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Average explainability of the winning choice for models and architectures on MNIST}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|l|c|c|c|}
+        \cline{2-4}
+        \multicolumn{1}{c|}{} & \multicolumn{3}{c|}{Architecture} \\
+        \hline
+        Model Type & 1 Unexplainable & 10 Explainable & \parbox[t]{3.3cm}{10 Explainable\\1 Unexplainable}\\
+        \hline
+        \hline
+        MLP & $0.0$ & $100.0$ & $67.2$ \\
+        \hline
+        SVM & $0.0$ & $100.0$ & $76.8$ \\
+        \hline
+        CNN & $0.0$ & $100.0$ & $75.5$ \\
+        \hline
+        Resnet50 & $0.0$ & $100.0$ & $69.9$ \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab:mnist_explainability_results}
+\end{table}
+
+Table \ref{tab:mnist_explainability_results} presents the configurations from
+Table \ref{tab:mnist_accuracy_results} but instead of recognition accuracy, the
+average explainability value of the winning selection is given as a percentage.
+The benchmark values are completely unexplainable, so all values are zero.  The
+10 explainable flows in the third column are explainable so the answers are
+fully explainable.  The last column shows how the average explainability is
+diminished for the winning answers.  The MLP system has the lowest average
+explainability, while the SVM system has the highest.
+
+Figures~\ref{tab:mnist_conf_mlp} and \ref{tab:mnist_conf_svm} depict the
+contrast between the confusion matrices on the unexplainable benchmark between
+the MLP and SVM.  In the SVM, the highest value in a non-diagonal cell is
+eleven.  Eleven occurs three times in the confusion matrix where some sevens are
+erroneously predicted as a two and where the digits four and seven are
+erroneously detected as a nine. The MLP confusion matrix shows in the first
+column that many digits (especially the two, seven, eight, and nine) are
+erroneously recognized as the digit zero.  The highest value in the non-diagonal
+of the MLP confusion matrix is an eight, where fours are predicted as the digit
+nine.
+
+% \begin{figure}[H]
+%     \centerline{\includegraphics[width=10cm]{./images/mnist_conf_matrix_mlp.png}}
+%     \caption{Confusion matrix for the single unexplainable MLP on MNIST.}
+%     \label{fig:mnist_conf_mlp}
+% \end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption{Confusion matrix for the single unexplainable MLP on MNIST.}
+    \label{tab:mnist_conf_mlp}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|c|c|c|c|c|c|c|c|c|c|}
+        \multicolumn{2}{c}{}& \multicolumn{10}{c}{Predicted}\\
+        & \multicolumn{1}{c}{} & \multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2}
+        & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6}
+        & \multicolumn{1}{c}{7} & \multicolumn{1}{c}{8} & \multicolumn{1}{c}{9} \\
+        \cline{3-12}
+        \multirow{10}{*}{{\rotatebox[origin=c]{90}{Actual}
+        }} & 
+        0 & $~973$ & 1 & 1 & 0 & 1 & 1 & 1 & 1 & 1 & 0 \\ \cline{3-12}
+        &   1 & 4 & $1127$ & 0 & 1 & 0 & 0 & 2 & 0 & 1 & 0 \\ \cline{3-12}
+        &   2 & 6 & 1 & $1016$ & 1 & 1 & 0 & 1 & 4 & 2 & 0 \\ \cline{3-12}
+        &   3 & 4  & 0 & 2 & $~995$ & 0 & 3 & 0 & 1 & 3 & 2 \\ \cline{3-12}
+        &   4 & 4 & 0 & 2 & 0 & $~962$ & 0 & 4 & 2 & 0 & 8 \\ \cline{3-12}
+        &   5 & 3 & 0 & 0 & 9 & 1 & $~870$ & 3 & 1 & 3 & 2 \\ \cline{3-12}
+        &   6 & 5 & 2 & 1 & 1 & 2 & 1 & $~945$ & 0 & 1 & 0 \\ \cline{3-12}
+        &   7 & 7 & 0 & 6 & 1 & 1 & 0 & 0 & $1006$ & 2 & 5 \\ \cline{3-12}
+        &   8 & 7 & 0 & 2 & 2 & 2 & 0 & 0 & 2 & $~955$ & 4 \\ \cline{3-12}
+        &   9 & 7 & 2 & 0 & 3 & 6 & 3 & 1 & 6 & 2 & $~979$ \\ \cline{3-12}
+    \end{tabular}
+\end{table}
+
+
+% \begin{figure}[H]
+%     \centerline{\includegraphics[width=10cm]{./images/mnist_conf_matrix_svm.png}}
+%     \caption{Confusion matrix for the single unexplainable SVM on MNIST.}
+%     \label{fig:mnist_conf_svm}
+% \end{figure}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Confusion matrix for the single unexplainable SVM on MNIST.}
+    \label{tab:mnist_conf_svm}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|c|c|c|c|c|c|c|c|c|c|}
+        \multicolumn{2}{c}{}& \multicolumn{10}{c}{Predicted}\\
+        & \multicolumn{1}{c}{} & \multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2}
+        & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6}
+        & \multicolumn{1}{c}{7} & \multicolumn{1}{c}{8} & \multicolumn{1}{c}{9} \\
+        \cline{3-12}
+        \multirow{10}{*}{{\rotatebox[origin=c]{90}{Actual}
+        }} & 
+        0 & $~973$ & 0 & 1 & 0 & 0 & 2 & 1 & 1 & 2 & 0 \\ \cline{3-12}
+        &   1 & 0 & $1126$ & 3 & 1 & 0 & 1 & 1 & 1 & 2 & 0 \\ \cline{3-12}
+        &   2 & 6 & 1 & $1006$ & 2 & 1 & 0 & 2 & 7 & 6 & 1 \\ \cline{3-12}
+        &   3 & 0  & 0 & 2 & $~995$ & 0 & 2 & 0 & 5 & 5 & 1 \\ \cline{3-12}
+        &   4 & 0 & 0 & 5 & 0 & $~961$ & 0 & 3 & 0 & 2 & 11 \\ \cline{3-12}
+        &   5 & 2 & 0 & 0 & 9 & 0 & $~871$ & 4 & 1 & 4 & 1 \\ \cline{3-12}
+        &   6 & 6 & 2 & 0 & 0 & 2 & 3 & $~944$ & 0 & 1 & 0 \\ \cline{3-12}
+        &   7 & 0 & 6 & 11 & 1 & 1 & 0 & 0 & $996$ & 2 & 11 \\ \cline{3-12}
+        &   8 & 3 & 0 & 2 & 6 & 3 & 2 & 2 & 3 & $~950$ & 3 \\ \cline{3-12}
+        &   9 & 3 & 4 & 1 & 7 & 10 & 2 & 1 & 7 & 4 & $~970$ \\ \cline{3-12}
+    \end{tabular}
+\end{table}
+
+Table \ref{tab:mnist_conf_exp_cnn} illustrates the confusion matrix on the MNIST
+test set for the highest performing explainable architecture using ten
+explainable and one unexplainable Resnet50 flows. The confusion matrix shows
+that thirteen times the digit four was erroneously predicted as a nine and in
+ten instance a handwritten five was erroneously predicted as a three.
+
+\begin{table}[H]
+    \centering
+    \caption{Confusion matrix for an explainable Resnet50 architecture with ten explainable and one unexplainable flows on MNIST.}
+    \label{tab:mnist_conf_exp_cnn}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|c|c|c|c|c|c|c|c|c|c|}
+        \multicolumn{2}{c}{}& \multicolumn{10}{c}{Predicted}\\
+        & \multicolumn{1}{c}{} & \multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2}
+        & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6}
+        & \multicolumn{1}{c}{7} & \multicolumn{1}{c}{8} & \multicolumn{1}{c}{9} \\
+        \cline{3-12}
+        \multirow{10}{*}{{\rotatebox[origin=c]{90}{Actual}
+        }} & 
+        0 & $~976$ & 0 & 0 & 0 & 0 & 0 & 3 & 0 & 0 & 1 \\ \cline{3-12}
+        &   1 & 0 & $1132$ & 0 & 0 & 0 & 0 & 2 & 1 & 0 & 0 \\ \cline{3-12}
+        &   2 & 1 & 1 & $1024$ & 1 & 0 & 0 & 0 & 5 & 0 & 0 \\ \cline{3-12}
+        &   3 & 0  & 2 & 1 & $1001$ & 0 & 0 & 0 & 5 & 1 & 0 \\ \cline{3-12}
+        &   4 & 0 & 2 & 3 & 0 & $~960$ & 0 & 4 & 1 & 0 & 13 \\ \cline{3-12}
+        &   5 & 3 & 0 & 0 & 10 & 0 & $~874$ & 2 & 1 & 2 & 0 \\ \cline{3-12}
+        &   6 & 6 & 2 & 0 & 0 & 2 & 3 & $~946$ & 0 & 2 & 0 \\ \cline{3-12}
+        &   7 & 0 & 8 & 3 & 0 & 0 & 0 & 0 & $1016$ & 1 & 0 \\ \cline{3-12}
+        &   8 & 4 & 0 & 2 & 1 & 0 & 0 & 0 & 2 & $~960$ & 5 \\ \cline{3-12}
+        &   9 & 3 & 1 & 0 & 1 & 7 & 0 & 0 & 3 & 0 & $~994$ \\ \cline{3-12}
+    \end{tabular}
+\end{table}
+
+
+% TODO: outline over allresults and present a table using different ANN
+% architectures.
+
+% TODO format as a table:
+% \begin{itemize}
+%     \item $0.979$ mlp 10 explainable 1 unexplainable
+%     \item $0.962$ mlp 10 explainable
+%     \item $0.983$ 1 mlp unexplainable
+%     \item $0.973$ svm 10 explainable 1 unexplainable
+%     \item $0.954$ svm 10 explainable
+%     \item $0.9788$ 1 svm unexplainable rbf
+%     \item $0.987$ cnn 10 explainable 1 unexplainable
+%     \item $0.973$ cnn 10 explainable
+%     \item $0.994$ 1 cnn unexplainable
+%     \item $0.988$ resnet 10 explainable 1 unexplainable
+%     \item $0.976$ resent 10 explainable
+%     \item $0.989$ 1 resnet 50 unexplainable
+% \end{itemize}
+
+\subsection{MNIST Explainable Examples}
+\label{sec:mnist_exp_prop_examples}
+
+Detailed examples of explainable MNIST digit recognition, using the
+property-based explainable method, follow in this section. Three interesting
+MNIST digits are presented.  The property transform opinions, effectiveness,
+confidence, and explainability will be reviewed in detail.  This is done by
+stepping through the inference engine results for the digits, the procedures of
+the probabilistic voting scheme, explainability metrics, and composing the
+explainability rationale from the explainable property-based methodology.
+
+The explainable architecture for these explainable samples is using eleven
+pre-decision flows (PDF).  One flow is unexplainable using the untransformed
+application input. Inference engines in the property-based explainable
+architecture are multilayer perceptrons with three hidden layers of 128, 256,
+and 128 neurons each. The neural networks are using the rectified linear unit
+activation function and a stochastic gradient descent solver. These samples also
+used the $E_{PARS}$ effectiveness metric in the property-based explainable
+architecture's decision-making process.
+
+When characterizing the confidence, $Conf(c)$, of a class ,$c$, for samples in
+this section, the following confidence ranges apply:
+
+\begin{itemize}
+    \item High - $75.0 \leq Conf \leq 100.0$
+    \item Medium - $25.0 \leq Conf < 75.0$
+    \item Low - $0.0 \leq Conf < 25.0$
+\end{itemize}
+
+The confusion matrix from the MNIST test set for the explainable property-based architecture used
+for digit examples is in Table~\ref{tab:mnist_example_conf_matrix}.  The confusion matrix
+Was stored in the knowledgebase and was used to suggest how the system can fail for the examples.
+
+\begin{table}[H]
+    \centering
+    \caption{MLP explainable architecture confusion matrix for MNIST examples.}
+    \label{tab:mnist_example_conf_matrix}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|c|c|c|c|c|c|c|c|c|c|}
+        \multicolumn{2}{c}{}& \multicolumn{10}{c}{Predicted}\\
+        & \multicolumn{1}{c}{} & \multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2}
+        & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6}
+        & \multicolumn{1}{c}{7} & \multicolumn{1}{c}{8} & \multicolumn{1}{c}{9} \\
+        \cline{3-12}
+        \multirow{10}{*}{{\rotatebox[origin=c]{90}{Actual}
+        }} & 
+        0 &     972 &  0   &  1   &  0  &  0  &  0  &  7  &  0   &  0  &  0  \\ \cline{3-12}
+        &   1 &  0  & 1131 &  1   &  1  &  0  &  0  &  2  &  0   &  0  &  0  \\ \cline{3-12}
+        &   2 &  3  &  0   & 1015 &  0  &  0  &  0  &  4  &  8   &  2  &  0  \\ \cline{3-12}
+        &   3 &  4  &  2   &  2   & 990 &  0  &  2  &  0  &  6   &  4  &  0  \\ \cline{3-12}
+        &   4 &  4  &  2   &  2   &  0  & 953 &  0  &  4  &  4   &  2  & 11   \\ \cline{3-12}
+        &   5 &  3  &  2   &  0   & 12  &  2  & 862 &  4  &  1   &  2  &  4  \\ \cline{3-12}
+        &   6 &  2  &  4   &  0   &  0  &  2  &  2  & 947 &  0   &  1  &  0  \\ \cline{3-12}
+        &   7 &  2  &  4   &  12  &  1  &  3  &  0  &  0  & 1000 &  2  &  4  \\ \cline{3-12}
+        &   8 & 10  &  3   &  1   &  4  &  2  &  0  &  6  &  2   & 939 &  7  \\ \cline{3-12}
+        &   9 &  7  &  3   &  0   &  3  &  9  &  1  &  1  &  3   &  1  & 981 \\ \cline{3-12}
+    \end{tabular}
+\end{table}
+
+% mnist test sample index 4 a digit 4
+\begin{figure}[H]
+    \centerline{\includegraphics[width=2cm, alt={An MNIST digit four}]{./images/mnist_samples/4_4_0.png}}
+    \caption{MNIST example one, a digit four.}
+    \label{fig:mnist_example1}
+\end{figure}
+
+
+The first MNIST example is shown in Figure~\ref{fig:mnist_example1}.  The digit is
+index four (zero based indexing) in the MNIST test set.  The digit is labeled as
+the number four. Table \ref{table:mnist_example1_ex} details the explainability
+matrix which contains the inference engine results and explainability for each
+flow.
+
+Each row in the body of the explainability matrix represents a property
+transform's flow. The first column lists the flow id as $F_j$ for flow $j$.
+The property transforms associated with the flows correspond to the property
+transforms in Table \ref{tab:transsample}.
+
+The second column, labeled property, in the explainability matrix indicates the
+property name associated with the flow.  The third column, labeled class vote,
+indicates the opinion of the inference engine as the class it voted for. The
+next three columns labeled with PDF effectiveness $E(j,c)$ indicate the
+effectiveness of each flow $j$ for the class $c$ it voted for. The next three
+columns labeled PDF explainability with $Ex(c)$ indicate the explainability
+metric for each flow $j$ that voted for class $c$. These values are important in
+calculating the explainability of the rationale for each class.
+
+\begin{table}[h!]
+    % \begin{minipage}{0.15\linewidth}
+    %     \centering
+    %     \includegraphics[width=2cm]{./images/mnist_samples/4_4_0.png}
+    %     \captionof{figure}{A digit four example.}
+    %     \label{fig:ex4}
+    % \end{minipage}\hfill
+    %\begin{minipage}{0.85\linewidth}
+        \renewcommand{\arraystretch}{1.3}
+        \captionof{table}{Explainability Matrix for MNIST Example one}\label{table:mnist_example1_ex}
+        \centering
+        %\resizebox{0.85\linewidth}{!}{%
+        \begin{tabular}{| c | c | c | c | c | c || c | c | c |}
+        \cline{4-9}
+        \multicolumn{3}{c}{} & \multicolumn{3}{|c||}{PDF Effectiveness} & \multicolumn{3}{c|}{PDF Explainability} \\
+        \hline
+        $F_j$ & Property & Class Vote & $E(j,0)$ & $E(j,4)$ & $E(j,9)$ & $Ex(0)$ & $Ex(4)$ & $Ex(9)$ \\
+        \hline
+        \hline
+        $F_1$ & Stroke & $4$ &  & $1.0$ &  &  & $1.0$ & \\ 
+        \hline
+        $F_2$ & Circle & $0$ & $0.039$ &  &  & $1.0$ &  & \\
+        \hline
+        $F_3$ & Crossing & $0$ & $0.018$ &  &  & $1.0$ &  & \\
+        \hline
+        $F_4$ & Ellipse & $0$ & $0.004$ &  &  & $1.0$ &  & \\
+        \hline
+        $F_5$ & Ell-Cir & $0$ & $0.069$ &  &  & $1.0$ &  & \\
+        \hline
+        $F_6$ & Endpoint & $4$ &  & $0.974$ &  &  & $1.0$ & \\
+        \hline
+        $F_7$ & Encl. Reg. & $0$ & $0.021$ &  &  & $1.0$ &  & \\
+        \hline
+        $F_8$ & Line & $9$ &  &  & $0.496$ &  &  & $1.0$ \\
+        \hline
+        $F_9$& Convex Hull & $4$ &  & $0.826$ &  &  & $1.0$ & \\
+        \hline
+        $F_{10}$& Corner & $4$ &  & $0.538$ &  &  & $1.0$ & \\
+        \hline
+        $F_{11}$& No Property & $4$ &  & $1.0$ &  &  & $0.0$ & \\
+        \hline
+        \hline
+        \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $0.151$ & $4.337$ & $0.496$ & $0.151$ & $3.337$ & $0.496$ \\
+        \cline{0-8}
+        \multicolumn{3}{|c|}{Confidence / Explainability} & $3.03\%$ & $87.0\%$ & $9.96\%$ & $100\%$ & $76.9\%$ & $100\%$ \\
+        \cline{0-8}
+        \end{tabular}
+        %}
+    %\end{minipage}
+\end{table}
+
+Observing the class votes in Table \ref{table:mnist_example1_ex} for example
+one, five of the PDFs suggested the digit four while five other PDFs suggested
+the digit zero.  The effectiveness of the flows that suggested the four were
+much higher with an effectiveness range from $0.538$ to $1.0$.  Effectiveness of
+the PDFs suggesting the digit zero had a comparatively much lower range from
+$0.004$ to $0.069$.  The effectiveness columns are summed to provide the
+weighted effectiveness, $WE_c$, for each class, $c$, that was voted for. The
+class indicating the digit four has a much higher weighted effectiveness, at
+$4.337$, while the next highest is for the digit nine at $0.496$. Confidence
+values for each class, $c$, that was voted for are listed in the last row of the
+table under the Effectiveness columns. Observe that the confidence for the class
+four is at $87.0\%$.
+
+The explainability columns in the explainability matrix indicate the
+explainability metric, $Ex(c)$, of the flows that voted for class, $c$.
+In these examples, the explainability metric will be $1.0$ for all PDFs but the
+unexplainable pdf, where the metric will be $0.0$ due to the lack of
+explainability.  In calculating the explainability for each class $c$, the
+product of effectiveness and the explainbility metric is summed for each class
+resulting in an explainbility that is weighted by the effectiveness of the PDFs.
+This results in the explainability resulting in $1.0$ for classes that received
+only votes for explainable properties.  Classes receiving unexplainable votes
+will have the explainability diminished relative to the effectiveness of the
+unexplainable flow for that class.  This is depicted in the explainability,
+$Ex(c)$ from \eqref{eq:explainability}, for the class $c$ as the digit four
+across the flows $j$ that suggested the digit four in
+\eqref{eq:explainability_mnist_example1}.
+
+\begin{equation}\label{eq:explainability_mnist_example1}
+    Ex(4)=\frac{\sum{E(j,4)X_j}}{\sum{E(j,4)}} = \frac{3.337}{4.337}=0.769
+\end{equation}
+
+\begin{figure}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \captionof{table}{Explanation for MNIST Example one} \label{table:mnist_example1_explanation}
+    %\centering
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
+    \hline
+     Class & Confidence & Explainability & Explainable Description \\
+    \hline \hline
+    $4$ & $87.0\%$ & $76.9\%$ & Confidence is high for interpreting this character as a four due to the stroke, endpoint, convex hull, and corner properties. \\ 
+    \hline
+    $9$ & $9.96\%$ & $100\%$ & Confidence is low for interpreting this character as a nine due to the line property. \\
+    \hline
+    $0$ & $3.03\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the ellipse-circle, circle, fill, crossing, and ellipse properties. \\
+    \hline
+    \end{tabular}
+    %}
+\end{figure}
+
+Table \ref{table:mnist_example1_explanation} presents the results from the XAI
+component of the architecture. The decisions are presented in descending order
+based on confidence.  Note that since the unexplainable flow voted for the digit
+four the explainability for the winning solution is diminished at $76.9\%$.
+Observe that the digit four won with $87.0\%$ confidence and an explainability
+of $76.9\%$.  The rationale provided by XAI for the winning digit indicates:
+
+\begin{quote}
+    \textit{Confidence is high for interpreting this character as a four due to the stroke, endpoint, convex hull, and corner properties.}
+\end{quote}
+
+Alternatives (the digits nine and zero) that were suggested by other properties
+are also presented by XAI with supporting confidence ($9.96\%$ and $3.03\%$),
+explainability, and rationale referencing explainable properties that suggested
+the digits.
+
+In addition to the predictions and rationale, the explainable system references
+the confusion matrix in the knowledgebase and suggests that the false discovery
+rate when predicting a four is $1.9\%$.  The system also suggests that the most
+confused digits when predicting a four are a nine at $0.9\%$ and a seven at
+$0.3\%$.
+
+% mnist test sample index 1 a digit 2
+\begin{figure}[H]
+    \centerline{\includegraphics[width=2cm, alt={An MNIST digit two}]{./images/mnist_samples/1_2_0.png}}
+    \caption{MNIST example two, a digit two.}
+    \label{fig:mnist_example2}
+\end{figure}
+
+Example two is shown in Figure~\ref{fig:mnist_example2} which is index one (zero
+based indexing) in the MNIST test set. The digit is labeled as a two.
+
+Table \ref{table:mnist_example2_ex} shows the explainability matrix for example
+two. Six of the flows, including the unexplainable flow, suggested digit two
+with effectiveness ranging from $0.564$ to $1.0$. Four flows suggested the digit
+zero with very low effectiveness from $0.004$ to $0.039$. One flow, the ellipse
+circle, suggested the digit eight with effectiveness $0.288$.  It is clear from
+these effectiveness metrics that the two is preferred by the system as the most
+flows suggested the digit two and those flows had comparatively high
+effectiveness metrics.
+
+The resulting weighted effectiveness in Table \ref{table:mnist_example2_ex}
+heavily favors the digit two, with confidence $93.1\%$, over the eight, with
+$5.37\%$ confidence, and the zero, with $1.53\%$ confidence.
+
+Because the unexplainable flow suggested the two, the explainability of the
+recommended answer is impacted.  We see the effectiveness of the unexplainable
+flow, $F_{11}$, was $1.0$.  This results in the explainability, $Ex(c)$ from
+\eqref{eq:explainability}, with the class $c=2$ resulting in $80.0\%$ as shown
+in \eqref{eq:explainability_mnist_example2}.
+
+\begin{equation}\label{eq:explainability_mnist_example2}
+    Ex(2)=\frac{\sum{E(j,2)X_j}}{\sum{E(j,2)}} = \frac{3.99}{4.99}=0.80
+\end{equation}
+
+\begin{table}[H]
+    % \begin{minipage}{0.15\linewidth}
+    %     \centering
+    %     \includegraphics[width=2cm]{./images/mnist_samples/4_4_0.png}
+    %     \captionof{figure}{A digit four example.}
+    %     \label{fig:ex4}
+    % \end{minipage}\hfill
+    %\begin{minipage}{0.85\linewidth}
+        \renewcommand{\arraystretch}{1.3}
+        \captionof{table}{Explainability Matrix for MNIST Example two}\label{table:mnist_example2_ex}
+        \centering
+        %\resizebox{0.85\linewidth}{!}{%
+        \begin{tabular}{| c | c | c | c | c | c || c | c | c |}
+        \cline{4-9}
+        \multicolumn{3}{c}{} & \multicolumn{3}{|c||}{PDF Effectiveness} & \multicolumn{3}{c|}{PDF Explainability} \\
+        \hline
+        $F_j$ & Property & Class Vote & $E(j,0)$ & $E(j,2)$ & $E(j,8)$ & $Ex(0)$ & $Ex(2)$ & $Ex(8)$ \\
+        \hline
+        \hline
+        $F_1$ & Stroke & $2$ &  & $1.0$ &  &  & $1.0$ & \\ 
+        \hline
+        $F_2$ & Circle & $0$ & $0.039$ &  &  & $1.0$ &  & \\
+        \hline
+        $F_3$ & Crossing & $0$ & $0.018$ &  &  & $1.0$ &  & \\
+        \hline
+        $F_4$ & Ellipse & $0$ & $0.004$ &  &  & $1.0$ &  & \\
+        \hline
+        $F_5$ & Ell-Cir & $8$ &  &  & $0.288$ &  &  & $1.0$ \\
+        \hline
+        $F_6$ & Endpoint & $2$ &  & $0.901$ &  &  & $1.0$ & \\
+        \hline
+        $F_7$ & Encl. Reg. & $0$ & $0.021$ &  &  & $1.0$ &  & \\
+        \hline
+        $F_8$ & Line & $2$ &  & $0.564$ &  &  & $1.0$ & \\
+        \hline
+        $F_9$& Convex Hull & $2$ &  & $0.796$ &  &  & $1.0$ & \\
+        \hline
+        $F_{10}$& Corner & $2$ &  & $0.729$ &  &  & $1.0$ & \\
+        \hline
+        $F_{11}$& No Property & $2$ &  & $1.0$ &  &  & $0.0$ & \\
+        \hline
+        \hline
+        \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $0.082$ & $4.990$ & $0.288$ & $0.082$ & $3.990$ & $0.288$ \\
+        \cline{0-8}
+        \multicolumn{3}{|c|}{Confidence / Explainability} & $1.53\%$ & $93.1\%$ & $5.37\%$ & $100\%$ & $80.0\%$ & $100\%$ \\
+        \cline{0-8}
+        \end{tabular}
+        %}
+    %\end{minipage}
+\end{table}
+
+Table \ref{table:mnist_example2_explanation} depicts the explainable results
+from XAI. The digit two wins with the alternatives presented with low confidence
+as eight and zero.  The rationale provided for the winning selection indicates:
+
+\begin{quote}
+    \textit{Confidence is high for interpreting this character as a two due to the stroke, endpoint, convex hull, corner, and line properties.}
+\end{quote}
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \captionof{table}{Explanation for MNIST Example two} \label{table:mnist_example2_explanation}
+    %\centering
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
+    \hline
+     Class & Confidence & Explainability & Explainable Description \\
+    \hline \hline
+    $2$ & $93.1\%$ & $80.0\%$ & Confidence is high for interpreting this character as a two due to the stroke, endpoint, convex hull, corner, and line properties. \\ 
+    \hline
+    $8$ & $5.37\%$ & $100\%$ & Confidence is low for interpreting this character as an eight due to the ellipse-circle property. \\
+    \hline
+    $0$ & $1.53\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the circle, fill, crossing, and ellipse properties. \\
+    \hline
+    \end{tabular}
+    %}
+\end{table}
+
+The explainable system references the confusion matrix in the knowledgebase and
+suggests that the false discovery rate when predicting a two is $1.8\%$. The
+system elaborates that the most confused digit when predicting a two is a seven
+at $1.2\%$.
+
+Example three is shown in Figure~\ref{fig:mnist_example3} which is index seven (zero
+based indexing) in the MNIST test set. The digit is labeled as a nine.
+
+% mnist test sample index 7 a digit 9
+\begin{figure}[H]
+    \centerline{\includegraphics[width=2cm, alt={An MNIST digit nine}]{./images/mnist_samples/7_9_0.png}}
+    \caption{MNIST example three, a digit nine.}
+    \label{fig:mnist_example3}
+\end{figure}
+%\vspace{\floatsep}
+
+Table \ref{table:mnist_example3_ex} presents the explainability matrix for
+example three.  In this example, five classes were suggested by the inference
+engines, zero, three, four, seven, and nine.  Including the unexplainable flow,
+five flows suggested the digit nine, three flows suggested the digit zero, and
+one flow each suggested the digits three, four, and seven.
+
+\begin{table}[H]
+    % \begin{minipage}{0.15\linewidth}
+    %     \centering
+    %     \includegraphics[width=2cm]{./images/mnist_samples/4_4_0.png}
+    %     \captionof{figure}{A digit four example.}
+    %     \label{fig:ex4}
+    % \end{minipage}\hfill
+    %\begin{minipage}{0.85\linewidth}
+        \renewcommand{\arraystretch}{1.3}
+        \captionof{table}{Explainability Matrix for MNIST Example three}\label{table:mnist_example3_ex}
+        \centering
+        \resizebox{\linewidth}{!}{%
+        \begin{tabular}{| c | c | c | c | c | c | c | c || c | c | c | c | c |}
+        \cline{4-13}
+        \multicolumn{3}{c}{} & \multicolumn{5}{|c||}{PDF Effectiveness} & \multicolumn{5}{c|}{PDF Explainability} \\
+        \hline
+        $F_j$ & Property & Class Vote & $E(j,0)$ & $E(j,3)$ & $E(j,4)$ & $E(j,7)$ & $E(j,9)$ & $Ex(0)$ & $Ex(3)$ & $Ex(4)$ & $Ex(7)$ & $Ex(9)$ \\
+        \hline
+        \hline
+        $F_1$ & Stroke & $9$ &  &  &  &  & $1.0$ &  &  &  &  & $1.0$\\ 
+        \hline
+        $F_2$ & Circle & $0$ & $0.039$ &  &  &  &  & $1.0$ &  &  &  & \\
+        \hline
+        $F_3$ & Crossing & $3$ &  & $0.220$ &  &  &  &  & $1.0$ &  &  & \\
+        \hline
+        $F_4$ & Ellipse & $0$ & $0.004$ &  &  &  &  & $1.0$ &  &  &  & \\
+        \hline
+        $F_5$ & Ell-Cir & $0$ & $0.069$ &  &  &  &  & $1.0$ &  &  &  & \\
+        \hline
+        $F_6$ & Endpoint & $9$ &  &  &  &  & $0.920$ &  &  &  &  & $1.0$ \\
+        \hline
+        $F_7$ & Encl. Reg. & $9$ &  &  &  &  & $0.789$ &  &  &  &  & $1.0$ \\
+        \hline
+        $F_8$ & Line & $4$ &  &  & $0.562$ &  &  &  &  & $1.0$ &  & \\
+        \hline
+        $F_9$& Convex Hull & $9$ &  &  &  &  & $0.739$ &  &  &  &  & $1.0$ \\
+        \hline
+        $F_{10}$& Corner & $7$ &  &  &  & $0.697$ &  &  &  &  & $1.0$ &  \\
+        \hline
+        $F_{11}$& No Property & $9$ &  &  &  &  & $1.0$ & & & & & $0.0$ \\
+        \hline
+        \hline
+        \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $0.112$ & $0.221$ & $0.562$ & $0.697$ & $4.449$ & $0.112$ & $0.221$ & $0.562$ & $0.697$ & $3.449$ \\
+        \cline{0-12}
+        \multicolumn{3}{|c|}{Confidence / Explainability} & $1.85\%$ & $3.65\%$ & $9.30\%$ & $11.5\%$ & $73.7\%$ & $100\%$ & $100\%$ & $100\%$ & $100\%$ & $77.5\%$ \\
+        \cline{0-12}
+        \end{tabular}
+        }
+    %\end{minipage}
+\end{table}
+
+The effectiveness associated with the nine results in the nine winning with
+$73.7\%$ confidence.  The unexplainable flow also suggested the digit nine. As a
+result, the explainability metric for nine is $77.5\%$ as shown in
+\eqref{eq:explainability_mnist_example3}.  In terms of confidence, the next
+closest alternative to the nine is the digit seven with $11.5\%$ confidence.
+
+\begin{equation}\label{eq:explainability_mnist_example3}
+    Ex(9)=\frac{\sum{E(j,9)X_j}}{\sum{E(j,9)}} = \frac{3.449}{4.449}=0.775
+\end{equation}
+
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \captionof{table}{Explanation for MNIST Example three} \label{table:mnist_example3_explanation}
+    %\centering
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
+    \hline
+     Class & Confidence & Explainability & Explainable Description \\
+    \hline \hline
+    $9$ & $73.7\%$ & $77.5\%$ & Confidence is medium for interpreting this character as a nine due to the stroke, endpoint, fill, and convex hull properties. \\ 
+    \hline
+    $7$ & $11.5\%$ & $100\%$ & Confidence is low for interpreting this character as a seven due to the corner property. \\
+    \hline
+    $4$ & $9.30\%$ & $100\%$ & Confidence is low for interpreting this character as a four due to the line property. \\
+    \hline
+    $3$ & $3.65\%$ & $100\%$ & Confidence is low for interpreting this character as a three due to the crossing property. \\
+    \hline
+    $0$ & $1.85\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the ellipse-circle, circle, and ellipse properties. \\
+    \hline
+    \end{tabular}
+    %}
+\end{table}
+
+Table \ref{table:mnist_example3_explanation} presents the explainable description from the
+XAI block.  The rationale provided by XAI for the winning digit nine follows:
+
+\begin{quote}
+    \textit{Confidence is medium for interpreting this character as a nine due to the stroke, endpoint, fill, and convex hull properties.}
+\end{quote}
+
+The explainable system references the confusion matrix in the knowledgebase and
+suggests that the false discovery rate when predicting a nine is $2.6\%$. The
+system further suggests that the most confused digits when predicting a nine are
+a four at $1.1\%$ and an eight at $0.7\%$.
+
+Accuracy achieved with an explainable property-based system previously with
+MNIST was $91.9\%$ with $100\%$ explainability\cite{whitten21}.  In that case
+nine explainable properties, multi-layer perceptron inference engines, and the
+recall metric were used for gauging effectiveness. Utilizing an unexplainable
+component (consisting of the original untransformed image), an additional convex
+hull transform, and a better metric for effectiveness resulted in an improvement
+to $97.9\%$ accuracy from the MLP and $98.8\%$ for Resnet50. The resulting
+average explainability metric, $Ex(c)$, for the winning classes, $c$, was
+reduced to $67.2$\% for MLP and $69.9\%$ for Resnet50.
+
+\subsection{EMNIST Results}
+
+
+
+%Results for addition of the convex hull are 97.1\% accuracy.  TODO add more details
+%here.
+
+%Results for adding the two hidden layer CNN are 96.0\% versus 91.9, a 4\%
+%increase on the MNIST dataset from \cite{whitten21}.  TODO: add more here.
+
+Because of considerable ambiguity between classes in the balanced EMNIST
+dataset, it was split into three groups: digits, uppercase characters, and
+lowercase characters. Table~\ref{tab_unexplainable_accuracy_results} shows the
+benchmark accuracy results of a single unexplainable ML model using the
+indicated model architectures on the full balanced EMNIST dataset and the three
+distinct splits. Accuracy is much higher for the splits (digits, uppercase, and
+lowercase) than the full dataset. On the full balanced dataset, with 46 classes,
+Resnet50 slightly outperformed the CNN. The two-layer CNN can be observed as
+having the maximum accuracy results in digits, uppercase, and lowercase
+characters.
+
+% \begin{table}[H]
+%     \renewcommand{\arraystretch}{1.3}
+%     \centering
+%     \caption{Unexplainable accuracy results on various balanced EMNIST data sets with differing ML models}
+%     %{\columnwidth}{!}{%
+%     \begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+%         \cline{2-9}
+%         \multicolumn{1}{c}{} & \multicolumn{8}{|c|}{Accuracy (\%)} \\
+%         \cline{2-9}
+%         \multicolumn{1}{c}{} & \multicolumn{2}{|c|}{Full EMNIST} & \multicolumn{2}{|c|}{EMNIST Digits} & \multicolumn{2}{|c|}{EMNIST Caps} & \multicolumn{2}{|c|}{EMNIST Lower} \\
+%         \hline
+%         Model Type & Train & Test & Train & Test & Train & Test & Train & Test \\
+%         \hline
+%         \hline
+%         MLP & 82.59 & 78.68 & 99.82 & 97.32 & 95.88 & 91.13 & 97.91 & 89.47 \\
+%         \hline
+%         CNN & 89.14 & 88.66 & 99.44 & 99.05 & 95.87 & 95.36 & 94.84 & 93.41 \\
+%         \hline
+%         Resnet50 & 88.69 & 88.68 & 99.44 & 98.90 & 95.26 & 94.89 & 97.07 & 92.68 \\
+%         \hline
+%     \end{tabular}
+%     %}
+%     \label{tab_unexplainable_accuracy_results}
+% \end{table}
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Benchmark unexplainable accuracy results on the full and various splits of the balanced EMNIST data sets with differing ML models.}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{|l|c|c|c|c|}
+        \cline{2-5}
+        \multicolumn{1}{c}{} & \multicolumn{4}{|c|}{Accuracy (\%)} \\
+        \hline
+        \multicolumn{1}{|p{3cm}|}{\centering Model\\Type} & \multicolumn{1}{|p{3cm}|}{\centering Full\\EMNIST} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Digits} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Uppercase} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Lowercase} \\
+        \hline
+        \hline
+        MLP & $74.3$ & $97.8$ & $88.7$ & $89.4$ \\
+        \hline
+        SVM & $84.3$ & $97.7$ & $91.8$ & $90.8$ \\
+        \hline
+        CNN & $88.7$ & $98.8$ & $95.4$ & $93.5$ \\
+        \hline
+        Resnet50 & $89.0$ & $98.3$ & $94.9$ & $93.4$ \\
+        \hline
+    \end{tabular}
+    }
+    \label{tab_unexplainable_accuracy_results}
+\end{table}
+
+Table \ref{tab_explainable_accuracy_results} shows the explainable accuracy
+results on the unpruned data. Compared to Table
+\ref{tab_unexplainable_accuracy_results} the results are considerably lower than
+the benchmark unexplainable results in Table
+\ref{tab_unexplainable_accuracy_results}.  As expected, there appears to be a
+cost for explainability.  That cost is decreased accuracy. In the explainable
+results, the Resnet50 model performs best on full EMNIST, but CNN models
+performed slightly better on the splits.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Explainable accuracy results on the full and various splits of the balanced EMNIST data sets with differing ML models using ten explainable flows.}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{|l|c|c|c|c|}
+        \cline{2-5}
+        \multicolumn{1}{c}{} & \multicolumn{4}{|c|}{Accuracy (\%)} \\
+        \hline
+        \multicolumn{1}{|p{3cm}|}{\centering Model\\Type} & \multicolumn{1}{|p{3cm}|}{\centering Full \\ EMNIST} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Digits} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Uppercase} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Lowercase} \\
+        \hline
+        \hline
+        MLP  & $51.0$  & $87.1$  & $67.9$  & $68.3$ \\
+        \hline
+        SVM & $75.5$ & $93.9$ & $84.1$ & $84.2$ \\
+        \hline
+        CNN &  $79.5$ &  $96.2$ &  $89.2$ &  $89.7$ \\
+        \hline
+        Resnet50  & $82.6$  & $86.9$ &  $87.7$ & $85.6$ \\
+        \hline
+    \end{tabular}
+    }
+    \label{tab_explainable_accuracy_results}
+\end{table}
+
+
+Table \ref{tab_exp_unexp_accuracy_results_no_thresh} shows adding an unexplainable component to the
+PBE architecture. The accuracy results are improved significantly where the accuracy approaches
+the benchmark unexplainable accuracy in Table \ref{tab_unexplainable_accuracy_results}.
+
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Explainable accuracy results on the full and various splits of the balanced EMNIST data sets with differing ML models using ten explainable and one unexplainable flow.}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{|l|c|c|c|c|}
+        \cline{2-5}
+        \multicolumn{1}{c}{} & \multicolumn{4}{|c|}{Accuracy (\%)} \\
+        \hline
+        \multicolumn{1}{|p{3cm}|}{\centering Model\\Type} & \multicolumn{1}{|p{3cm}|}{\centering Full \\ EMNIST} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Digits} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Uppercase} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Lowercase} \\
+        \hline
+        \hline
+        MLP  & $73.5$  & $94.5$  & $85.6$  & $84.9$ \\
+        \hline
+        SVM & $80.2$ & $96.3$ & $88.6$ & $88.2$ \\
+        \hline
+        CNN &  $85.6$ &  $97.8$ &  $93.0$ &  $90.8$ \\
+        \hline
+        Resnet50  & $83.8$  & $96.2$ &  $90.8$ & $92.1$ \\
+        \hline
+    \end{tabular}
+    }
+    \label{tab_exp_unexp_accuracy_results_no_thresh}
+\end{table}
+
+Table \ref{tab_exp_unexp_explainability_results_no_thresh} illustrates the
+impact on the average explainablility of the winning choice with an explainable
+component in the PBE architecture. The multi-layer perceptron has an especially
+low explainability, below 50 indicating much of the contribution for decisions
+is due to the unexplainable flow rather than those associated with a property.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Average explainability results for the winning vote on the full and various splits of the balanced EMNIST data sets with differing ML models using ten explainable and one unexplainable flow.}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{|l|c|c|c|c|}
+        \cline{2-5}
+        \multicolumn{1}{c}{} & \multicolumn{4}{|c|}{Average Explainability (\%)} \\
+        \hline
+        \multicolumn{1}{|p{3cm}|}{\centering Model\\Type} & \multicolumn{1}{|p{3cm}|}{\centering Full \\ EMNIST} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Digits} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Uppercase} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Lowercase} \\
+        \hline
+        \hline
+        MLP  & $48.2$  & $71.2$  & $57.8$  & $70.3$ \\
+        \hline
+        SVM & $69.6$ & $77.4$ & $71.3$ & $76.3$ \\
+        \hline
+        CNN &  $64.0$ &  $76.5$ &  $68.7$ &  $73.4$ \\
+        \hline
+        Resnet50  & $66.1$  & $63.6$ &  $77.7$ & $73.7$ \\
+        \hline
+    \end{tabular}
+    }
+    \label{tab_exp_unexp_explainability_results_no_thresh}
+\end{table}
+
+
+% \begin{table}[H]
+%     \renewcommand{\arraystretch}{1.3}
+%     \centering
+%     \caption{Explainable accuracy results on the full and various splits of the balanced EMNIST data sets with differing ML models using ten explainable and one unexplainable flow with a $0.05$ threshold.}
+%     \resizebox{\linewidth}{!}{%
+%     \begin{tabular}{|l|c|c|c|c|}
+%         \cline{2-5}
+%         \multicolumn{1}{c}{} & \multicolumn{4}{|c|}{Accuracy (\%)} \\
+%         \hline
+%         \multicolumn{1}{|p{3cm}|}{\centering Model\\Type} & \multicolumn{1}{|p{3cm}|}{\centering Full \\ EMNIST} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Digits} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Uppercase} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Lowercase} \\
+%         \hline
+%         \hline
+%         MLP  & $73.6$  & $94.6$  & $85.6$  & $86.6$ \\
+%         \hline
+%         SVM & $80.3$ & $96.3$ & $88.7$ & $88.8$ \\
+%         \hline
+%         CNN &  $85.6$ &  $97.7$ &  $93.0$ &  $93.5$ \\
+%         \hline
+%         Resnet50  & $83.8$  & $96.2$ &  $90.8$ & $93.6$ \\
+%         \hline
+%     \end{tabular}
+%     }
+%     \label{tab_exp_unexp_accuracy_results_thresh}
+% \end{table}
+
+% \begin{table}[H]
+%     \renewcommand{\arraystretch}{1.3}
+%     \centering
+%     \caption{Average explainability results for the winning vote on the full and various splits of the balanced EMNIST data sets with differing ML models using ten explainable and one unexplainable flow with a $0.05$ threshold.}
+%     \resizebox{\linewidth}{!}{%
+%     \begin{tabular}{|l|c|c|c|c|}
+%         \cline{2-5}
+%         \multicolumn{1}{c}{} & \multicolumn{4}{|c|}{Average Explainability (\%)} \\
+%         \hline
+%         \multicolumn{1}{|p{3cm}|}{\centering Model\\Type} & \multicolumn{1}{|p{3cm}|}{\centering Full \\ EMNIST} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Digits} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Uppercase} & \multicolumn{1}{|p{3cm}|}{\centering EMNIST\\Lowercase} \\
+%         \hline
+%         \hline
+%         MLP  & $46.9$  & $71.1$  & $57.7$  & $56.8$ \\
+%         \hline
+%         SVM & $69.5$ & $77.3$ & $71.3$ & $71.3$ \\
+%         \hline
+%         CNN &  $63.9$ &  $76.5$ &  $68.7$ &  $68.8$ \\
+%         \hline
+%         Resnet50  & $66.1$  & $63.4$ &  $77.7$ & $67.9$ \\
+%         \hline
+%     \end{tabular}
+%     }
+%     \label{tab_exp_unexp_explainability_results_thresh}
+% \end{table}
+
+
+\subsection{EMNIST Explainable Examples}
+
+This section depicts the explainability results using examples from the EMNIST
+balanced test set using only explainable properties.  EMNIST example one, which
+is labeled as an uppercase Q, is shown in Figure~\ref{fig:ex1}.  The sample is
+index 71 in the balanced EMNIST test set.  Table \ref{table:emnist_example1_ex}
+shows that votes for classes Q, G, and W were made by various properties.  Nine
+of the properties contributed a vote for Q and one property each voted on the
+other classes.  Summing the effectiveness weights for the classes, Q wins with a
+confidence of 92.4\%.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=2cm, alt={An EMNIST character labeled as an uppercase Q}]{./images/examples/test-Q-3.png}
+    \caption{EMNIST example one, a test sample labeled Q.}
+    \label{fig:ex1}
+\end{figure}
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Explainability matrix for EMNIST example one.}\label{table:emnist_example1_ex}
+    \centering
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{| c | c | c | c | c | c || c | c | c |}
+    \cline{4-9}
+    \multicolumn{3}{c}{} & \multicolumn{3}{|c||}{Effectiveness} & \multicolumn{3}{c|}{Explainability} \\
+    \hline
+    $F_j$ & Property & Vote & $E(j,G)$ & $E(j,Q)$ & $Ex(W)$ & $Ex(G)$ & $Ex(Q)$ & $Ex(W)$ \\
+    \hline
+    \hline
+    $F_0$ & Stroke & Q &  & $0.973$ &  &  & 1.0 &  \\ 
+    \hline
+    $F_1$ & Circle & Q &  & $0.128$ &  &  & $1.0$ &    \\
+    \hline
+    $F_2$ & Crossing & Q &  & $0.327$ &  &  & $1.0$ &   \\
+    \hline
+    $F_3$ & Ellipse & G & $0.168$ &  &  & $1.0$ &  &   \\
+    \hline
+    $F_4$ & Ell-Cir & W &  &  & $0.250$ &  &  & $1.0$  \\
+    \hline
+    $F_5$ & Endpoint & Q &  & $0.596$ &  &  & $1.0$ &   \\
+    \hline
+    $F_6$ & Encl. Reg. & Q &  & $0.888$ &  &  &$1.0$ &   \\
+    \hline
+    $F_7$ & Line & Q &  & $0.271$ &  &  & $1.0$ &    \\
+    \hline
+    $F_8$ & Convex Hull & Q &  & $0.670$ &  &  & $1.0$ &   \\
+    \hline
+    $F_9$ & Corner & Q &  & $0.257$ &  &  &  $1.0$ &   \\
+    \hline
+    $F_{10}$ & No Property & Q &  & $0.992$ &  &  & $0.0$ &  \\
+    \hline
+    \hline
+    \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $0.168$ & $5.102$ & $0.250$ & $0.167$ & $4.111$ & $0.250$ \\
+    \cline{0-8}
+    \multicolumn{3}{|c|}{Confidence/Explainability} & $3.03\%$ & $92.4\%$ & $4.52\%$ & $100\%$ & $80.6\%$ & $100\%$ \\
+    \cline{0-8}
+    \end{tabular}%
+    }
+\end{table}
+
+Explainable rationale provided by XAI is depicted in
+Table~\ref{table:emnist_example1_explanation} for the three classes that received
+votes from the NNs.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \captionof{table}{Explanation for EMNIST Example one} \label{table:emnist_example1_explanation}
+    %\centering
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
+    \hline
+     Class & Confidence & Explainability & Explainable Description \\
+    \hline \hline
+    Q & $92.4\%$ & $80.6\%$ & Confidence is high for interpreting this character as a Q due to the stroke, enclosed region, convex hull, endpoint, crossing, line, corner, and circle properties. \\ 
+    \hline
+    W & $4.52\%$ & $100\%$ & Confidence is low for interpreting this character as a W due to the ellipse-circle property. \\
+    \hline
+    G & $3.03\%$ & $100\%$ & Confidence is low for interpreting this character as a G due to the ellipse property. \\
+    \hline
+    \end{tabular}
+    %}
+\end{table}
+
+Figure \ref{fig:ex2} shows example two, index 30 from the EMNIST balanced test
+set, which is labeled as an uppercase C. Votes by the properties in the
+explainability matrix shown in Table \ref{table:emnist_example2_ex} that eight
+properties, including the unexplainable property, infer an uppercase C. The
+overall weighted effectiveness for the class C is $3.801$ giving it a confidence
+of $93.6\%$. The uppercase X receives a vote from the enclosed region property.
+Uppercase T receives a vote from the ellipse property. An uppercase U receives a
+vote from the line property.  Because effectiveness of the solitary opinions are
+very low in comparison, C wins with $93.6\%$ confidence.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=2cm, alt={An EMNIST character labeled as an uppercase C}]{./images/examples/test-C-1.png}
+    \caption{EMNIST example two, a test sample labeled C}
+    \label{fig:ex2}
+\end{figure}
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Explainability matrix for EMNIST example two.}\label{table:emnist_example2_ex}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{| c | c | c | c | c | c | c || c | c | c | c |}
+    \cline{4-11}
+    \multicolumn{3}{c}{} & \multicolumn{4}{|c||}{Effectiveness} & \multicolumn{4}{c|}{Explainability} \\
+    \hline
+    $F_j$ & Property & Vote & $E(j,C)$ & $E(j,T)$ & $E(j,U)$ & $E(j,X)$ & $Ex(C)$ & $Ex(T)$ & $Ex(U)$ & $Ex(X)$ \\
+    \hline
+    \hline
+    $F_0$ & Stroke & C & $0.964$ &  &  &  & $1.0$ & & & \\ 
+    \hline
+    $F_1$ & Circle & C & $0.114$ &  &  &  & $1.0$ & & & \\
+    \hline
+    $F_2$ & Crossing & C & $0.056$ &  &  &  & $1.0$ & & &  \\
+    \hline
+    $F_3$ & Ellipse & T &  & $0.009$ &  &  &  & $1.0$ & & \\
+    \hline
+    $F_4$ & Ell-Cir & C & $0.131$ &  &  &  & $1.0$ & & & \\
+    \hline
+    $F_5$ & Endpoint & C & $0.574$ &  &  &  & $1.0$ & & &  \\
+    \hline
+    $F_6$ & Encl. Reg. & X &  &  &  & $0.005$ &  & & & $1.0$  \\
+    \hline
+    $F_7$ & Line & U &  &  & $0.244$ &  &  &  & $1.0$ & \\
+    \hline
+    $F_8$ & Convex Hull & C & $0.603$ &  &  &  & $1.0$ & & & \\
+    \hline
+    $F_9$ & Corner & C & $0.369$ &  &  &  & $1.0$ & & &  \\
+    \hline
+    $F_{10}$ & No Property & C & $0.989$ &  &  &  & $0.0$ & & &  \\
+    \hline
+    \hline
+    \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $3.801$ & $0.009$ & $0.244$ & $0.005$ & $2.812$ & $0.009$ & $0.244$ & $0.005$ \\
+    \cline{0-10}
+    \multicolumn{3}{|c|}{Confidence/Explainability} & $93.6\%$ & $0.02\%$ & $6.02\%$ & $0.01\%$ & $74.0\%$ & $100\%$ & $100\%$ & $100\%$ \\
+    \cline{0-10}
+    \end{tabular}%
+    }
+    \label{table:example2}
+\end{table}
+
+Table \ref{table:emnist_example2_explanation} shows the explanation for Example 2.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \captionof{table}{Explanation for EMNIST Example two} \label{table:emnist_example2_explanation}
+    %\centering
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
+    \hline
+     Class & Confidence & Explainability & Explainable Description \\
+    \hline \hline
+    C & $93.6\%$ & $74.0\%$ & Confidence is high for interpreting this character as a C due to the stroke, convex hull, endpoint, corner, ellipse-circle, circle, and crossing properties. \\ 
+    \hline
+    U & $6.02\%$ & $100\%$ & Confidence is low for interpreting this character as a U due to the line property. \\
+    \hline
+    T & $0.02\%$ & $100\%$ & Confidence is low for interpreting this character as a T due to the ellipse property. \\
+    \hline
+    X & $0.01\%$ & $100\%$ & Confidence is low for interpreting this character as an X due to the enclosed region property. \\ 
+    \hline
+    \end{tabular}
+    %}
+\end{table}
+
+The vote for an uppercase X, by the enclosed region, is unexpected as there
+should be no resulting enclosed pixels in the transformed C, i.e., a flood fill,
+which is the transform associated with the enclosed region, should result in no
+pixels in the output image since a C has no enclosed region. A review of the
+resulting transform shows that this is indeed the case.  Test results show that
+samples from several classes, such as Y and L, that would not have pixels in a
+flood fill, get Z votes from the enclosed region property.  This suggests that a
+future improvement in the system could be to discount results from transforms
+void of any activated pixels, especially when the transform has several classes
+that generate empty images.  Improvements could also be accomplished using
+knowledge of the explainable properties associated and not associated with each
+class.
+
+
+\subsection{Effectiveness Metrics}
+
+This section presents another explainable example form EMNIST in the context of
+differing effectiveness metrics.  The example illustrates the confidence,
+rationale, and explainability with three effectiveness metrics. Data from the
+system using accuracy, recall, and $E_{PARS}$, will be presented to demonstrate
+how the explainable system benefits from more robust and resilient effectiveness
+metrics.
+
+Recall that effectiveness characterizes the performance of an inference engine
+to predict a particular class and is used in the decision-making process to
+select among the classes suggested. Even though the training and testing
+datasets used are balanced, with respect to elements in each class, taking the
+effectiveness by class results in comparing one class to all others. For
+example, in the case of MNIST with ten balanced digit classes, the results of
+one versus others for effectiveness has the others group with nine times the
+number of elements of the single class.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=2cm, alt={An EMNIST character labeled as an uppercase S}]{./images/emnist/test/18_28_0.png}
+    \caption{EMNIST example three, a test sample labeled the uppercase letter S.}
+    \label{fig:ex4}
+\end{figure}
+
+Figure~\ref{fig:ex4} depicts EMNIST example three from the balanced test set,
+(index 18) labeled as an uppercase S. The explainable architecture used for the
+example is composed of eleven PDFs with SVM IEs. The entire EMNIST balanced
+dataset with digits, uppercase and lowercase characters was used for training
+rather than the splits previously observed.
+
+The results of processing the example using the accuracy metric are
+depicted in Tables \ref{table:example4a} and \ref{table:exexample4a}, the recall
+metric results are in Tables \ref{table:example4r} and \ref{table:exexample4r},
+and the results of using the $E_{PARS}$ metric are in Tables
+\ref{table:example4epars} and \ref{table:exexample4epars}.  Table
+\ref{table:example4eff_metrics} illustrates the metric particulars for the PDFs
+in the example in one place.
+
+It is important to note that four classes () were voted on by the flows for EMNIST
+example three.  Each PDF's vote and explainability metric is the same across the
+various tables. Only the effectiveness varies as we change the metric from
+accuracy, to recall, and finally to $E_{PARS}$.
+
+%accuracy
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \captionof{table}{Explainability Matrix for EMNIST example three based on the Accuracy metric.}\label{table:example4a}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{| c | c | c | c | c | c | c || c | c | c | c |}
+    \cline{4-11}
+    \multicolumn{3}{c}{} & \multicolumn{4}{|c||}{PDF Effectiveness} & \multicolumn{4}{c|}{PDF Explainability} \\
+    \hline
+    $F_j$ & Property & Class Vote & $E(j,1)$ & $E(j,E)$ & $E(j,S)$ & $E(j,n)$ & $Ex(1)$ & $Ex(E)$ & $Ex(S)$ & $Ex(n)$ \\
+    \hline
+    \hline
+    $F_1$ & Stroke & S &  &  & $0.996$ &  &  &  & $1.0$ & \\ 
+    \hline
+    $F_2$ & Circle & 1 & $0.842$ &  &  &  & $1.0$ &  &  & \\
+    \hline
+    $F_3$ & Crossing & 1 &  $0.735$ &  &  &  & $1.0$ &  &  & \\
+    \hline
+    $F_4$ & Ellipse & n &  &  &  & $0.977$ &  &  &  & $1.0$ \\
+    \hline
+    $F_5$ & Ell-Cir & 1 & $0.844$ &  &  &  & $1.0$ &  &  & \\
+    \hline
+    $F_6$ & Endpoint & S &  &  & $0.978$ &  &  &  & $1.0$ & \\
+    \hline
+    $F_7$ & Encl. Reg. & 1 & $0.362$ &  &  &  & $1.0$ &  &  & \\
+    \hline
+    $F_8$ & Line & S &  &  & $0.979$ &  &  &  & $1.0$ & \\
+    \hline
+    $F_9$& Convex Hull & E &  & $0.977$ &  &  &  & $1.0$ &  &  \\
+    \hline
+    $F_{10}$& Corner & S &  &  & $0.979$ &  &  &  & $1.0$ & \\
+    \hline
+    $F_{11}$& No Property & S &  &  & $0.996$ &  &  &  & $0.0$ & \\
+    \hline
+    \hline
+    \multicolumn{3}{|c|}{Weights} & $2.783$ & $0.977$ & $4.928$ & $0.977$ & $2.783$ & $0.977$  & $3.932$ & $0.977$ \\
+    \cline{0-10}
+    \multicolumn{3}{|c|}{Confidence / Explainability} & $28.8\%$ & $10.1\%$ & $51.0\%$ & $10.1\%$ & $100\%$ & $100\%$ & $79.8\%$ & $100\%$ \\
+    \cline{0-10}
+    \end{tabular}
+    }
+\end{table}
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \captionof{table}{Explanation for EMNIST example three based on the Accuracy metric.} \label{table:exexample4a}
+    %\centering
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
+        \hline
+        Class & Confidence & Explainability & Explainable Description \\
+        \hline \hline
+        S & $51.0\%$ & $79.8\%$ & Confidence is medium for interpreting this character as an S due to the stroke, corner, endpoint, and line properties. \\ 
+        \hline
+        1 & $28.8\%$ & $100\%$ & Confidence is medium for interpreting this character as a one due to the enclosed region, circle, ellipse-circle, and crossing properties. \\
+        \hline
+        n & $10.1\%$ & $100\%$ & Confidence is low for interpreting this character as an n due to the ellipse property. \\
+        \hline
+        E & $10.1\%$ & $100\%$ & Confidence is low for interpreting this character as an E due to the convex hull property. \\
+       \hline
+    \end{tabular}
+    %}
+\end{table}
+
+When examining the Explainability data from Tables \ref{table:example4r},
+\ref{table:example4a}, and \ref{table:example4epars}, each flow identifier,
+$F_j$, is in the first column where $j$ denotes the flow number.  The second
+column indicates the property name. Flow $F_{11}$ is labeled as no property
+because it represents an unexplainable flow, without an explainable property.
+The Class Vote column indicates the class that was selected by each flow.
+
+The remaining columns are related to effectiveness and explainability.  Since
+four classes were voted on in this example, there will be four columns each for
+effectiveness and explainability, representing each class with a vote. The
+columns labeled $E(j,c)$, represent the effectiveness of the flows for each
+class, $c$, that were voted upon. The columns labeled $Ex(c)$ represent the
+explainability metric for each flow, $j$, and class, $c$, the flow voted for.
+Only the column representing the class that a flow voted for will have a value
+in the table for effectiveness and explainability.  The last two rows of the
+Explainability tables represent the weights, of effectiveness and
+explainability, as well as the Confidence, $Conf(c)$, and Explainability,
+$Ex(c)$, for each class, $c$, and flows suggesting that class.
+
+Ordered explanation results are represented in Tables \ref{table:exexample4r},
+\ref{table:exexample4a}, and \ref{table:exexample4epars}.  The first column
+indicates the class, $d$. The second column the Confidence.  The third column
+represents the explainability associated with the decision. The final column is
+the rationale provided to the user.
+
+\begin{table}[H]
+        \renewcommand{\arraystretch}{1.3}
+        \captionof{table}{Explainability matrix for EMNIST example three based on the Recall metric.}\label{table:example4r}
+        \centering
+        \resizebox{\textwidth}{!}{%
+        \begin{tabular}{| c | c | c | c | c | c | c || c | c | c | c |}
+        \cline{4-11}
+        \multicolumn{3}{c}{} & \multicolumn{4}{|c||}{PDF Effectiveness} & \multicolumn{4}{c|}{PDF Explainability} \\
+        \hline
+        $F_j$ & Property & Class Vote & $E(j,1)$ & $E(j,E)$ & $E(j,S)$ & $E(j,n)$ & $Ex(1)$ & $Ex(E)$ & $Ex(S)$ & $Ex(n)$ \\
+        \hline
+        \hline
+        $F_1$ & Stroke & S &  &  & $0.923$ &  &  &  & $1.0$ & \\ 
+        \hline
+        $F_2$ & Circle & 1 & $0.995$ &  &  &  & $1.0$ &  &  & \\
+        \hline
+        $F_3$ & Crossing & 1 & $0.985$ &  &  &  & $1.0$ &  &  & \\
+        \hline
+        $F_4$ & Ellipse & n &  &  &  & $0.108$ &  &  &  & $1.0$ \\
+        \hline
+        $F_5$ & Ell-Cir & 1 & $0.995$ &  &  &  & $1.0$ &  &  & \\
+        \hline
+        $F_6$ & Endpoint & S &  &  & $0.496$ &  &  &  & $1.0$ & \\
+        \hline
+        $F_7$ & Encl. Reg. & 1 & $0.999$ &  &  &  & $1.0$ &  &  & \\
+        \hline
+        $F_8$ & Line & S &  &  & $0.495$ &  &  &  & $1.0$ & \\
+        \hline
+        $F_9$& Convex Hull & E &  & $0.260$ &  &  &  & $1.0$ &  &  \\
+        \hline
+        $F_{10}$& Corner & S &  &  & $0.509$ &  &  &  & $1.0$ & \\
+        \hline
+        $F_{11}$& No Property & S &  &  & $0.924$ &  &  &  & $0.0$ & \\
+        \hline
+        \hline
+        \multicolumn{3}{|c|}{Weights} & $3.974$ & $0.260$ & $3.347$ & $0.108$ & $3.974$ & $0.260$  & $2.423$ & $0.1078$ \\
+        \cline{0-10}
+        \multicolumn{3}{|c|}{Confidence / Explainability} & $51.7\%$ & $3.39\%$ & $43.5\%$ & $1.40\%$ & $100\%$ & $100\%$ & $72.4\%$ & $100\%$ \\
+        \cline{0-10}
+        \end{tabular}
+        }
+\end{table}
+    
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \captionof{table}{Explanation for EMNIST example three based on the Recall metric.} \label{table:exexample4r}
+    %\centering
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
+        \hline
+         Class & Confidence & Explainability & Explainable Description \\
+        \hline \hline
+        1 & $51.7\%$ & $100\%$ & Confidence is medium for interpreting this character as a one due to the enclosed region, circle, ellipse-circle, and crossing properties. \\ 
+        \hline
+        S & $43.5\%$ & $72.4\%$ & Confidence is medium for interpreting this character as an S due to the stroke, corner, endpoint, and line properties. \\
+        \hline
+        E & $3.39\%$ & $100\%$ & Confidence is low for interpreting this character as an E due to the convex hull property. \\
+        \hline
+        n & $1.40\%$ & $100\%$ & Confidence is low for interpreting this character as an n due to the ellipse property. \\
+        \hline
+    \end{tabular}
+        %}
+\end{table}
+
+Observe in Tables \ref{table:example4r} and \ref{table:exexample4r} that the
+four PDFs that voted for class one had high Recall, reflected in the
+Effectiveness column $E(j,1)$ of Table \ref{table:example4r}.  This resulted in
+the digit one winning with medium confidence, $51.7\%$, due to the enclosed
+region, circle, ellipse-circle, and crossing properties.  The second choice was
+the \lq{S}\rq~with medium confidence, $43.5\%$. Since Recall in
+\eqref{eq:recall} has $TP$ in the numerator, high $TP$ and very low $FN$ counts
+of the PDFs that voted for the digit one observed in Table
+\ref{table:example4eff_metrics} explains why the digit one wins using the Recall
+metric.
+
+Tables \ref{table:example4a} and \ref{table:exexample4a} contain data and
+results from using the Accuracy metric on the example.  Accuracy is given in
+\eqref{eq:accuracy}.  Due to the comparatively high $TN$ rate of the PDFs that
+voted for the \lq{S}\rq, as shown in bold in Table
+\ref{table:example4eff_metrics} it wins with medium confidence, $51.0\%$, due to
+the stroke, corner, endpoint, and line properties. The \lq{S}\rq~also received a
+vote from the unexplainable PDF.  The lower explainability metric, at $79.8\%$,
+reflects diminished explainability due to no explainable property associated
+with part ($20.2\%$) of the contribution for the decision.
+
+% product
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \captionof{table}{Explainability Matrix for EMNIST example three based on the $E_{PARS}$ metric.}\label{table:example4epars}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{| c | c | c | c | c | c | c || c | c | c | c |}
+    \cline{4-11}
+    \multicolumn{3}{c}{} & \multicolumn{4}{|c||}{PDF Effectiveness} & \multicolumn{4}{c|}{PDF Explainability} \\
+    \hline
+    $F_j$ & Property & Class Vote & $E(j,1)$ & $E(j,E)$ & $E(j,S)$ & $E(j,n)$ & $Ex(1)$ & $Ex(E)$ & $Ex(S)$ & $Ex(n)$ \\
+    \hline
+    \hline
+    $F_1$ & Stroke & S &  &  & $0.834$ &  &  &  & $1.0$ & \\ 
+    \hline
+    $F_2$ & Circle & 1 & $0.083$ &  &  &  & $1.0$ &  &  & \\
+    \hline
+    $F_3$ & Crossing & 1 & $0.039$ &  &  &  & $1.0$ &  &  & \\
+    \hline
+    $F_4$ & Ellipse & n &  &  &  & $0.041$ &  &  &  & $1.0$ \\
+    \hline
+    $F_5$ & Ell-Cir & 1 & $0.085$ &  &  &  & $1.0$ &  &  & \\
+    \hline
+    $F_6$ & Endpoint & S &  &  & $0.227$ &  &  &  & $1.0$ & \\
+    \hline
+    $F_7$ & Encl. Reg. & 1 & $0.004$ &  &  &  & $1.0$ &  &  & \\
+    \hline
+    $F_8$ & Line & S &  &  & $0.240$ &  &  &  & $1.0$ & \\
+    \hline
+    $F_9$& Convex Hull & E &  & $0.107$ &  &  &  & $1.0$ &  &  \\
+    \hline
+    $F_{10}$& Corner & S &  &  & $0.251$ &  &  &  & $1.0$ & \\
+    \hline
+    $F_{11}$& No Property & S &  &  & $0.839$ &  &  &  & $0.0$ & \\
+    \hline
+    \hline
+    \multicolumn{3}{|c|}{Weights} & $0.211$ & $0.107$ & $2.391$ & $0.041$ & $0.2106$ & $0.107$  & $1.552$ & $0.041$ \\
+    \cline{0-10}
+    \multicolumn{3}{|c|}{Confidence  / Explainability} & $7.66\%$ & $3.88\%$ & $86.9\%$ & $1.48\%$ & $100\%$ & $100\%$ & $64.9\%$ & $100\%$ \\
+    \cline{0-10}
+    \end{tabular}
+    }
+\end{table}
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \captionof{table}{Explanations for EMNIST example three based on the $E_{PARS}$ metric.} \label{table:exexample4epars}
+    %\centering
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
+    \hline
+     Class & Confidence & Explainability & Explainable Description \\
+    \hline \hline
+    S\rq & $86.9\%$ & $64.9\%$ & Confidence is high for interpreting this character as an S due to the stroke, corner, endpoint, and line properties. \\ 
+    \hline
+    1 & $7.66\%$ & $100\%$ & Confidence is low for interpreting this character as a one due to the enclosed region, circle, ellipse-circle, and crossing properties. \\
+    \hline
+    E & $3.88\%$ & $100\%$ & Confidence is low for interpreting this character as an E due to the convex hull property. \\
+    \hline
+    n & $1.40\%$ & $100\%$ & Confidence is low for interpreting this character as an n due to the ellipse property. \\
+    \hline
+    \end{tabular}
+    %}
+\end{table}   
+
+Table~\ref{tab:mnist_emnist_eff_metrics} depicts the MNIST and EMNIST overall
+accuracy percentage results obtained with MLP and SVM using various per-class
+effectiveness metrics in ranking and selecting a global decision. MLPs and SVMs
+performed comparably on MNIST and the SVMs performed a few percentage points
+better on EMNIST.  SVMs also appeared to be more forgiving when used with lower
+performing effectiveness metrics. 
+
+Accuracy reflected in the tables is an appropriate overall measure of
+performance of the system since the classes are balanced and the metric is being
+taken on the entire architecture. The Explainable result (E) columns indicate
+the overall system accuracy for ten explainable flows while the combined
+Explainable and Unexplainable result (E+U) columns indicate the overall
+accuracy using ten explainable and one unexplainable flow.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Comparison of an explainable system's overall performance (\% accuracy) using various effectiveness metrics.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{| l | c | c || c | c || c | c || c | c |}
+        \cline{2-9}
+        \multicolumn{1}{l}{} & \multicolumn{4}{| c ||}{MNIST} & \multicolumn{4}{ c |}{EMNIST} \\
+        \cline{2-9}
+        \multicolumn{1}{l}{} & \multicolumn{2}{| c ||}{MLP} & \multicolumn{2}{ c ||}{SVM} & \multicolumn{2}{ c ||}{MLP} & \multicolumn{2}{ c |}{SVM} \\
+        \hline
+        Effectiveness Metric & $E$ & $E+U$ & $E$ & $E+U$ & $E$ & $E+U$ & $E$ & $E+U$ \\
+        \hline
+        \hline
+        $E_{PARS}$ & 95.5 & 97.6 & 95.4 & 97.3 & 71.7 & 77.4 & 75.9 & 81.0 \\ \hline
+        $P \cdot R \cdot S$ & 95.2 & 97.4 & 95.1 & 97.1 & 71.7 & 77.3 & 75.9 & 81.0 \\ \hline
+        $P \cdot R$ & 94.3 & 97.2 & 94.8 & 97.0 & 71.1 & 76.8 & 75.9 & 81.0 \\ \hline
+        $P \cdot S$ & 95.0 & 97.3 & 94.4 & 96.8 & 70.4 & 76.9 & 74.7 & 80.8 \\ \hline
+        Precision ($P$) & 94.4 & 97.0 & 94.2 & 96.7 & 70.4 & 76.8 & 74.7 & 80.8 \\ \hline
+        Cohen's Kappa & 94.1 & 96.9 & 94.2 & 96.7 & 71.5 & 77.5 & 74.4 & 80.6 \\ \hline
+        $MCC$ & 92.6 & 96.2 & 93.8 & 96.5 & 69.7 & 75.5 & 73.9 & 80.4 \\ \hline
+        F1-Score & 91.9 & 95.9 & 93.5 & 96.4 & 70.6 & 76.7 & 74.2 & 80.5 \\ \hline
+        $S \cdot R$ & 85.6 & 93.1 & 92.0 & 95.7 & 37.0 & 55.3 & 67.1 & 76.9 \\ \hline
+        Specificity ($S$) & 88.1 & 93.7 & 92.0 & 95.1 & 49.2 & 61.5 & 68.5 & 76.9 \\ \hline
+        Accuracy (ACC) & 85.6 & 92.6 & 92.0 & 95.1 & 47.7 & 60.0 & 68.0 & 76.3 \\ \hline
+        AUC & 67.5 & 77.7 & 89.8 & 94.1 & 5.62 & 8.49 & 63.4 & 73.1 \\ \hline
+        Balanced Accuracy & 75.0 & 85.4 & 89.7 & 94.2 & 8.46 & 16.4 & 63.1 & 72.9 \\ \hline
+        Recall ($R$) & 52.4 & 68.0 & 85.1 & 91.7 & 2.53 & 3.35 & 50.5 & 63.7 \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab:mnist_emnist_eff_metrics}
+\end{table}
+
+Adding an accurate, but unexplainable, classifier to the system improves
+performance. This is illustrated in Table \ref{tab:mnist_emnist_eff_metrics}
+where combined results (E+U) are greater than the strictly explainable ($E$)
+results. A marked improvement in accuracy was shown by moving to combined
+explainable and unexplainable flows.
+
+The combined (E+U) results were greater than explainable (E) in all cases.
+In the MNIST example using Recall as Effectiveness, the increase using MLP flows
+was over 15\%.  Typical increases with combined flows ranged from two to ten
+percentage points better than strictly explainable flows.
+
+Some of the performance metrics from the literature, especially those that are
+resilient to imbalanced data such as Cohen's Kappa, provide outstanding results
+as a measure of effectiveness in the explainable architecture. Surprisingly,
+Precision alone as well as the product of Precision and other metrics perform
+among the highest of those attempted. The best-performing metric found is given
+in \eqref{eq:epars} as $E_{PARS}$, the product of Precision, Accuracy, Recall,
+and Specificity.  The previously reported accuracy observed, using the
+explainable architecture, on MNIST with MLPs was about 92\% using Recall as
+Effectiveness and probability estimates. Employing $E_{PARS}$ as effectiveness
+and without using probability estimates, accuracy was observed at about 95.5\%,
+an improvement of over 3\%. When probability estimates are used with $E_{PARS}$
+as effectiveness, accuracy was increased to 96.1\%.  Adding an unexplainable
+component to the system and using probability estimates increased accuracy
+results to as high as 98.0\%. 
+
+Observing the numerator in \eqref{eq:epars_expansion}, $E_{PARS}$
+performs well because $TP$ to $TN$ balance is maintained since $TP^3$
+($\approx2.2\text{x}10^{11}$ for MNIST and $\approx1.4\text{x}10^{10}$ for
+EMNIST) and $TN^2$ ($\approx2.7\text{x}10^9$ for MNIST and
+$\approx1.2\text{x}10^{10}$ for EMNIST).  A larger dataset with more classes may
+not result in similar performance.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \captionof{table}{Ex.~2 Effectiveness Metrics (\%) based on Votes}\label{table:example4eff_metrics} 
+    \centering
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{| c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
+    \hline
+    Property & Class & TP & TN & FP & FN & R & ACC & $E_{PARS}$ \\
+    \hline
+    \hline
+    Encl. Reg. & 1 & 2.13 & 34.0 & 63.8 & 0.0 & 99.9 & 36.2 & 0.40 \\ 
+    \hline
+    Circle & 1 & 2.12 & 82.1 & 15.8 & 0.0 & 99.5 & 84.2 &  8.29 \\
+    \hline
+    Ell-Cir & 1 & 2.12 & 82.3 & 15.5 & 0.0 & 99.5 & 84.4 & 8.47 \\
+    \hline
+    Crossing & 1 & 2.01 & 71.5 & 26.4 & 0.0 & 98.5 & 73.5 & 3.88 \\
+    \hline
+    Convex Hull & E & 0.55 & 97.1 & 0.76 & 1.57 & 26.0 & 97.7 & 10.7 \\
+    \hline
+    No Property & S & 1.97 & \bf{97.7} & 0.19 & 0.16 & 92.4 & 99.6 & 83.9 \\
+    \hline
+    Stroke & S & 1.96 & \bf{97.7} & 0.20 & 0.16 & 92.3 & 99.6 & 83.4 \\
+    \hline
+    Corner & S & 1.08 & \bf{96.8} & 1.04 & 1.05 & 50.9 & 97.9 & 25.1 \\
+    \hline
+    Endpoint & S & 1.06 & \bf{96.7} & 0.20 & 0.20 & 49.6 & 97.8 & 22.7 \\
+    \hline
+    Line & S & 1.05 & 96.8 & 1.05 & 1.07 & 49.5 & 97.9 & 24.0 \\
+    \hline
+    Ellipse & n & 0.23 & 97.5 & 0.36 & 1.90 & 10.8 & 97.7 & 4.07 \\
+    \hline
+    \end{tabular}
+    %}
+\end{table}
+
+The final set of Explainability and Explanations Tables,
+\ref{table:example4epars} and \ref{table:exexample4epars}, involve the
+$E_{PARS}$ metric. The stroke and unexplainable flows have a much higher
+effectiveness than other metrics.  High effectiveness from the Accuracy
+metric for the flows voting for the digit one were due to insensitivity of
+Accuracy to $FP$s.  The same flows voting for the digit one have a reduced
+effectiveness due to relative sensitivity of $E_{PARS}$ to $FP$ counts, as
+observed in Table \ref{table:example4eff_metrics}.  The capital \lq{S}\rq~
+correctly wins with high confidence, $86.9\%$, using $E_{PARS}$.
+
+
+\subsection{Pruning Mislabeled EMNIST Data}
+
+Table~\ref{tab:raw_cap_confusion_matrix} shows the confusion matrix for interesting
+uppercase letters after running though the explainable architecture. There is
+significant confusion with the I and L classes and a fair degree of confusion
+with the U and V classes.
+
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[width=10cm]{./images/confusion_matrix_vlsid.png}
+%    \caption{Confusion matrix using convex hull}
+%    \label{fig:conf_matrix}
+%\end{figure}
+
+% \begin{table}[H]
+%     \renewcommand{\arraystretch}{1.3}
+%     \centering
+%     \caption{Explainable confusion matrix for unpruned uppercase letters H - M, U, and V.  TODO: this needs to be formatted like other confusion matrices}
+%     %\resizebox{\columnwidth}{!}{%
+%     \begin{tabular}{ |c|c|c|c|c|c|c|c|c|}
+%     \hline
+%      & H & I & J & K & L & M & U & V \\
+%     \hline
+%     H & 374 &  & 1 & 3 &  & 11 & 1 & 1 \\
+%     \hline
+%     I &  & 275 & 2 & & 114 & & & \\
+%     \hline
+%     J &  & 11 & 376 & & 1 & & 2 & 6 \\
+%     \hline
+%     K &  &  &  & 392 & 1 & & & \\
+%     \hline
+%     L &  & 90 &  &  & 306 & & & \\
+%     \hline
+%     M &  &  &  &  &  & 399 & & 1 \\
+%     \hline
+%     U & 4 & 1 & & 1 & 9 & & 305 & 29 \\
+%     \hline
+%     V & & & 2 & & 2 & 2 & 9 & 326 \\
+%     \hline
+%     \end{tabular}
+%     %}
+%     \label{raw_cap_confusion_matrix}
+% \end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Explainable confusion matrix for select unpruned uppercase letters.}
+    \label{tab:raw_cap_confusion_matrix}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|c|c|c|c|c|c|c|c|}
+        \multicolumn{2}{c}{}& \multicolumn{8}{c}{Predicted}\\
+        & \multicolumn{1}{c}{} & \multicolumn{1}{c}{H} & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{J}
+        & \multicolumn{1}{c}{K} & \multicolumn{1}{c}{L} & \multicolumn{1}{c}{M} & \multicolumn{1}{c}{U}
+        & \multicolumn{1}{c}{V} \\
+        \cline{3-10}
+        \multirow{8}{*}{{\rotatebox[origin=c]{90}{Actual}
+        }} & 
+        H &     374 &  0   &  1   &  3  &  0  &  11  &  1  &  1  \\ \cline{3-10}
+        &   I &  0  &  275 &  2   &  0  &  114  &  0  &  0  & 0  \\ \cline{3-10}
+        &   J &  0  &  11  &  376 &  0  &  1  &  0  &  2  &  6   \\ \cline{3-10}
+        &   K &  0  &  0   &  0   & 392 &  1  &  0  &  0  &  0   \\ \cline{3-10}
+        &   L &  0  &  90  &  0   &  0  & 306 &  0  &  0  &  0   \\ \cline{3-10}
+        &   M &  0  &  0   &  0   &  0  &  0  & 399 &  0  &  1   \\ \cline{3-10}
+        &   U &  4  &  1   &  0   &  1  &  9  &  0  & 305 &  29  \\ \cline{3-10}
+        &   V &  0  &  0   &  2   &  0  &  2  &  2  &  9  &  326 \\ \cline{3-10}
+    \end{tabular}
+\end{table}
+
+
+After applying one round of Cleanlab to prune only training labels with issues,
+Table \ref{tab:raw_cap_cleanlab_confusion_matrix} indicates the same uppercase
+letters of interest. The confusion in the I class appears to have gotten better.
+L, U, and V classes appear to have gotten worse. Six of the eight classes of
+interest had decreases in correct classifications, the values along the
+diagonal.  Using CNNs in the explainable architecture, the overall results of
+one round of Cleanlab were an increase in accuracy to 87.4\% on uppercase
+letters from 82.9\% without pruning.
+
+% \begin{table}[H]
+%     \renewcommand{\arraystretch}{1.3}
+%     \centering
+%     \caption{Explainable confusion matrix for uppercase letters H - M, U, and V after a single Cleanlab pruning.  TODO this confusion matrix needs to be formatted like others}
+%     %\resizebox{\columnwidth}{!}{%
+%     \begin{tabular}{ |c|c|c|c|c|c|c|c|c|}
+%     \hline
+%     ~ & H & I & J & K & L & M & U & V \\
+%     \hline
+%     H & 368 & & 1 & 2 & & 7 & 1 & \\
+%     \hline
+%     I &  & 293 & 4 &  & 65 & 14 & & \\
+%     \hline
+%     J & & 17 & 339 & & 1 & 6 & 1 & 2 \\
+%     \hline
+%     K & 5 &  &  & 349 & 2 & 20 &  & \\
+%     \hline
+%     L & 0 & 120 &  & 1 & 236 & 2 & & \\
+%     \hline
+%     M & 4 & & & 3 & & 383 & & \\
+%     \hline
+%     U & 2 & & 1 & 1 & & 22 & 304 & 17 \\
+%     \hline
+%     V & & & 3 & 1 & & 21 & 13 & 315 \\
+%     \hline
+%     \end{tabular}
+%     %}
+%     \label{raw_cap_cleanlab_confusion_matrix}
+% \end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Explainable confusion matrix for select uppercase letters after a single round of Cleanlab pruning.}
+    \label{tab:raw_cap_cleanlab_confusion_matrix}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|c|c|c|c|c|c|c|c|}
+        \multicolumn{2}{c}{}& \multicolumn{8}{c}{Predicted}\\
+        & \multicolumn{1}{c}{} & \multicolumn{1}{c}{H} & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{J}
+        & \multicolumn{1}{c}{K} & \multicolumn{1}{c}{L} & \multicolumn{1}{c}{M} & \multicolumn{1}{c}{U}
+        & \multicolumn{1}{c}{V} \\
+        \cline{3-10}
+        \multirow{8}{*}{{\rotatebox[origin=c]{90}{Actual}
+        }} & 
+        H &     368 &  0   &  1   &  2  &  0  &  7  &  1  &  0  \\ \cline{3-10}
+        &   I &  0  &  293 &  4   &  0  & 65 &  14  &  0  &  0  \\ \cline{3-10}
+        &   J &  0  &  17  & 339  &  0  & 1  &  6  &  1  &  2   \\ \cline{3-10}
+        &   K &  5  &  0   &  0   & 349 &  2  &  20  &  0  &  0   \\ \cline{3-10}
+        &   L &  0  &  120 &  0   &  1  & 236 &  2  &  0  &  0   \\ \cline{3-10}
+        &   M &  4  &  0   &  0   &  3  &  0  & 383 &  0  &  0   \\ \cline{3-10}
+        &   U &  2  &  0   &  1   &  1  &  0  &  22  & 304 &  17  \\ \cline{3-10}
+        &   V &  0  &  0   &  3   &  1  &  0  &  21  &  13  &  315 \\ \cline{3-10}
+    \end{tabular}
+\end{table}
+
+
+After applying subsequent rounds of Cleanlab to the capital letter dataset, the
+accuracy achieved was 86.6\% after the second and 88.7\% after the third
+iteration of pruning. Table \ref{tab:raw_cap_cleanlab_third_confusion_matrix} again
+shows the confusion matrix for the classes of interest after the third Cleanlab
+pruning.
+
+The best pruning results were achieved performing the 5\% pruning with a penalty
+for incorrect labels.  The results on this pruned set were about 89.2\% accuracy
+on uppercase letters versus 82.9\% on unpruned test data using CNN in the
+explainable architecture.  
+
+% \begin{table}[H]
+%     \renewcommand{\arraystretch}{1.3}
+%     \centering
+%     \caption{Explainable confusion matrix for uppercase letters H - M, U, and V after three rounds of Cleanlab pruning}
+%     %\resizebox{\columnwidth}{!}{%
+%     \begin{tabular}{ |c|c|c|c|c|c|c|c|c|}
+%     \hline
+%     ~ & H & I & J & K & L & M & U & V \\
+%     \hline
+%     H & 357 & &  & 8 & & 2 & 1 & 1 \\
+%     \hline
+%     I &  & 254 & 3 & 3 & 101 & 1 & & \\
+%     \hline
+%     J & & 19 & 298 & 1 & 16 & & 2 & 6 \\
+%     \hline
+%     K & 3 &  &  & 352 & 2 & 2 & 0 & \\
+%     \hline
+%     L & 0 & 90 & 1 & 1 & 277 & & & \\
+%     \hline
+%     M & & & & 3 & & 378 & & 1 \\
+%     \hline
+%     U & 1 & & 1 & 9 & & 1 & 305 & 29 \\
+%     \hline
+%     V & & 2 & & 2 & 2 & 1 & 9 & 326 \\
+%     \hline
+%     \end{tabular}
+%     %}
+%     \label{raw_cap_cleanlab_third_confusion_matrix}
+% \end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Explainable confusion matrix for select uppercase letters after three rounds of Cleanlab pruning.}
+    \label{tab:raw_cap_cleanlab_third_confusion_matrix}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|c|c|c|c|c|c|c|c|}
+        \multicolumn{2}{c}{}& \multicolumn{8}{c}{Predicted}\\
+        & \multicolumn{1}{c}{} & \multicolumn{1}{c}{H} & \multicolumn{1}{c}{I} & \multicolumn{1}{c}{J}
+        & \multicolumn{1}{c}{K} & \multicolumn{1}{c}{L} & \multicolumn{1}{c}{M} & \multicolumn{1}{c}{U}
+        & \multicolumn{1}{c}{V} \\
+        \cline{3-10}
+        \multirow{8}{*}{{\rotatebox[origin=c]{90}{Actual}
+        }} & 
+        H &     357 &  0   &  0   &  8  &  0  &  2  &  1  &  1  \\ \cline{3-10}
+        &   I &  0  &  254 &  3   &  3  & 101 &  1  &  0  &  0  \\ \cline{3-10}
+        &   J &  0  &  19  & 298  &  1  & 16  &  0  &  2  &  6   \\ \cline{3-10}
+        &   K &  3  &  0   &  0   & 352 &  2  &  2  &  0  &  0   \\ \cline{3-10}
+        &   L &  0  &  90  &  1   &  1  & 277 &  0  &  0  &  0   \\ \cline{3-10}
+        &   M &  0  &  0   &  0   &  3  &  0  & 378 &  0  &  1   \\ \cline{3-10}
+        &   U &  1  &  0   &  1   &  9  &  0  &  1  & 305 &  29  \\ \cline{3-10}
+        &   V &  0  &  2   &  0   &  2  &  2  &  1  &  9  &  326 \\ \cline{3-10}
+    \end{tabular}
+\end{table}
+
+Images pruned from the training set due to issues such as mislabeled or
+ambiguous samples after one Cleanlab pruning were submitted back to the system.  
+Of the 1188 pruned images only 129, or about 11\%, of the problematic labels from
+the original training set were recognized as correctly labeled.  The remaining
+89\% were recognized by the explainable architecture as other classes with
+varying degrees of confidence. Some of the pruned images are depicted in
+Figure~\ref{fig:pruned_inf_samples}.  In many cases the explainable architecture is
+able to correctly inference, according to human recognition, mislabeled samples.
+
+\begin{figure}[H]
+    \centering
+    %\textbf{Pruned Samples}\par\medskip 
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-inferred-S.png}
+        \caption{G label}
+        \label{fig:inf_issue_G0}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-T-5-inferred-u.png}
+        \caption{T label}
+        \label{fig:inf_issue_T5}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-inferred-M.png}
+        \caption{O label}
+        \label{fig:inf_issue_O7}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-W-3-inferred-M.png}
+        \caption{W label}
+        \label{fig:inf_issue_W3}
+    \end{subfigure}%
+    %\begin{subfigure}{.20\columnwidth}
+    %    \centering
+    %    \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-10-inferred-F.png}
+    %    \caption{O label}
+    %    \label{fig:inf_issue_O10}
+    %\end{subfigure}
+    \caption{Pruned samples that were inferred by the system.}
+    \label{fig:pruned_inf_samples}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    %\textbf{Pruned Samples}\par\medskip 
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-stroke.png}
+        \caption{Stroke}
+        %\label{fig:inf_issue_G0_stroke}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-circle.png}
+        \caption{Circles}
+        %\label{fig:inf_issue_T5}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-el-circle.png}
+        \caption{Ellipse}
+        %\label{fig:inf_issue_O7}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-area.png}
+        \caption{Area}
+        %\label{fig:inf_issue_W3}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-line.png}
+        \caption{Line}
+        %\label{fig:inf_issue_O10}
+    \end{subfigure}
+    \caption{Relevant transforms of Figure~\ref{fig:inf_issue_G0}.}
+    \label{fig:g0_trans}
+\end{figure}
+
+Figure~\ref{fig:inf_issue_G0}, originally labeled as a G, was inferred correctly by
+the explainable architecture as an S with 42\% confidence.  The next closest
+prediction was a Z with 14\% confidence.  The explanation for the prediction was
+due to the stroke, circle, area, and line properties being consistent with the
+letter S. Examples of the contributing transforms are depicted in
+Figure~\ref{fig:g0_trans}.
+
+\begin{figure}[H]
+    \centering
+    %\textbf{Pruned Samples}\par\medskip 
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-T-5-stroke.png}
+        \caption{Stroke}
+        %\label{fig:inf_issue_G0_stroke}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-T-5-area.png}
+        \caption{Area}
+        %\label{fig:inf_issue_T5}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-T-5-endpoint.png}
+        \caption{Endpoint}
+        %\label{fig:inf_issue_O7}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-T-5-circle.png}
+        \caption{Circle}
+        %\label{fig:inf_issue_W3}
+    \end{subfigure}%
+    %\begin{subfigure}{.20\columnwidth}
+    %    \centering
+    %    \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-line.png}
+    %    \caption{Line}
+    %    %\label{fig:inf_issue_O10}
+    %\end{subfigure}
+    \caption{Relevant transforms of Figure~\ref{fig:inf_issue_T5}.}
+    \label{fig:t5_trans}
+\end{figure}
+
+Figure~\ref{fig:inf_issue_T5}, originally labeled as a T, was inferred correctly as
+a U with 36\% confidence. The next closest prediction was a Z with 25\%
+confidence.  The explanation was due to the stroke, area,
+endpoint, and circle properties. Figure~\ref{fig:t5_trans}
+depicts relevant transforms.
+
+\begin{figure}[H]
+    \centering
+    %\textbf{Pruned Samples}\par\medskip 
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-stroke.png}
+        \caption{Stroke}
+        %\label{fig:inf_issue_G0_stroke}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-endpoint.png}
+        \caption{Endpoint}
+        %\label{fig:inf_issue_T5}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-area.png}
+        \caption{Area}
+        %\label{fig:inf_issue_O7}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-circle.png}
+        \caption{Circle}
+        %\label{fig:inf_issue_W3}
+    \end{subfigure}%
+    %\begin{subfigure}{.20\columnwidth}
+    %    \centering
+    %    \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-fill.png}
+    %    \caption{Enclosed Region}
+    %    %\label{fig:inf_issue_O10}
+    %\end{subfigure}
+    \caption{Relevant transforms of Figure~\ref{fig:inf_issue_O7}.}
+    \label{fig:o7_trans}
+\end{figure}
+
+Figure~\ref{fig:inf_issue_O7}, originally labeled as an O, was inferred correctly
+as an M with 56\% confidence. The next closest prediction was a Z with 27\%
+confidence.  Rationale for the decision are the stroke, endpoint, area,
+and circle being consistent with an M. Figure~\ref{fig:o7_trans} depicts the
+transforms that contributed to the decision.
+
+\begin{figure}[H]
+    \centering
+    %\textbf{Pruned Samples}\par\medskip 
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-W-3-stroke.png}
+        \caption{Stroke}
+        %\label{fig:inf_issue_G0_stroke}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-W-3-endpoint.png}
+        \caption{Endpoint}
+        %\label{fig:inf_issue_T5}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-W-3-area.png}
+        \caption{Area}
+        %\label{fig:inf_issue_O7}
+    \end{subfigure}%
+    \begin{subfigure}{.20\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-W-3-line.png}
+        \caption{Line}
+        %\label{fig:inf_issue_W3}
+    \end{subfigure}%
+    %\begin{subfigure}{.20\columnwidth}
+    %    \centering
+    %    \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-fill.png}
+    %    \caption{Enclosed Region}
+    %    %\label{fig:inf_issue_O10}
+    %\end{subfigure}
+    \caption{Relevant transforms of Figure~\ref{fig:inf_issue_W3}.}
+    \label{fig:w3_trans}
+\end{figure}
+
+Figure~\ref{fig:inf_issue_W3}, originally labeled as a W, was inferred correctly
+as an M with 65\% confidence. The next closest character was a Z with 28\%
+confidence.  Rationale for selecting M was consistency with the stroke,
+endpoint, area, and line properties.  Relevant transforms are depicted in
+Figure~\ref{fig:w3_trans}
+
+%Figure~\ref{fig:inf_issue_O10}, originally labeled as an O was inferred correctly as an F with 40\% confidence.
+
+The quality of the training set is a big concern with NN and XAI.  The pruning
+methods presented attempt to improve the quality of the training set, to enhance
+accuracy and explainability of the system. With respect to pruned samples, the
+explainable architecture was a benefit in two ways, (a) it was able to correct
+some problematic, pruned labels with a good degree of confidence (b) the
+explainable architecture provided rationale based on explainable properties that
+could help a user to confidently resolve issues with labels.
+
+\section{Case-Based Explainable Results on Handwritten Digits}
+\label{sec:case_based_handwriting_results}
+
+The overall case-based results are shown in Table
+\ref{tab:mnist_case_based_results}. The 75 PC dataset performed the best with
+$98.5\%$ accuracy and a rate of $97.7\%$ corresponmdence. The correspondence
+figure indicates that the K training neighbors had a weight theat favored
+the class that the inference engine selected $97.7\%$ of the time.
+
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Accuracy and correspondence of the case-based explainable architecture on MNIST.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|l|c|c|}
+        \hline
+        Data & Accuracy & Correspondence \\
+        \hline
+        \hline
+        MNIST & $97.9$ & $97.2$ \\
+        \hline
+        MNIST 50 PC & $98.3$ & $98.1$ \\
+        \hline
+        MNIST 75 PC & $98.5$ & $97.7$  \\
+        \hline
+        MNIST 100 PC & $98.4$ & $97.9$  \\
+        \hline
+        MNIST 150 PC & $98.3$ & $97.6$  \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab:mnist_case_based_results}
+\end{table}
+
+\subsection{Explainable Examples}
+\label{sec:case_based_explainable_examples}
+
+Explainable examples in this section were processed using a case-based
+explainable architecture with a SVM inference engine with a radial basis function
+kernel.  The MNIST data was reduced using 75 principal components.  Ten of the
+nearest neighbors from the training set are retrieved in each case. Weighting
+used for correspondence used the inverse square of distance.
+
+
+The first example is the MNIST four from Figure \ref{fig:mnist_case_based_example1}.
+Note that this is the same digit at index four of the MNIST test set as MNIST example one
+the property-based example.
+
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=2cm, alt={An MNIST digit four}]{./images/mnist_samples/4_4_0.png}}
+    \caption{MNIST example one, a digit four.}
+    \label{fig:mnist_case_based_example1}
+\end{figure}
+
+The SVM predicted a digit four.  Ten nearest neighbors from training were
+identified and are shown in Table \ref{tab:mnist_case_based_ex1}.  The distance,
+index in the training database, and label are listed in the table.  The table
+shows nine of the neighbors were also the digit four.  The last row in the table
+indicates the furthest of the ten neighbors was a nine. The resulting
+correspondence metric for the digit four is $0.923$ and the correspondence
+metric from the class nine is $0.077$. The winning neighbor corresondence for
+the digit four agrees with the SVM.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Ten nearest neighbors for case-based MNIST example one.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Distance & \multicolumn{1}{p{3cm}|}{\centering Training\\Index}  & Label \\
+        \hline
+        \hline
+        $3.184$ & $40094$ & $4$ \\
+        \hline
+        $3.357$ & $52920$ & $4$ \\
+        \hline
+        $3.448$ & $25760$ & $4$  \\
+        \hline
+        $3.517$ & $32719$ & $4$  \\
+        \hline
+        $3.594$ & $50609$ & $4$  \\
+        \hline
+        $3.793$ & $24734$ & $4$  \\
+        \hline
+        $3.807$ & $53519$ & $4$  \\
+        \hline
+        $3.809$ & $40600$ & $4$  \\
+        \hline
+        $3.933$ & $23306$ & $4$  \\
+        \hline
+        $4.128$ & $1732$ & $9$  \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab:mnist_case_based_ex1}
+\end{table}
+
+Rationale provided by the explanation routine indicates the digit four is
+predicted and the ten nearest neighbors agree with high correspondence of
+$92.3\%$. An alternative with low correspondence $7.7\%$ is the digit nine. The
+ten nearest neighbors can also be presented by retrieveing by index from the
+MNIST training set.  The ten nearest neighbors to MNIST example one are shown in
+Figure \ref{fig:mnist_case_based_ex1_knn}.
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=14cm, alt={The ten nearest neighbors from  training to the MNIST digit four}]{./images/case_based_mnist_ex1_knn.png}}
+    \caption{Ten nearest training neighbors for MNIST example one.}
+    \label{fig:mnist_case_based_ex1_knn}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% Example 2
+
+The second example is shown in Figure \ref{fig:mnist_case_based_example2} and is
+labeled a two. The SVM appropriately predicts a two.  The ten nearest neighbors
+are shown in Table \ref{tab:mnist_case_based_ex2}.  All ten neighbors are also
+labeled as the digit two.  The resulting correspondence is $1.00$ for the digit
+two based on the ten nearest neighbors.
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=2cm, alt={An MNIST digit two}]{./images/mnist_samples/1_2_0.png}}
+    \caption{MNIST example two, a digit two.}
+    \label{fig:mnist_case_based_example2}
+\end{figure}
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Ten nearest neighbors for case-based MNIST example two.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Distance & \multicolumn{1}{p{3cm}|}{\centering Training\\Index}  & Label \\
+        \hline
+        \hline
+        $3.395$ & $28882$ & $2$ \\
+        \hline
+        $3.475$ & $49160$ & $2$ \\
+        \hline
+        $3.631$ & $24612$ & $2$  \\
+        \hline
+        $3.897$ & $16902$ & $2$  \\
+        \hline
+        $3.969$ & $31956$ & $2$  \\
+        \hline
+        $4.115$ & $24010$ & $2$  \\
+        \hline
+        $4.130$ & $31634$ & $2$  \\
+        \hline
+        $4.153$ & $53455$ & $2$  \\
+        \hline
+        $4.173$ & $17757$ & $2$  \\
+        \hline
+        $4.319$ & $21012$ & $2$  \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab:mnist_case_based_ex2}
+\end{table}
+
+Rationale provided by the explanation routine indicates the digit two is
+predicted and the ten nearest neighbors agree with high correspondence of
+$100\%$. The ten nearest neighbors are also be presented by retrieveing by index
+from the MNIST training set.  The ten nearest neighbors to MNIST example two are
+shown in Figure \ref{fig:mnist_case_based_ex2_knn}.
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=14cm, alt={The ten nearest neighbors from training to the MNIST two}]{./images/case_based_mnist_ex2_knn.png}}
+    \caption{Ten nearest training neighbors for MNIST example two.}
+    \label{fig:mnist_case_based_ex2_knn}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% example 3
+
+The third case-based MNIST example is depicted in Figure
+\ref{fig:mnist_case_based_example3}, which is labeled as a digit nine.  The ten
+nearest neighbors, shown in Table \ref{tab:mnist_case_based_ex3}, are all
+labeled as the digit nine as well.  the resulting correspondence from the ten
+neighbors is $1.0$.
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=2cm, alt={An MNIST digit nine}]{./images/mnist_samples/7_9_0.png}}
+    \caption{MNIST example three, a digit nine.}
+    \label{fig:mnist_case_based_example3}
+\end{figure}
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Ten nearest neighbors for case-based MNIST example three.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Distance & \multicolumn{1}{p{3cm}|}{\centering Training\\Index}  & Label \\
+        \hline
+        \hline
+        $3.181$ & $41982$ & $9$ \\
+        \hline
+        $3.983$ & $25446$ & $9$ \\
+        \hline
+        $4.035$ & $14815$ & $9$  \\
+        \hline
+        $4.170$ & $56597$ & $9$  \\
+        \hline
+        $4.426$ & $48818$ & $9$  \\
+        \hline
+        $4.440$ & $34962$ & $9$  \\
+        \hline
+        $4.444$ & $33862$ & $9$  \\
+        \hline
+        $4.623$ & $56527$ & $9$  \\
+        \hline
+        $4.797$ & $56681$ & $9$  \\
+        \hline
+        $4.799$ & $11688$ & $9$  \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab:mnist_case_based_ex3}
+\end{table}
+
+Rationale provided by the explanation routine indicates the digit nine is
+predicted and the ten nearest neighbors agree with high correspondence of
+$100\%$. The ten nearest neighbors are also be presented by retrieveing by index
+from the MNIST training set.  The ten nearest neighbors to MNIST example three are
+shown in Figure \ref{fig:mnist_case_based_ex3_knn}.
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=14cm, alt={Ten nearest neighbors from training to the MNIST nine}]{./images/case_based_mnist_ex3_knn.png}}
+    \caption{Ten nearest training neighbors for MNIST example three.}
+    \label{fig:mnist_case_based_ex3_knn}
+\end{figure}
+
+
+%%%%%%%%%%%%%%example 4 index 449
+
+The next example exhibits some ambiguity. Figure
+\ref{fig:mnist_case_based_example4} depicts MNSIT case-based example four,
+labeled a three. The sample is index number 449 from the MNIST test set. The SVM
+improperly suggested a five.
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=2cm, alt={An MNIST digit three}]{./images/mnist_samples/449_3_39.png}}
+    \caption{MNIST example four, a digit three.}
+    \label{fig:mnist_case_based_example4}
+\end{figure}
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Ten nearest neighbors for case-based MNIST example four.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Distance & \multicolumn{1}{p{3cm}|}{\centering Training\\Index}  & Label \\
+        \hline
+        \hline
+        $5.557$ & $47802$ & $3$ \\
+        \hline
+        $6.045$ & $48628$ & $3$ \\
+        \hline
+        $6.076$ & $48825$ & $5$  \\
+        \hline
+        $6.084$ & $59473$ & $5$  \\
+        \hline
+        $6.086$ & $47625$ & $3$  \\
+        \hline
+        $6.105$ & $2652$ & $3$  \\
+        \hline
+        $6.108$ & $35458$ & $3$  \\
+        \hline
+        $6.162$ & $41978$ & $3$  \\
+        \hline
+        $6.187$ & $52790$ & $3$  \\
+        \hline
+        $6.221$ & $16220$ & $3$  \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab:mnist_case_based_ex4}
+\end{table}
+
+The ten nearest neighbors from the training index are shown in Table
+\ref{tab:mnist_case_based_ex4}.  Two of the ten neighbors were labeled a five
+while the eight others were labeled a three.  Correspondence for the three wins
+at $0.802$ compared to $0.198$ for the class five. This results in the neighbor
+correspondence contradicting the SVM.
+
+Rationale provided by the explanation routine indicates that the digit five was
+predicted. The ten nearest neighbors contradict the prediction with low $19.8\%$
+correspondence for the digit three. The ten nearest neighbors favor of the digit
+three with $80.2\%$ correspondence. The ten nearest neighbors from the training
+set are sown in Figure \ref{fig:mnist_case_based_ex4_knn}.
+
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=14cm, alt={The ten nearest neighbors from training to the MNIST three}]{./images/case_based_mnist_ex4_knn.png}}
+    \caption{Ten nearest training neighbors for MNIST example four.}
+    \label{fig:mnist_case_based_ex4_knn}
+\end{figure}

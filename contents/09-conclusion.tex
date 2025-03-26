@@ -1,0 +1,287 @@
+\chapter{Conclusions} \label{ch:conclusions}
+
+This chapter briefly summarizes this research. It presents the strengths and
+limitations of the two explainable methods detailed herein and compares their
+applications to the problems of explainably recognizing handwriting and
+explainably detecting hardware trojans. The chapter also reviews the important
+questions that users are left with in traditional AI and shows how the two
+explainable methods answer those questions.
+
+The research in this work resulted in the following four papers:
+
+\begin{enumerate}
+    \item \href{https://doi.org/10.1109/NAECON49338.2021.9696413}{Explainable Artificial Intelligence Methodology for Handwritten Applications}\cite{whitten21}
+    \item \href{https://doi.org/10.1109/CCWC57344.2023.10099288}{Explainable Neural Network Recognition of Handwritten Characters}\cite{whitten23}
+    \item \href{https://doi.org/10.1109/ICMI60790.2024.10586116}{An AI Architecture with the Capability to Explain Recognition Results}\cite{whitten24icmi}
+    \item \href{https://doi.org/10.1109/NAECON61878.2024.10670684}{An AI Architecture with the Capability to Classify and Explain Hardware Trojans}\cite{whitten2024naecon}
+\end{enumerate}
+
+With AI rapidly growing in popularity in critical applications such as
+healthcare, business, and transportation, this research has addressed a lack of
+trust in AI by proposing methods and architectures to provide explanations and
+rationale for decisions made by opaque machine learning models. The methods
+posed possess strengths and limitations discussed in detail in this work. A
+summary follows.
+
+The property-based explainable method is well suited for high-dimensional
+application input, such as images, and provides explanations for decisions based
+upon explainable properties. When applying the property-based method to the
+problem of explainably detecting hardware trojans with only five features, it
+was challenging to map the notion of an explainable property to the minimal
+feature set. An approach was taken to utilize the 31 combinations of the five
+features. However, this approach had limited explainability.
+
+The case-based explainable method works best in low-dimensional applications
+with few features. Low-dimensional datasets allow for the optimization of
+locating neighboring examples from training data in the CBE method. As a
+rationale for decisions, the case-based explainable method presents a user with
+training cases closely related to the application input. The like cases from
+training could be a precedent for the intent to learn a similar pattern in the
+machine learning model.
+
+Manually applying the property-based method requires a thorough understanding of
+the problem domain. Understanding the problem alone is insufficient; the method
+requires considerable effort to discover the properties and devise and implement
+the transforms.
+
+In contrast, the case-based method is relatively general and straightforward to
+apply. The implementation of the case-based architecture was reusable between
+handwriting and hardware trojan applications.
+
+Both methods performed comparably, within a few percentage points, in terms of
+accuracy. The case-based method had an advantage in accuracy because the ML
+model in the case-based method is able to operate on untransformed data. The
+data loss associated with transforms detracts from the accuracy of the PBE
+method.
+
+Adding a degree of explainability to handwritten character recognition and
+hardware trojan detection improved trust by employing both methods and
+architectures. The property-based method did not assist as significantly as the
+case-based method in terms of explainability and improving trust in the hardware
+trojan application. Also, explainability was diminished when using the
+unexplainable component in the property-based system. It is of note that the
+inference in the case-based method is also unexplainable, but it is not as
+straightforward to characterize explainability in the same way in the case-based
+method.
+
+\section{Generalizing the Methods}
+
+In the case of the PBE method on more general image data, some existing digital
+image processing techniques could be further modified for more general
+applications. The addition of edge detection and various other digital image
+processing techniques could also be used as a pool of properties to transform
+and extract those properties from image data. Results from the pool of
+properties and transforms could be assessed to ascertain their effectiveness in
+detecting classes from the data. Effective properties and transforms would be
+retained, and others would be discarded to construct an architecture for a
+particular image detection or recognition application.
+
+The property-based explainable method could be further generalized by utilizing
+feature discovery and feature engineering techniques on high-dimensional data to
+extract features. In a similar approach to hardware trojans, the combination of
+various features could be applied as properties like they were in the hardware
+trojan approach.
+
+An alternative example of generalizing the PBE method is utilizing an approach
+such as Principal Component Analysis to capture a significant degree of variance
+in data. The Principal Components themselves or combinations thereof could be
+used as properties. Visualizing the principal components contributing to
+decisions may also help explain decisions.
+
+While already fairly general, the case-based method could be improved for larger
+datasets by utilizing non-volatile memory and efficient key-value storage for
+the training index. The CBE method could be designed as an element to add to an
+ML training pipeline to build the training index as an ML model is trained. The
+same single read of the training data would construct a training index and a
+trained ML model.
+
+The CBE method would also benefit from a more efficient algorithm for the
+nearest neighbor search. Currently, unless there is a collision, a KNN search
+will calculate the distance to all $n$ of the training samples and then sort
+the distances for those $n$ training samples. The complexity of such an
+operation is akin to a search at $O(n\log{}n)$. At least the full sort could be
+eliminated to reduce complexity to $O(n)$. A more efficient storage mechanism
+like a KD tree could reduce the complexity of the search to $(\log{})n$. These
+efficiency suggestions for the CBE method assume that the number of neighbors,
+$k$, and dimension of the data are significantly less than $n$. 
+
+\section{Addressing User Questions}
+
+Recall the several questions from Figure \ref{fig:ml_now_xai_future}, depicting
+the traditional machine learning process compared to the hope for XAI. Toward
+establishing trust in a decision-making system, a user has the following
+important questions:
+
+\begin{itemize}
+    \item Why did you do that?
+    \item Why not something else?
+    \item How certain are you?
+    \item What else did you consider?
+    \item Are there alternatives?
+    \item When do you fail?
+\end{itemize}
+
+The explainable architectures and methods herein exhibited how these crucial
+questions can be answered. The following subsections will explain and provide
+detailed examples of how these questions are answered using the techniques and
+methods in this work.
+
+\subsection{Why did you do that?}
+
+In the PBE architecture, the textual rationale, which relates to explainable
+properties, provides enough justification to explain to a user why the
+architecture made its choice. One such example is Table
+\ref{table:mnist_example1_explanation}, which explains classifying the sample
+based on four properties that relate to commonly understood features of the
+sample.
+
+The CBE architecture provides related training cases that closely match the
+application input as a precedent and rationale for a decision. In addition to
+the samples, the user is provided with the distance in feature space to the
+training samples. Examples are shown in the cases presented in case-based MNIST
+example one in Table \ref{tab:mnist_case_based_ex1} and the images from the
+training samples in Figure \ref{fig:mnist_case_based_ex1_knn}.
+
+\subsection{Why not something else?}
+
+The PBE method answers this question by presenting the winning vote by
+confidence metric and the ordered opinions of the property transforms. It should
+be apparent to the user why the PBE selected the winning vote and not the other
+opinions. An example is in Table \ref{table:mnist_example3_explanation} where
+flows had opinions on five classes ranked in descending order based on
+confidence. The nine was chosen instead of others because confidence in the nine
+is 60 points greater than the nearest alternative. 
+
+The KNN and their distances to the application input from the CBE architecture
+and correspondence with the input sample provide a user with information to
+understand why the system did not select an alternative. Examples of how this
+question is answered are in each of the three explainable examples in Section
+\ref{sec:case_based_explainable_examples}.
+
+\subsection{How certain are you?}
+
+The confidence metric in the PBE method, provided with each result, clearly
+quantifies the certainty of the decision relative to alternative opinions.
+Because the confidence metric is based upon the effectiveness of each flow for
+the class it voted on, the most historically effective opinions are considered.
+
+Similarly, the correspondence metric gives a user a means of quantifying a
+result in the CBE system relative to alternatives. Because the CBE architecture
+can also report a contradiction between the ML model and neighbors, this also
+helps to convey to a user when there is a lack of confidence.
+
+\subsection{What else did you consider?}
+
+The PBE architecture presents the opinions of the flows even if their confidence
+may not have been sufficient to win the vote. This rich information gives a user
+an understanding of what else was considered.
+
+The CBE architecture reports other classes with instances in the neighbors. The
+result reporting of multiple alternatives alerts users to the other classes
+found and considered among KNN. Examples are in Tables
+\ref{tab:mnist_case_based_ex1} and \ref{tab:mnist_case_based_ex4}, where the
+user is presented with alternatives of nine and five with lower correspondence.
+
+\subsection{Are there alternatives?}
+
+Both architectures present alternatives along with metrics to show a user which
+of the alternative classes were considered and preferred. The property-based
+architecture can show each class that received a vote and its confidence. The
+CBE architecture also reflects when there are alternative classes among the
+nearest neighbors. Alternatives occur much less with the case-based
+architecture.
+
+\subsection{When do you fail?}
+
+The CBE architecture can communicate the historical failure frequency using the
+false discovery rate. The PBE architecture can further indicate the classes most
+likely to cause confusion. Reporting when the architecture has failed is easy to
+accomplish with data, such as confusion matrices, stored in the knowledgebase.
+Section \ref{sec:mnist_exp_prop_examples} with MNIST explainable examples
+illustrates how the user is given an understanding of how the system fails.
+
+As implemented, the CBE architecture cannot indicate failures in the same way as
+the PBE architecture. The CBE method and the role of the training index could be
+expanded to accommodate such processing and storage to report a false discovery
+rate.
+
+\section{Future Work}
+
+Both methods would benefit from future work improving the explainable interface.
+Currently, the architectures present static rationale and metrics. Although this
+data is richer than traditional AI and answers many important questions,
+allowing a user to query and interrogate the system, including the knowledgebase
+and training index, would positively impact trust. Such an interface may be
+accomplished with limited memory AI, such as large language models.
+
+Other areas for future work on these methods involve seeking additional
+applications, automation, and generalization strategies. In the PBE method,
+exploring a common set of properties and transforms for various application
+input types could be a means of generalizing the PBE method.
+
+It will be beneficial to approach the case-based method by exploring the scaling
+limits of the training dataset size that it can process. A more optimized search
+method for neighbors would allow the CBE method to work with larger datasets
+efficiently. The case-based method would also benefit by developing a means of
+applying the method to any model during training to better integrate the method
+for practical use.
+
+% Expand on the explainable interface to allow a user to interrogate the
+% system and ask more questions.  Could be accomplished via a LLM.
+
+
+% The ML voting scheme is more accurate in classifying input than the
+% probabilistic scheme by about 4\%.   However, the probabilistic VME is nearly
+% 2\% better in terms of Explainability Quality over the ML VME.  Note that in the
+% probabilistic scheme, the VME selects a class from among the property votes, so
+% there is always a property that corresponds to the VME output.  The NN in the ML
+% voting scheme is trained based on labels on the training set, which may not
+% correspond to a vote from a property in a small percentage of inputs.
+
+% It appears there can be cases where Identification Accuracy and Explanation
+% Quality may not be well balanced.  The particulars of the application will need
+% to be considered.  An issue arises on whether the quality of explainability may
+% have greater importance than identification accuracy but this will require
+% further future analysis.
+
+% \section{2023 CCWC}
+
+% This work introduced an explainable architecture for recognizing handwritten
+% characters.  This work increased the accuracy of the architecture by leveraging
+% multiple NN architectures and by adding highly accurate but unexplainable
+% components. A metric is introduced that assists in characterizing explainability
+% when unexplainable components are added to the Architecture.
+
+% The expansive EMNIST dataset was studied for explainable recognition of
+% characters and some challenges with training data were identified.  The dataset
+% used consists of about five times the number labels of previous data sets. There
+% was a degree of ambiguity between some classes. Some of the ambiguity problems
+% were avoided by further splitting the dataset.
+
+% This work introduces the concept of correctly pruning a training set in order
+% to avoid misleading training set labels and improve the explainability. Results
+% processing the EMNIST character database using the explainable architecture are
+% provided. The explainable architecture was also used to resolve some of the
+% training set issues, leveraging explanations to increase confidence of new
+% labels.
+
+% \section{2024 ICMI}
+
+% Introduction of unexplainable, but high-performing, flows into the explainable
+% architecture increased the accuracy and explainability of the system.  Using
+% previous effectiveness metrics an increase in MNIST accuracy with MLP was
+% observed at over 15\% by introducing unexplainable flows.  A metric to
+% characterize the impact of the unexplainable addition to the system, $Ex_d$, and
+% along with an example from EMNIST, illustrate its utility.
+
+% The results and analysis pertaining to performance metrics to gauge
+% effectiveness suggest that several metrics from the literature perform better
+% than previous effectiveness in the explainable architecture, as noted in Section
+% \ref{eff_results}. The best-performing metric $E_{PARS}$ was devised as the
+% product of Precision, Accuracy, Recall, and Specificity.  The example
+% demonstrated that more robust and resilient effectiveness metrics improve
+% results.  With analysis of the $E_{PARS}$ metric, one could speculate that
+% larger data sets, especially with more classes, may not perform as well with
+% $E_{PARS}$. A derivation of $E_{PARS}$ that similarly scales the $TP$ at or above
+% $TN$ based on the dataset size and number of classes could be devised and may be
+% suitable as a metric gauging model performance on imbalanced datasets.

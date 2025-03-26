@@ -17,6 +17,9 @@
 \usepackage{subcaption}
 %used for fixed width columns in tables
 \usepackage{array}
+% Used for the H float option
+\usepackage{float}
+\usepackage{multirow}
 
 % There are reports that allege hyperref should be the last package imported
 % otherwise important settings may get overwritten. Import packages above this.
@@ -24,10 +27,10 @@
 %TODO Change these per your thesis
 \hypersetup{
     pdflang={en},
-    pdftitle={the title},
-    pdfauthor={the author},
-    pdfsubject={what subject},
-    pdfkeywords={comma delimited keywords},
+    pdftitle={Explainable AI Architectures: Methods, Applications, Examples, and Results},
+    pdfauthor={Paul Carl Whitten},
+    pdfsubject={Computer Engineering},
+    pdfkeywords={Explainable Artificial Intelligence, XAI},
     hidelinks % this removes the boxes around links in the TOC
 }
 
@@ -43,17 +46,17 @@
 \begin{center}
 %TODO replace with your title below
 \Large{\bfseries\MakeUppercase{
-    The First Line in Thesis:\\ This is the Second Title Line\\
+    Explainable AI Architectures:\\Methods, Applications, Examples, and Results\\
  }}
  % ----------------------------------------------------------------
  \vspace{.5cm}
  \large{\bfseries{by}}\\ \vspace{.5cm}
  \vspace{.5cm}
  %TODO replace with author name below
-\Large{\bfseries\MakeUppercase{Author Name}}\\[5pt]
+\Large{\bfseries\MakeUppercase{Paul Carl Whitten}}\\
 
   % ----------------------------------------------------------------
-\vspace{2cm}
+\vspace{1cm}
 \large{Submitted in partial fulfillment of the requirements for the degree of} \\[0.5cm]
  %TODO Change the degree, if needed
 \textsc{\Large{{Doctor of Philosophy}}} \\[5pt]
@@ -62,12 +65,12 @@
 % Thesis advisor was on a past template but was not in the graduate studies
 % sample title page, so this can be removed.
 %TODO Change the advisor name
-{Thesis Advisor: Advisor Name} \vspace{0.4cm} \\[2cm]
+{Thesis Advisor: Chris Papachrisou} \vspace{0.4cm} \\[2cm]
 
  \vfill
  % ----------------------------------------------------------------
 %TODO change Department Name
-\large{Department Name}\\[5pt]
+\large{Electrical, Computer, and Systems Engineering}\\[5pt]
 %TODO Change University Name
 \textsc{Case Western Reserve University}\\[0.5cm]
 
@@ -86,21 +89,21 @@
     \textbf{\MakeUppercase{Case Western Reserve University}}\\
     \textbf{\MakeUppercase{School of Graduate Studies}}
     \vfill
-    We hereby approve the thesis/dissertation of \par
-    \textbf{Author Name} \par
-    candidate for the degree of \textbf{Degree Here}\footnote{We also certify that written approval has been obtained for any proprietary material contained therein.}.\\
+    We hereby approve the dissertation of \par
+    \textbf{Paul Carl Whitten} \par
+    candidate for the degree of \textbf{Doctor of Philosophy}\footnote{We also certify that written approval has been obtained for any proprietary material contained therein.}.\\
     \vfill
     Committee Chair \\
-    \textbf{CommitteeChair Name}\\
+    \textbf{Chris Papachristou}\\
     \vfill
     Committee Member \\
-    \textbf{CommitteeMember1 Name}\\
+    \textbf{Francis Merat}\\
     \vfill
     Committee Member \\
-    \textbf{CommitteeMember2 Name}\\
+    \textbf{Daniel Saab}\\
     \vfill
     Committee Member \\
-    \textbf{CommitteeMember3 Name}\\
+    \textbf{An Wang}\\
     \vfill
     Date of Defense \\
     \textbf{March 27, 2025}
@@ -119,9 +122,10 @@
 \begin{center}
     \thispagestyle{empty}
     \vspace*{\fill}
-    Dedicated to not having to pay\\
-    for a software license\\
-    to make this thesis accessible.
+    To my wife Cheryl\\
+    and my children\\
+    Mallory, Amanda,\\
+    Lillian, Iris, and Opal.
     \vspace*{\fill}
 \end{center}
 \clearpage
@@ -146,8 +150,12 @@
 % adjust the following files to your content
 \include{contents/02-background}
 \include{contents/03-method}
-\include{contents/04-results}
-\include{contents/05-conclusion}
+\include{contents/04-handwriting_application}
+\include{contents/05-trojan_application}
+\include{contents/06-handwriting_results}
+\include{contents/07-trojan_results}
+\include{contents/08-discussion}
+\include{contents/09-conclusion}
 
 % comment out the following lines if you are not using an appendix 
 \appendix

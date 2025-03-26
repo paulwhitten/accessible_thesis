@@ -1,0 +1,1169 @@
+\chapter{Explainable Methods Applied to Handwritten Characters} \label{ch:handwriting}
+% remove below this line and add your method(s)
+
+This chapter first outlines the application of the explainable property-based
+methodology and then the case-based approach to detect handwritten characters
+explainably. The property-based approach utilized both the MNIST and EMNIST
+datasets, while the case-based approach only utilized MNIST. The
+procedures are detailed and discussed when implementing the methodologies as
+they apply to the handwritten datasets.
+
+\section{The Explainable Property-Based Methodology and MNIST}
+
+This section will apply the explainable property-based methodology to the
+problem of explainably detecting handwritten digits in the MNIST dataset.
+Following the property-based methodology, Python programs were developed to
+implement the components of the explainable architecture.
+
+\subsection{Data Processing}
+
+The MNIST dataset required no specialized data processing as it has been used in
+much AI research. Python functions were written to deserialize the database for
+use by the various machine learning methods. The implementation of those
+functions is in the file
+\href{https://gitlab.com/paulwhitten/2023-svm-xai/-/blob/main/load_mnist_data.py}{\texttt{load\_mnist\_data.py}}\cite{whitten2024icmi_source}.
+
+\subsection{Explainable Properties}
+
+During the discovery of explainable properties, significant time was spent
+combing through MNIST examples, discussing and posing geometric features of
+digits. An enumeration of the explainable properties posed follows:
+
+\begin{itemize}
+    \item Area - The area of a digit is the number of pixels activated.
+    \item Circles - A circle is a full or partially-rounded region.
+    \item Corners - A corner is an inflection point.
+    \item Crossing - A crossing is where two lines (strokes) meet.
+    \item Curves - A curve is a line that deviates from straight without a sharp inflection point.
+    \item Enclosed regions - An enclosed region is a fully enclosed set of pixels.
+    \item Lines - Lines are two points connected by a minimal extent.
+    \item Slant - A slant, slope, or lean in the direction of a digit.
+    \item Stroke - The stroke of a digit is the minimal outline of the path of the writing implement.
+\end{itemize}
+
+\subsection{Property Transforms}
+
+Following the explainable property-based methodology, transforms of the MNIST
+input images related to explainable properties are sought. Some properties, such
+as the area, curves, and slants, were discarded due to the lack of utility in
+differentiating between classes (area) or problems with identifying and applying
+appropriate transforms (curve and slant).
+
+Digital image processing techniques that highlight the explainable properties
+are used as transforms. Table~\ref{tab:transsample} shows transforms associated
+with the remaining properties. The first column is the property transform $T$
+and its identifier $j$. The second column indicates the property associated with
+the transform. The transform column describes the transformation algorithm used.
+The final column provides an example transformation for application input,
+$I_i$, an MNIST digit. To the right, the transformed MNIST digit is shown as
+$T_j(I_i)$.
+
+\renewcommand{\arraystretch}{1.8}
+%\setlength\tabcolsep{2mm}
+\begin{table}[h]
+\renewcommand{\arraystretch}{1.3}
+\caption{Properties and transforms for the MNIST example}
+\centering
+%\resizebox{\columnwidth}{!}{%
+\begin{tabular}{ c | c | c | ccc | }
+\cline{2-6}
+$T_j$ & Property & Transform & $I_i$ &  &  $T_j(I_i)$ \\
+\hline \hline
+$T_1$ & Stroke & Skeleton & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={An MNIST digit}]{./images/digit-images/4-11.png}} & $\rightarrow$ & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={A transformed MNIST digit}]{./images/digit-images/4-11-skel.png}} \\
+\hline
+$T_2$ & Circle & Hough Circle & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={An MNIST digit}]{./images/digit-images/6-17.png}} & $\rightarrow$ & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={A transformed MNIST digit}]{./images/digit-images/6-17-circle.png}} \\
+\hline
+$T_3$ & Crossings & Crossings & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={An MNIST digit}]{./images/digit-images/4-2.png}} & $\rightarrow$ & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={A transformed MNIST digit}]{./images/digit-images/4-2-crossing.png}} \\
+\hline
+$T_4$ & Circle & Hough Ellipse & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={An MNIST digit}]{./images/digit-images/0-3.png}} & $\rightarrow$ & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={A transformed MNIST digit}]{./images/digit-images/0-3-ellipse.png}} \\
+\hline
+$T_5$ & Circle & Multiple Ellipse Circle & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={An MNIST digit}]{./images/digit-images/8-4.png}} & $\rightarrow$ & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={A transformed MNIST digit}]{./images/digit-images/8-4-ellipse-circle.png}} \\
+\hline
+$T_6$ & Endpoints & Endpoints & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={An MNIST digit}]{./images/digit-images/2-2.png}} & $\rightarrow$ & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={A transformed MNIST digit}]{./images/digit-images/2-2-endpoint.png}} \\
+\hline
+$T_7$ & Enclosed Region & Flood Fill & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={An MNIST digit}]{./images/digit-images/0-2.png}} & $\rightarrow$ & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={A transformed MNIST digit}]{./images/digit-images/0-2-fill.png}} \\
+\hline
+$T_8$ & Line & Hough Line & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={An MNIST digit}, alt={An mnist digit}]{./images/digit-images/7-20.png}} & $\rightarrow$ & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={A transformed MNIST digit}]{./images/digit-images/7-20-line.png}} \\
+%\hline
+%$P_9$ & Enclosed Region & Skeleton Flood Fill & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={An MNIST digit}]{./images/digit-images/8-3.png}} & $\rightarrow$ & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={A transformed MNIST digit}]{./images/digit-images/8-3-skel-fill.png}} \\
+\hline
+$T_{9}$ & Enclosed Region & Convex Hull & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={An MNIST digit}]{./images/digit-images/0-0-12.png}} & $\rightarrow$ & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={A transformed MNIST digit}]{./images/digit-images/0-0-12-ch.png}} \\
+\hline
+$T_{10}$ & Corner & Harris Corner & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={An MNIST digit}]{./images/digit-images/4-26.png}} & $\rightarrow$ & \raisebox{-.5\height}{\includegraphics[width=5.5mm, alt={A transformed MNIST digit}]{./images/digit-images/4-26-corner.png}} \\
+\hline
+\end{tabular}%
+%}
+\centering
+\label{tab:transsample}
+\end{table}
+
+Most of the transform algorithms in Table~\ref{tab:transsample} used
+implementations in the Python package scikit-image\cite{scikitimage}. A
+description of the parameters used follows. Particulars of the transformations
+can also be found in the source code repo in the file
+\href{https://gitlab.com/paulwhitten/2023-svm-xai/-/blob/main/transform_parallel.py}{\texttt{transform\_parallel.py}}\cite{whitten2024icmi_source}.
+
+The Stroke property transform, $T_1$, represents the minimal path of the writing
+implement to trace the digit. The morphological skeleton transformation is a
+one-pixel connected representation of the digit, highlighting the stroke. The
+Lee\cite{LEE1994} algorithm for the skeleton is used. Figure
+\ref{fig:skeleton_examples} depicts sample transforms of digits. The original
+digit is on the left, and the transform is shown on the right. The transforms
+from \ref{fig:stroke_orig1} $\rightarrow$ \ref{fig:stroke_transform1} and
+\ref{fig:stroke_orig3} $\rightarrow$ \ref{fig:stroke_transform3} are expected,
+while the transform from \ref{fig:stroke_orig2} $\rightarrow$
+\ref{fig:stroke_transform2} seems to lose some detail and resembles a digit two.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/1-0.png}
+        \caption{}
+        \label{fig:stroke_orig1}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/stroke/1-0.png}
+        \caption{}
+        \label{fig:stroke_transform1}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/1-9.png}
+        \caption{}
+        \label{fig:stroke_orig2}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/stroke/1-9.png}
+        \caption{}
+        \label{fig:stroke_transform2}
+    \end{subfigure}%
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/8-18.png}
+        \caption{}
+        \label{fig:stroke_orig3}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/stroke/8-18.png}
+        \caption{}
+        \label{fig:stroke_transform3}
+    \end{subfigure}%
+
+    \caption{Examples of the stroke of digits by taking the skeleton.}
+    \label{fig:skeleton_examples}
+\end{figure}
+
+Note that three property transforms are associated with the circle property as
+$T_2$, $T_4$, and $T_5$. The circle property saw challenges in identifying
+various circular structures in MNIST digits. Some of the transforms related to
+the circle property were specialized for particular digits. Digits like the zero
+often had an elongated circle, which was not as readily detected using the Hough
+Circle. Other digits, like the eight, often had two circular features that
+should both be detected. It was observed that Hough circles are effective for
+detecting digits six and nine but generally perform poorly for digits eight and
+zero.
+
+The ellipse transform is better at extracting characteristics of handwritten
+zeros. Detection of the two circular features in most digit eights was improved
+using a transform for multiple non-overlapping circles or an ellipse.
+
+$T_2$ involves the individual circle property with the Hough Circle transform.
+The Hough circle detector used detection on a radius range from three to
+thirteen pixels. This transformation was more effective in identifying digits
+like six and nine. Figure \ref{fig:circle_examples} illustrates some circle
+transforms. The first two, showing some of the challenges with zero in the
+transform \ref{fig:circle_orig1} $\rightarrow$ \ref{fig:circle_transform1} and
+\ref{fig:circle_orig2} $\rightarrow$ \ref{fig:circle_transform2}, show how
+irregularities in the digit could result in the detection of small circles. The
+transform of the eight in \ref{fig:circle_orig4} $\rightarrow$
+\ref{fig:circle_transform4} depicts the trouble detecting both circular features
+of the eight. The digits six and nine depicted in \ref{fig:circle_orig3} $\rightarrow$
+\ref{fig:circle_transform3} and \ref{fig:circle_orig5} $\rightarrow$
+\ref{fig:circle_transform5} are representative of the Hough circle on those
+digits.
+
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/0-28.png}
+        \caption{}
+        \label{fig:circle_orig1}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/circle/0-28.png}
+        \caption{}
+        \label{fig:circle_transform1}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/0-19.png}
+        \caption{}
+        \label{fig:circle_orig2}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/circle/0-19.png}
+        \caption{}
+        \label{fig:circle_transform2}
+    \end{subfigure}%
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/6-18.png}
+        \caption{}
+        \label{fig:circle_orig3}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/circle/6-18.png}
+        \caption{}
+        \label{fig:circle_transform3}
+    \end{subfigure}%
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/8-20.png}
+        \caption{}
+        \label{fig:circle_orig4}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/circle/8-20.png}
+        \caption{}
+        \label{fig:circle_transform4}
+    \end{subfigure}%
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/9-16.png}
+        \caption{}
+        \label{fig:circle_orig5}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/circle/9-16.png}
+        \caption{}
+        \label{fig:circle_transform5}
+    \end{subfigure}%
+
+    \caption{Examples of circles in digits by taking the Hough circle.}
+    \label{fig:circle_examples}
+\end{figure}
+
+The Hough Ellipse was used in $T_4$ for detecting the zero. Detection of
+ellipses used a pixel range between five and twenty-three pixels. Figure
+\ref{fig:ellipse_examples} shows the exact zeros from Figure
+\ref{fig:circle_examples} that the Hough circle had difficulty detecting. Also,
+in Figure \ref{fig:circle_examples}, the transform of an eight is shown where
+the overall shape is detected as a single large ellipse.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/0-28.png}
+        \caption{}
+        \label{fig:ellipse_orig1}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/ellipse/0-28.png}
+        \caption{}
+        \label{fig:ellipse_transform1}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/0-19.png}
+        \caption{}
+        \label{fig:ellipse_orig2}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/ellipse/0-19.png}
+        \caption{}
+        \label{fig:ellipse_transform2}
+    \end{subfigure}%
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/8-20.png}
+        \caption{}
+        \label{fig:ellipse_orig3}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/ellipse/8-20.png}
+        \caption{}
+        \label{fig:ellipse_transform3}
+    \end{subfigure}
+
+    \caption{Examples of the ellipse in digits by taking the Hough ellipse.}
+    \label{fig:ellipse_examples}
+\end{figure}
+
+The transform for multiple non-overlapping circles and ellipse implemented in
+$T_5$ effectively detected the digit eight as two circular features as shown in
+Figure \ref{fig:ellipse_circle_examples}.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/8-20.png}
+        \caption{}
+        \label{fig:ellipse_circle_orig1}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/ellipse_circle/8-20.png}
+        \caption{}
+        \label{fig:ellipse_circle_transform1}
+    \end{subfigure}
+
+    \caption{Examples of the multiple non-overlapping circles and ellipse transform.}
+    \label{fig:ellipse_circle_examples}
+\end{figure}
+
+
+The crossings property transform, $T_3$, represents the intersection of segments
+in a digit. The transform involves taking the skeleton and finding activated
+pixels with more than two neighbors, indicating a confluence of segments. The
+crossing transform had mixed utility as many digits provide no pixels activated
+in the output, and other digits provide ambiguous output as shown in Figure
+\ref{fig:crossing_examples}.
+
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/3-3.png}
+        \caption{}
+        \label{fig:crossing_orig1}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/crossing/3-3.png}
+        \caption{}
+        \label{fig:crossing_transform1}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/4-5.png}
+        \caption{}
+        \label{fig:crossing_orig2}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/crossing/4-5.png}
+        \caption{}
+        \label{fig:crossing_transform2}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/6-5.png}
+        \caption{}
+        \label{fig:crossing_orig3}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/crossing/6-5.png}
+        \caption{}
+        \label{fig:crossing_transform3}
+    \end{subfigure}
+
+    \caption{Examples of the crossing transform.}
+    \label{fig:crossing_examples}
+\end{figure}
+
+The endpoints property transform, $T_6$, also involves first taking the skeleton
+of the digit. Endpoints are identified as activated pixels in the skeleton with
+only one neighbor, which indicates they terminate a segment. Figure
+\ref{fig:endpoint_examples} shows endpoint transformations. Figure
+\ref{fig:endpoint_orig1} $\rightarrow$ \ref{fig:endpoint_transform1} illustrates
+the behavior when a digit, like the zero, has no endpoint. Transform
+\ref{fig:endpoint_orig2} $\rightarrow$ \ref{fig:endpoint_transform2} shows the
+endpoints on the leftmost tips of the three. The transform of the eight in
+\ref{fig:endpoint_orig3} $\rightarrow$ \ref{fig:endpoint_transform3} illustrates
+the result of a break in a digit compared to an eight in
+\ref{fig:endpoint_orig4} $\rightarrow$ \ref{fig:endpoint_transform4} without a
+break.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/0-28.png}
+        \caption{}
+        \label{fig:endpoint_orig1}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/endpoint/0-28.png}
+        \caption{}
+        \label{fig:endpoint_transform1}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/3-0.png}
+        \caption{}
+        \label{fig:endpoint_orig2}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/endpoint/3-0.png}
+        \caption{}
+        \label{fig:endpoint_transform2}
+    \end{subfigure}%
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/8-20.png}
+        \caption{}
+        \label{fig:endpoint_orig3}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/endpoint/8-20.png}
+        \caption{}
+        \label{fig:endpoint_transform3}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/8-18.png}
+        \caption{}
+        \label{fig:endpoint_orig4}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/endpoint/8-18.png}
+        \caption{}
+        \label{fig:endpoint_transform4}
+    \end{subfigure}
+
+    \caption{Examples of endpoints in digits.}
+    \label{fig:endpoint_examples}
+\end{figure}
+
+Property transforms, $T_7$ and $T_9$, were for the enclosed region properties.
+They used a flood fill for $T_7$ and the convex hull for $T_9$. The flood fill
+only fills completely enclosed regions. Flood fill is illustrated in Figure
+\ref{fig:fill_examples} where \ref{fig:fill_orig1} $\rightarrow$
+\ref{fig:fill_transform1} activates only the inside enclosed region of the zero.
+The \ref{fig:fill_orig2} $\rightarrow$ \ref{fig:fill_transform2} and
+\ref{fig:fill_orig3} $\rightarrow$ \ref{fig:fill_transform3} transformations
+illustrate the effect of a break in the top of an eight and the zero. The last
+transform \ref{fig:fill_orig4} $\rightarrow$ \ref{fig:fill_transform4} depicts a
+digit labeled as a nine. In this example, the break in the top of the nine is
+enough for that region not to be filled, while the bottom of the nine is
+enclosed enough to be filled.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/0-1.png}
+        \caption{}
+        \label{fig:fill_orig1}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/fill/0-1.png}
+        \caption{}
+        \label{fig:fill_transform1}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/8-20.png}
+        \caption{}
+        \label{fig:fill_orig2}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/fill/8-20.png}
+        \caption{}
+        \label{fig:fill_transform2}
+    \end{subfigure}%
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/0-17.png}
+        \caption{}
+        \label{fig:fill_orig3}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/fill/0-17.png}
+        \caption{}
+        \label{fig:fill_transform3}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/9-9.png}
+        \caption{}
+        \label{fig:fill_orig4}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/fill/9-9.png}
+        \caption{}
+        \label{fig:fill_transform4}
+    \end{subfigure}
+
+    \caption{Examples of the flood fill of digits.}
+    \label{fig:fill_examples}
+\end{figure}
+
+Figure \ref{fig:chull_examples} shows convex hull transform examples on the same
+digits as the flood fill in Figure \ref{fig:fill_examples}. The convex hull acts
+as a wrapping of the digit, capturing the entire region of the digit without
+being impacted by breaks.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/0-1.png}
+        \caption{}
+        \label{fig:chull_orig1}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/chull/0-1.png}
+        \caption{}
+        \label{fig:chull_transform1}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/8-20.png}
+        \caption{}
+        \label{fig:chull_orig2}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/chull/8-20.png}
+        \caption{}
+        \label{fig:chull_transform2}
+    \end{subfigure}%
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/0-17.png}
+        \caption{}
+        \label{fig:chull_orig3}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/chull/0-17.png}
+        \caption{}
+        \label{fig:chull_transform3}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/9-9.png}
+        \caption{}
+        \label{fig:chull_orig4}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/chull/9-9.png}
+        \caption{}
+        \label{fig:chull_transform4}
+    \end{subfigure}
+
+    \caption{Examples of the convex hull of digits.}
+    \label{fig:chull_examples}
+\end{figure}
+
+Another transform associated with the enclosed region, the flood fill of the
+skeleton, was initially employed but was dropped due to poor performance. The
+poor performance of the flood fill of the skeleton can be observed in Table
+\ref{tab:skel_fill_metrics}, where almost no true positives for nine out of ten
+MNIST classes occur.  If we also note the results for class one, $88.8\%$ of the
+samples were falsely labeled as a one. It indicates that the transform was
+practically unanimous in predicting all classes as the digit one. This transform
+could have undergone more scrutiny, but because there was sufficient coverage in
+the other transforms related to enclosed regions, it was dropped.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{MNIST training metrics for the Skeleton Fill inference engine. Metric values are percentages (\%).}
+    %\resizebox{\textwidth}{!}{%
+    \begin{tabular}{| c | r | r | r | r | r |}
+        \hline
+        Class & \multicolumn{1}{|c|}{TP} & \multicolumn{1}{|c|}{TN} & \multicolumn{1}{|c|}{FP} & \multicolumn{1}{|c|}{FN} & \multicolumn{1}{|c|}{$ACC$} \\
+        \hline
+        \hline
+        0 & 0.0 & 90.1 & 0.0 & 9.87 & 90.1 \\ \hline
+        1 & 11.2 & 0.0 & 88.8 & 0.0 & 11.2 \\ \hline
+        2 & 0.0 & 90.0 & 0.0 & 9.93 & 90.1 \\ \hline
+        3 & 0.0 & 89.8 & 0.0 & 10.2 & 89.8 \\ \hline
+        4 & 0.0 & 90.2 & 0.0 & 9.74 & 90.3 \\ \hline
+        5 & 0.0 & 91.0 & 0.0 & 9.04 & 91.0 \\ \hline
+        6 & 0.0 & 90.1 & 0.0 & 9.86 & 90.1 \\ \hline
+        7 & 0.0 & 89.6 & 0.0 & 10.4 & 89.6 \\ \hline
+        8 & 0.0 & 90.2 & 0.0 & 9.75 & 90.3 \\ \hline
+        9 & 0.0 & 90.0 & 0.0 & 9.92 & 90.1 \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab:skel_fill_metrics}
+\end{table}
+
+The line property transform, $T_8$, was intended to identify straight lines in
+digits. It utilized the Hough Line algorithm on the skeleton. As parameters to
+the Hough line, a threshold and gap of zero were used along with a minimum line
+length of six pixels. Figure \ref{fig:line_examples} depicts sample line
+transforms. The intermediate transform to the skeleton illustrates what is
+happening in identifying lines. In the transform from \ref{fig:crossing_orig2}
+$\rightarrow$ \ref{fig:line_skel2} $\rightarrow$ \ref{fig:line_transform2},
+there are no lines longer than six contiguous pixels for lines to be identified
+in the result. The transform from \ref{fig:line_orig3} $\rightarrow$
+\ref{fig:line_skel3} $\rightarrow$ \ref{fig:line_transform3} shows three small
+line segments are identified. One segment is vertical from the top right;
+another segment is horizontal, descending six pixels down and left from the
+vertical line, and finally, a six-pixel line extends across the bottom of the
+example with a slightly positive slope.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/3-3.png}
+        \caption{}
+        \label{fig:line_orig1}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/stroke/3-3.png}
+        \caption{}
+        \label{fig:line_skel1}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/line/3-3.png}
+        \caption{}
+        \label{fig:line_transform1}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/4-5.png}
+        \caption{}
+        \label{fig:line_orig2}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/stroke/4-5.png}
+        \caption{}
+        \label{fig:line_skel2}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/line/4-5.png}
+        \caption{}
+        \label{fig:line_transform2}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/2-14.png}
+        \caption{}
+        \label{fig:line_orig3}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/stroke/2-14.png}
+        \caption{}
+        \label{fig:line_skel3}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/line/2-14.png}
+        \caption{}
+        \label{fig:line_transform3}
+    \end{subfigure}
+
+    \caption{Examples of the line transform.}
+    \label{fig:line_examples}
+\end{figure}
+
+Figure \ref{fig:line_pixels_examples} shows another line example, the same four
+from Figure \ref{fig:line_examples} but with varying line length parameters to
+the Hough line routine. The original digit is shown again in figure
+\ref{fig:line_pixel_orig1}. Figure \ref{fig:line_pixel6} shows the line
+transform with a six-pixel length threshold. Figure \ref{fig:line_pixel5} shows
+a five-pixel line threshold, and Figure \ref{fig:line_pixel4} shows a four-pixel
+threshold.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/4-5.png}
+        \caption{}
+        \label{fig:line_pixel_orig1}
+    \end{subfigure}%
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/line/4-5.png}
+        \caption{}
+        \label{fig:line_pixel6}
+    \end{subfigure}%
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/line/4-5-5pixel.png}
+        \caption{}
+        \label{fig:line_pixel5}
+    \end{subfigure}
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/line/4-5-4pixel.png}
+        \caption{}
+        \label{fig:line_pixel4}
+    \end{subfigure}%
+
+    \caption{Examples of the line transform with relaxed line length parameters.}
+    \label{fig:line_pixels_examples}
+\end{figure}
+
+The corner property transform, $T_{10}$, used the Harris Corner detection
+algorithm. This was another transform that started from the already available
+skeleton. The threshold parameter used in detecting corners was $0.02$, and a
+minimum distance of three pixels performed well. Figure
+\ref{fig:corner_examples} illustrates examples of the corner transform
+identifying corners in a four and three.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/4-5.png}
+        \caption{}
+        \label{fig:corner_orig1}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/corner/4-5.png}
+        \caption{}
+        \label{fig:corner_transform1}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/raw/3-18.png}
+        \caption{}
+        \label{fig:corner_orig2}
+    \end{subfigure}%
+    $\rightarrow$
+    \begin{subfigure}{.15\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={A MNIST digit}]{./images/mnist_transforms/corner/3-18.png}
+        \caption{}
+        \label{fig:corner_transform2}
+    \end{subfigure}
+
+    \caption{Examples of the corner transform.}
+    \label{fig:corner_examples}
+\end{figure}
+
+\subsection{Transform Training Data}
+
+A Python program,
+\href{https://gitlab.com/paulwhitten/2023-svm-xai/-/blob/main/transform_parallel.py}{\texttt{transform\_parallel.py}}\cite{whitten2024icmi_source},
+was implemented to transform the training data.  The program will take an MNIST
+database as input and output a new transformed MNIST database for each of the
+eleven transforms. Initially, the program performed transforms in a serial
+fashion using one core. Often, the transformation would take over an hour to
+complete on the 60,000-element training set using an Intel i9-10900 CPU @2.80GHz
+with 96GB RAM. The program would run in under seven minutes when it was
+refactored to exploit parallelism.
+
+\subsection{Train ML Models}
+
+Several ML algorithms were utilized in training models as inference engines for
+the property transformations. Multi-layer perceptrons (MLP) and support vector
+machines (SVM) from the scikit-learn\cite{scikitlearn} python package were used,
+as well as convolutional neural networks and ResNet deep learning algorithms
+from TensorFlow\cite{tensorflow2015-whitepaper}.
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=11cm, alt={A diagram of the property transforms and inference engines for handwritten characters}]{./images/property-ml-handwriting-dot.png}}
+    \caption{Property based explainable transforms and inference engines for handwriting recognition.}
+    \label{fig:prop_trans_inference_handwriting}
+\end{figure}
+
+The MLP implementation of training the inference engines is implemented in
+\href{https://gitlab.com/paulwhitten/2023-svm-xai/-/blob/main/train_nn_transforms.py}{\texttt{train\_nn\_transforms.py}}\cite{whitten2024icmi_source}.
+Three hidden layers of 128, 256, and 128 perceptrons with the rectified linear
+unit activation function gave good results.
+
+The SVM inference engines used the support vector classifier with the radial
+basis function kernel. The implementation of the training routine is in the file
+\href{https://gitlab.com/paulwhitten/2023-svm-xai/-/blob/main/train_svm_transforms.py}{\texttt{train\_svm\_transforms.py}}\cite{whitten2024icmi_source}.
+SVM inference engines took much longer to train than the MLP inference engines.
+
+After training the property transforms and inference engines, a system may be
+constructed resembling Figure~\ref{fig:prop_trans_inference_handwriting}.
+
+\subsection{Knowledgebase}
+
+The knowledgebase stores data for determining effectiveness so global decisions
+can be made based on the potentially conflicting opinions of the PDFs. A series
+of Python programs were used to construct the knowledgebase. Python utility
+functions also implement functionality to access the data in the knowledgebase
+at runtime.
+
+The programs construct and then serialize the knowledgebase to persistent
+storage. Persistent storage used for the handwriting knowledgebases is comprised
+of a JSON file. A database or other storage mechanism may be employed for larger
+datasets. In addition to storing the confusion matrix for each PDF, the various
+effectiveness metrics were calculated in advance and serialized in the
+knowledgebase. Rather than store redundant information, space may be saved by
+merely saving the optimal effectiveness metric for each PDF. Because this work
+was research-focused, much more was stored in the knowledgebase than was
+necessary for a typical application.
+
+In calculating the metrics, a PDF's overall metric is insufficient. The metric
+for each class using a one-versus-others scheme must be calculated and stored.
+Because of the one-versus-others scheme, a significant imbalance is introduced.
+It is crucial to select a metric that is resilient to data imbalance. The
+metrics that were calculated and stored in the knowledgebase included:
+
+\begin{itemize}
+    \item Accuracy
+    \item Precision
+    \item Recall 
+    \item Specificity 
+    \item Area under the ROC curve
+    \item Matthew's correlation coefficient
+    \item Cohen's Kappa
+    \item $E_{PARS}$
+\end{itemize}
+
+% TODO In addition to storing metrics
+
+\subsection{Voting}
+
+The purpose of the voting scheme is to decide among the potentially conflicting
+opinions from the explainable property transformation inferences. Information
+from the knowledgebase and explainable property inferences are input to the
+voting scheme. Probabilistic and ML voting schemes were employed and compared.
+The probabilistic voter had a high degree of explainability, while the ML voter
+occasionally provided results that did not correspond to opinions related to
+explainable properties.
+
+In the probabilistic voting scheme, the knowledgebase retrieves effectiveness
+metrics for each inference engine based on its opinion. For example, if the
+stroke IE suggested a two, the effectiveness of the stroke inference engine at
+identifying a two was retrieved and used to weight the effectiveness of the
+digit two. Recall that the weighted effectiveness of a digit, $c$, is $WE(c)$ in
+\eqref{eq:weighted_effectiveness} is given as the sum of the effectiveness for
+the inference engines that voted for $c$. Weighted effectiveness is then
+calculated for each class that an inference engine suggested in the same
+fashion.
+
+After calculating the weighted effectiveness of each digit suggested, the
+weighted effectiveness of all digits are summed as the total weighted
+effectiveness of all classes. Confidence for each suggested digit is given by
+the weighted effectiveness of that digit over the total weighted effectiveness
+of all digits. The digit with the highest confidence wins.
+
+Various effectiveness measures were utilized. There are ten classes in MNIST,
+one for each decimal digit. When taking effectiveness in a one versus others
+strategy, there will be a high imbalance factor of nine due to the one-to-others
+ratio of 1 to 9. It was important to select effectiveness metrics that were
+resilient to data imbalance. Metrics without such imbalance resiliency, such as
+accuracy and recall, often gave misleading metrics due to the data imbalance.
+
+\subsection{Explanation}
+
+The explanation routine takes the digits suggested by the voter and the
+confidence of those opinions and organizes them in descending order of
+confidence. The winning digit with the highest confidence is posed as the
+solution with alternatives and their relative confidence.
+
+A textual explanation is next constructed for the winning decision and each
+alternative. The explanation is based on the opinions of the various inference
+engines suggesting a particular digit. The explanation routine orders the
+winning decision and alternatives in descending order based on effectiveness.
+The explanation routine composes a textual rationale for each class that was
+voted on, linking the explainable properties to the suggestion.
+
+Finally, explainability metrics of the winning decision and alternatives are
+presented to the user. If unexplainable components are used in the system, the
+explainability for the digits suggested by the unexplainable components are
+calculated from \eqref{eq:explainability}. Digits without votes from an
+unexplainable component will have full explainability.
+
+\section{Explainable Property-Based Methodology and EMNIST}
+
+The EMNIST dataset is split in six different ways, based on classes included and
+the balancing of classes in each split. The split primarily used in this work is
+the EMNIST balanced data set which contains 131,600 samples in 46 classes.
+
+%consisting of decimal digits, 26 uppercase letters, and 10 lowercase letters.
+
+%While perusing samples in the EMNIST the dataset there were observations of
+%ambiguous and mislabeled samples.
+
+%Some of the label problems observed in EMNIST, from a cursory review, are shown in
+%Figure~\ref{fig:emnist_label_errors}. Each row in the figure represents samples from
+%a class.  The first sample of each row appears to be acceptable,
+%subsequent samples in each row are not. One particular class, F, had a large
+%percentage, over 30\%, observed as lowercase f. Other classes were noted to have
+%ambiguous or overlapping symbols such as U and V; $0$, O, and D; and L, I, l and
+%the digit 1.
+
+The high incidence of label errors and ambiguous data causes accuracy problems
+with ML and especially exacerbates XAI system results. There was a strong desire
+to address some of the issues.
+
+In an attempt to improve explainable results, the removal of ambiguous and
+mislabeled data was explored. Data and pruning of the training and test sets
+were performed in several ways and compared.
+
+The first pruning scheme was based on a threshold of 75\% confidence, which
+eliminated 5\% of the training set. Results of threshold pruning were observed
+on a per-class basis, and it was noted in Table \ref{tab:threshold_pruning_qty}
+that in some classes, over half of the samples were removed.  E.g., the I and L
+classes had more than 1200 of the 2400 samples for each class pruned. This
+pruning caused a highly unbalanced training set and resulted in only 13\%
+accuracy on uppercase letters. Higher thresholds up to 95\% were also attempted.
+However, poor accuracy results were observed\cite{whitten23}.
+
+\begin{table}
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{The number of pruned samples based on a 75\% confidence threshold}
+    %\resizebox{\textwidth}{!}{%
+    \begin{tabular}{|c|c|}
+        \hline
+        Character & Number Pruned \\
+        \hline
+        \hline
+        H & 23 \\   \hline
+        I & 1294 \\ \hline
+        J & 96 \\   \hline
+        K & 21 \\   \hline
+        L & 1255 \\ \hline
+        M & 5 \\    \hline
+        U & 156 \\  \hline
+        V & 103 \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab:threshold_pruning_qty}
+\end{table}
+
+The second pruning scheme limited the pruning to only the worst 5\% confidence
+of each class. Wrong classifications were especially penalized by assigning the
+confidence a negative value via multiplication by $-1.0$. This scheme used a
+K-fold Cross-validation to ensure that confidence of the training set samples
+were obtained out of sample and without bias.
+
+Another means of pruning involved leveraging Cleanlab to remove issues from the
+data. Cleanlab was also used iteratively with three passes, and results are
+reviewed in Chapter \ref{ch:handwriting_results}.
+
+\section{Case-Based Explainable Method and MNIST}
+
+This section outlines the implementation of the case-based architecture for
+handwritten digits. Recall from the case-based method that the training index
+can be constructed to store calculated distances to speed calculations. Because
+each MNIST sample has $28\times28=784$ pixels, each with a range of $[0, 255]$,
+each sample has an astronomical number of possibilities. The training set also
+has 60,000 samples, so there was concern that the algorithm for finding KNN
+using distance would be costly. With the high number of pixels in each sample
+and considering that each pixel can take 256 values, there is a low likelihood
+of collisions in training samples. Few collisions present few opportunities to
+skip calculations compared to a low-dimensionality dataset.
+
+Due to these performance concerns, the case-based method was applied to
+unchanged MNIST and MNIST, with principal component analysis applied to compare
+performance. Using PCA to reduce the dimensionality of the dataset had
+advantages in accuracy, compute time, and explainability.
+
+ %TODO: can we add memory to the list of PCA benefits as well?
+
+\subsection{Data Processing}
+
+No additional data processing was required for the case-based method on MNIST.
+When using the reduced MNIST dataset, PCA from scikit-learn\cite{scikitlearn}
+was used. An analysis of the MNIST data showed that about 87 principal
+components would capture $90\%$ of the variance in the data. Figure
+\ref{fig:pca_variance} shows a plot of the cumulative variance to the number of
+principal components of the MNIST dataset.
+
+\begin{figure}[h]
+    \centerline{\includegraphics[width=15cm, alt={Cumulative variance for MNIST based on the number of principal components}]{./images/pca_variance.png}}
+    \caption{A plot of the number of principal components to the cumulative variance in MNIST data.}
+    \label{fig:pca_variance}
+\end{figure}
+
+Various numbers of principal components were tried and compared for performance.
+The number of principal components that performed best (speed, explainability,
+and accuracy) was around 75.
+
+\subsection{Train ML Model}
+
+A SVM with a radial basis function kernel was used in the case-based method. The
+SVM performed identically to the SVM used in the unexplainable inference engine
+of the property-based method on unchanged MNIST. Using PCA, better performance
+was observed. Particular results are in Section
+\ref{sec:case_based_handwriting_results}. It took about 2 minutes to train an
+SVM on the complete MNIST training data and only 20 seconds to train an SVM with
+the MNIST data reduced to 75 principal components.
+
+\subsection{Training Index}
+
+As suspected, there were no collisions in the MNIST data. As a result, caching
+distance calculations in the training index was not beneficial. The resulting
+training index for MNIST was the base MNIST image data and labels. A lookup
+could be performed based on the index in the MNIST database.
+
+In the case of MNIST reduced using PCA, the PCA transforms of the training data,
+and the principal components were also stored to provide the result. Figure
+\ref{fig:mnist_eigendigits} presents the first 81 principal components or
+eigendigits.
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=15cm, alt={MNIST eigendigits from PCA}]{./images/mnist-81-eigendigits.png}}
+    \caption{A visualization of the first 81 principal components (eigendigits) from MNIST.}
+    \label{fig:mnist_eigendigits}
+\end{figure}
+
+
+\subsection{Query Scheme}
+
+The simple numeric index into the training set was used as lookup for the MNIST
+and PCA data. When presented with a sample, the case based explainable
+architecture iterates over the training set and calculates the distances to all
+of the training samples. In order to find the K nearest training samples, the
+first K elements of the sorted list of distances are retrieved.
+
+The time it takes the system to calculate distances to training samples and find
+the K nearest neighbors for MNIST averages 360 milliseconds in a Python program
+on an Intel i9-10900 CPU @2.80GHz. Using a reduced MNIST with 75 principal
+components results in 290 milliseconds to find K nearest neighbors using the
+same hardware.
+
+\subsection{Case-Based Explanation Routine}
+
+From the distance calculation for the K nearest neighbors, weight and
+correspondence are found for the classes in the K neighbors. The explainable
+case-based architecture presents the SVM inference prediction and the neighbors'
+correspondence figures. The system indicates whether neighbor correspondence
+agrees or conflicts with the SVM prediction. Information about the neighbors in
+the form of indices from the training set is also provided. From these indices,
+the actual MNIST and, if applicable, PCA data can be provided. Explainable
+examples are presented in Section \ref{sec:case_based_explainable_examples}.

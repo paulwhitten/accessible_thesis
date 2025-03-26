@@ -1,7 +1,1378 @@
-\chapter{Background}
+\chapter{Background} \label{ch:background}
 % remove below this line and add your background.
 
-Perhaps this thesis will have an algorithm or two\cite{knuth-fa}. Instead,
-perhaps it will cite some explainable AI work\cite{whitten2024naecon}.
+This chapter provides background material on topics relevant to developing
+decision-making systems that can explain reasoning and justify decisions.
+Beginning from general and moving toward more specific topics, the following
+sections cover Artificial Intelligence, Machine Learning, performance metrics,
+datasets, pruning datasets, digital image processing techniques, handwriting
+recognition, and hardware trojans.
 
-\lipsum[1-2]
+\section{Artificial Intelligence}\label{sec:ai}
+
+Artificial Intelligence (AI) is a study spanning the fields of Computer Science,
+Psychology, and Cognitive Science that involves the investigation and
+development of computational systems that make it possible to perceive, reason,
+learn, and act\cite{winston1992artificial, simon1995artificial,
+russell2016artificial, tzimas2021legal}.
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=15.0cm, alt={An AI taxonomy based on capability and functionality}]{./images/ai_taxonomy.png}
+    \caption{An Artificial Intelligence taxonomy based on capability and functionality.}
+    \label{fig:ai_taxonomy}
+\end{figure}
+
+Figure ~\ref{fig:ai_taxonomy} depicts a taxonomy of AI based on capabilities and
+functionality. AI capabilities are weak, strong, and super. Weak AI, also called
+narrow intelligence, involves an ability to perform particular purpose-built
+tasks. Strong AI, also known as general intelligence, can perform independently
+at near-human levels, learning and adapting without human intervention. Humans
+have not yet developed but have made some progress toward strong AI.
+Superintelligence involves capabilities to surpass human cognitive
+capabilities\cite{tzimas2021legal, samoili2020ai, Breen2024}.
+
+The subject of this research covers shaded areas of Figure
+~\ref{fig:ai_taxonomy} under weak AI. Weak AI can be further classified based on
+reactive and limited memory capabilities. Reactive AI is constructed for
+singular tasks and only operates with state representative of the current
+instant of time. An example of reactive AI is a program constructed to play a
+game of chess or an artificial neural network model constructed to classify
+handwritten digits. Limited memory AI maintains more than the immediate state.
+They retain information about the past. Examples of limited memory AI systems
+include Large Language Models and Generative AI\cite{schossau2023towards}.
+
+Theory of mind is related to general AI capabilities around functionality that
+can relate to or understand the thoughts and emotions of others
+\cite{cuzzolin2020knowing}. Self-aware AI is a super intelligence capability
+where one possesses elements of consciousness in that it is aware of its
+existence\cite{russell2016artificial}.
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=13.0cm, alt={An AI taxonomy based on algorithms and architectures}]{./images/ai_taxonomy_algorithms.png}
+    \caption{An Artificial Intelligence taxonomy based on algorithms and architectures.}
+    \label{fig:ai_taxonomy_algo}
+\end{figure}
+
+AI may also be further differentiated/classified based on the algorithms used,
+as shown in Figure~\ref{fig:ai_taxonomy_algo}. Two examples of algorithms AI
+uses are symbolic algorithms and algorithms that learn from past experiences.
+Symbolic AI algorithms, also known as classic AI, heavily rely upon logic,
+search, and rule-based mechanisms. An example of a symbolic AI algorithm is an
+expert system. Learning algorithms can be supervised, unsupervised, and
+reinforcement. Supervised learning involves training on labeled data to map the
+data inputs to labels as outputs. Supervised learning accomplishes learning via
+feedback. Examples of supervised learning algorithms are multilayer perceptrons
+and deep learning, such as convolutional neural networks (CNN). The
+architectures and algorithms in this work are the shaded areas under supervised
+learning. Unsupervised learning involves learning patterns without feedback. An
+example of unsupervised learning is the k-means clustering algorithm.
+Reinforcement learning involves providing reinforcement, rewards if positive,
+and penalties if negative. The reinforcement learning system then aims to
+maximize rewards in its decision-making. Examples of applications for
+reinforcement learning are game playing and robotic navigation \cite
+{russell2016artificial}.
+
+% The category of problem AI is applied, also may be used to differentiate
+% between the types of AI.  Some examples are classification, pattern
+% recognition, computer vision, recommendation, natural language processing, and
+% generative.
+
+% Expert systems saw past popularity.  Expert systems
+% simulate a human expert's decision-making process by processing knowledge data
+% to form a chain of conditional rules. Symbolic AI is another subfield of AI that
+% uses symbols, concepts, and logic to make decisions\cite{}
+
+\section{Machine Learning}
+
+Machine Learning (ML) is a field of AI that involves programming computers to
+solve a problem using example data or past
+experience\cite{alpaydin2014introduction}. ML involves studying and applying
+algorithms to complex problems that are difficult to solve using conventional
+programming techniques. ML algorithms are often general and applied to multiple
+problems. In supervised ML, an ML algorithm is used to build a model of a
+problem by processing and learning from labeled data representing the problem
+the algorithm is applied to\cite{rebala2019machine, alpaydin2014introduction}.
+The machine learning algorithms relevant to this work include neural networks,
+deep learning, support vector machines, and clustering.
+
+\subsection{Neural Networks}
+
+% Since the presentation of the McCulloch-Pitts neuron
+% model\cite{McCulloch1943-MCCALC-5} in 1943 and the subsequent implementation of
+% the perceptron\cite{rosenblatt1957perceptron}, the hardware, neural network
+% models, and tools have improved drastically, e.g.,
+% backpropagation\cite{kelley1960gradient,6795724}, Convolutional Neural Networks
+% (CNN)\cite{fukushima1982neocognitron}, Recurrent Neural Networks
+% (RNN)\cite{hopfield1982neural}, gradient based learning\cite{726791}, deep
+% residual learning\cite{7780459}.
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=9.0cm, alt={A Rosenblatt Perceptron}]{./images/rosenblatt_perceptron.png}
+    \caption{Rosenblatt Perceptron\cite{rosenblatt1957perceptron}.}
+    \label{fig:rosenblatt_perceptron}
+\end{figure}
+
+Neural Networks (NN) have improved drastically from the introduction of the
+McCulloch-Pitts model in 1943\cite{McCulloch1943-MCCALC-5} and the subsequent
+implementation of the perceptron\cite{rosenblatt1957perceptron, 4066017}.
+Rosenblatt presents the perceptron as consisting of three systems: sensory,
+association, and response. Each system has excitatory and inhibitory
+connections, as depicted in Figure~\ref{fig:rosenblatt_perceptron}.
+
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=12.0cm, alt={A modern model of a neuron}]{./images/modern_neuron_model.png} 
+    \caption{Modern model of a neuron\cite{haykin1998neural}.}
+    \label{fig:neuron_model}
+\end{figure}
+
+Further advances result in a more modern representation of a neuron as depicted
+in Figure~\ref{fig:neuron_model}. The input signals to the neuron are to the left
+as $x_i$ and output is to the right as $y$. Inputs, $x_i$ are comparable to the
+synaptic inputs for a neuron in biology. In this depiction, there are $n$
+inputs. Associated with each input is a weight signified with $w_i$. The product
+of weight, $w$, and input, $x$, for each input, $i$, is summed at the summing
+junction, shown as a circle and given by $s$ in \eqref{eq:summing_junction}.
+
+\begin{equation}\label{eq:summing_junction}
+    s = \sum_{i = 1}^{n} w_i x_i
+\end{equation}
+
+The activation function, $A(s)$, is depicted as a square in
+Figure~\ref{fig:neuron_model} with output, $y$. The activation function receives
+the sum of the weighted inputs, $s$, and is responsible for determining the
+neuron's output.  The activation function may be selected based on desirable
+characteristics. Some options for activation functions may include a simple
+threshold, piecewise linear, identity, logistic or sigmoid, hyperbolic tangent,
+and rectified linear unit functions\cite{haykin1998neural}.
+
+% \begin{figure}[h]
+% \minipage{0.32\textwidth}
+%   \includegraphics[width=\linewidth]{./images/sigmoid.png}
+%   \caption{Sigmoid}\label{fig:sigmoid}
+% \endminipage\hfill
+% \minipage{0.32\textwidth}
+%   \includegraphics[width=\linewidth]{./images/tanh.png}
+%   \caption{Tanh}\label{fig:tanh}
+% \endminipage\hfill
+% \minipage{0.32\textwidth}%
+%   \includegraphics[width=\linewidth]{./images/relu.png}
+%   \caption{Relu}\label{fig:relu}
+% \endminipage
+% \end{figure}
+
+\begin{figure}[H]
+    %\centering
+    \includegraphics[width=6.0cm, alt={A graph of a sigmoid activation function}]{./images/sigmoid.png}
+    \caption{A sigmoid activation function.}
+    \label{fig:sigmoid}
+\end{figure}
+
+
+\begin{equation}\label{eq:sigmoid}
+    \sigma(x) = \frac{1}{1 + e^{-x}}
+\end{equation}
+
+
+\begin{figure}[H]
+    %\centering
+    \includegraphics[width=6.0cm, alt={A graph of a hyperbolic tangent activation function}]{./images/tanh.png}
+    \caption{A hyperbolic tangent activation function.}
+    \label{fig:tanh}
+\end{figure}
+
+\begin{equation}\label{eq:tanh}
+    tanh(x) = \frac{e^x - e^{-x}}{e^x+e^{-x}}
+\end{equation}
+
+\begin{figure}[H]
+    %\centering
+    \includegraphics[width=6.0cm, alt={A graph of a rectified linear unit activation function}]{./images/relu.png}
+    \caption{A rectified linear unit activation function.}
+    \label{fig:relu}
+\end{figure}
+
+\begin{equation}\label{eq:relu}
+    relu(x) =
+    \begin{cases}
+        0,& x \leq 0 \\
+        x,& x > 0
+    \end{cases}
+\end{equation}
+
+The latter three activation functions are the most popular in practical use and
+are plotted in Figures~\ref{fig:sigmoid}, \ref{fig:tanh}, and \ref{fig:relu} to
+illustrate their behavior. The sigmoid activation function $\sigma(x)$ given in
+\eqref{eq:sigmoid} was widely used early in ML and was often referred to as a
+squashing function.  The hyperbolic tangent function given by \eqref{eq:tanh} is
+attractive for some applications because the range is $-1 \geq x \geq 1$ and
+worked well for multiple layer neural networks compared to the sigmoid function.
+The rectified linear unit given as $relu(x)$ in \eqref{eq:relu} has grown in
+popularity due to its characteristics in quickly converging and overcoming the
+vanishing gradient problem\cite{krizhevsky2012imagenet, nwankpa2018activation}.
+
+
+% \begin{figure}[h]
+%     %\centering
+%     \includegraphics[width=8.0cm]{./images/single_layer_ff_nn.png}
+%     \caption{Single layer feed forward neural network.}
+%     \label{fig:single_ffnn}
+% \end{figure}
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=16.0cm, alt={A milti-layer feed forward neural network}]{./images/multi_layer_ff_nn.png}
+    \caption{Multi-layer feed forward neural network.}
+    \label{fig:multi_ffnn}
+\end{figure}
+
+Artificial neurons are combined to perform more complex tasks. One such
+combination of neurons is a feed-forward neural network (FFNN), a directed graph
+with information flowing only in one direction from input to output. The first
+FFNNs had a single layer of input neurons connected to an output layer and were
+aptly names single layer FFNNs.
+% Figure~\ref{fig:single_ffnn} shows a single layer FFNN. The two green squares
+% labeled $i_1$ and $i_2$ are inputs to the FFNN. The ovals labeled $a$ and $b$
+% are artificial neurons in the FFNN. The two salmon-colored circles $o_1$ and
+% $o_2$ represent the outputs of the FFNN.
+Later, additional layers of hidden neurons were added to FFNNs, as depicted in
+Figure~\ref{fig:multi_ffnn}.  When a neuron is not externally visible from the
+neural network, it is called hidden. More specifically, hidden neurons are those
+not connected to an input or output. The input layer in
+Figure~\ref{fig:multi_ffnn} is depicted in green as nodes a through d. The
+hidden layers in Figure~\ref{fig:multi_ffnn} are highlighted in blue as Hidden
+Layer1 (nodes e, f, and g) and Hidden Layer2 (nodes h, i, and j). The output
+layer consists of the salmon-colored nodes labeled as k and l. Adding more
+layers of hidden neurons can result in the network's ability to perform even
+more complex tasks.
+
+A neural network's architecture can be defined as the static parameters, often
+called hyperparameters, of the neural network.  These parameters may differ
+depending on the problem. Some parameters pertain to the network layout and
+include the number of hidden layers and the number of neurons in each layer.  Other
+hyperparameters involve the activation function and the solver or algorithm used
+during training to attain dynamic parameters, known as weights.
+
+\subsection{Deep Learning}
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=15.5cm, alt={The LeNet-5 convolutional neural network architecture}]{./images/LeNet-5_architecture.svg.png}
+    \caption{A deep convolutional neural network, LeNet-5\cite{zhang2023dive}.}
+    \label{fig:lenet5}
+\end{figure}
+
+Machine learning, for decades, has needed time-consuming, hand-crafted
+algorithms for solving particular problems. Often, engineers applied specialized
+feature extraction, requiring much knowledge of the problem domain, to solve
+those problems \cite{lecun1995pattern, 726791}. Representation learning (RL)
+methods are an approach to simplify the work of developing models for ML
+problems. RL allows a system to accept raw data and can discern complex
+patterns. RL eliminated the need for custom feature extraction. Deep learning is
+an RL approach that generalizes feature identification and extraction by
+utilizing multiple processing (hidden) layers within the machine learning
+architecture to discover patterns in the data \cite{lecun2015deep}.
+
+
+Techniques such as backpropagation\cite{6795724}, convolutional neural network
+(CNN)\cite{fukushima1982neocognitron}, and gradient-based learning\cite{726791}
+produced improvements in machine learning techniques that paved the way for the
+multiple layers of processing needed by deep learning.
+
+CNNs are similar to traditional artificial neural networks but include
+convolutional layers where connectivity is limited to a locale rather than all
+neurons in the previous layer.  This achieves the behavior of convolving a
+kernel across the application input.  When the kernel encounters a specific feature
+it is designed to detect in the previous layer, it activates a neuron\cite{li2021survey}.
+In 1998, a CNN called LeNet5 was used to recognize characters in documents.  LeNet-5
+is depicted in Figure~\ref{fig:lenet5}\cite{726791, zhang2023dive, lecun1995learning}.
+
+As the depth of neural networks grew, the computing time for training these deep
+networks, with many more neurons, became an obstacle. In 2009 and 2011, deep
+belief and deep neural networks were trained with Graphics Processing Units
+(GPU) to dramatically speed up the training time through
+parallelization\cite{raina2009large, cirecsan2010deep}. In 2012, an eight-layer
+deep CNN, AlexNet, was used to obtain outstanding results on the ImageNet
+dataset \cite{krizhevsky2012imagenet}. Around that same time, deep neural
+networks achieved marked success in acoustic modeling for speech recognition. In
+this application, between three and eight hidden layer NNs with 1024 to 3072
+neurons in each layer provided the best results\cite{hinton2012deep}.
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=8.5cm, alt={The ResNet architecture}]{./images/resnet.png}
+    \caption{A residual block and ResNet 32 constructed from 16 residual blocks\cite{7780459}.}
+    \label{fig:resnet}
+\end{figure}
+
+In 2015, highway and deep residual learning (ResNet) networks were introduced
+\cite{srivastava2015highway, 7780459}. Figure~\ref{fig:resnet} shows a residual
+block in ResNet on the left. The residual block consists of two convolutional
+layers and a skip connection.  In deep residual learning skip connections are
+used to propagate the input, x, to the next residual layer.  This breakthrough
+dramatically reduced training error as neural networks got deeper. The right of
+Figure\ref{fig:resnet} illustrates how the residual blocks are used to achieve
+ResNet 32, which was a 32 layer deep residual network. ResNet had as many as 152
+layers.
+
+It was common for these deep architectures to outperform historical ML
+algorithms. The methods approach or exceed human recognition for many problems.
+Despite these advances, the weights of these networks cannot currently explain a
+decision.
+
+\subsection{Support Vector Machines (SVM)}
+
+Work by Vapnik and Chervonenkis in the early 1960s introduced a Generalized
+Portrait Method\cite{vapnik1999nature}. In the method Support Vectors, class
+boundaries for training samples are identified. Hyperplanes can be used between
+the support vectors to distinguish between classes and classify future input.
+Large margins between support vectors and hyperplanes produce optimal results.
+Obtaining a hyperplane with large margins involves transforming data into more
+dimensions, which increases computational complexity. Boser et al. pose a kernel
+trick for reducing the complexity and obtaining a large margin
+hyperplane\cite{boser1992training, cortes1995support}.
+
+\subsection{Clustering}
+
+Clustering algorithms involve the grouping of like elements together. Element
+characteristics or similarity metrics gauge the likeness of elements. Popular
+clustering algorithms are K-Means and K-nearest neighbors—the K-Means algorithm
+groups elements into K clusters, where K is some predetermined number. In
+K-nearest neighbors, a sample is assigned to a class based on the k-nearest
+neighbors to that sample from the labeled training set\cite{rebala2019machine,
+SINGH2024102799}.
+
+\subsection{Combining Results of Artificial Neural Networks}
+
+%Jacobs and mixture of experts\cite{6797059} from Neural Networks for Pattern Recognition\cite{bishop1995neural}.
+
+Several works discuss combining multiple trained neural networks (NN) results.
+Jacobs et al. identified local experts of trained networks \cite{6797059}. Other
+works treated multiple trained networks as committees and combined NN to form a
+collective decision \cite{perrone1993putting, bishop1995neural,
+sharkey1996combining}.
+
+\section{Explainable Artificial Intelligence (XAI)}
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=16.0cm, alt={A comparison of traditional AI to XAI}]{./images/ml_now_xai_future.png}
+    \caption{The traditional Machine Learning process compared to the hope for future XAI\cite{dw2019darpa}.}
+    \label{fig:ml_now_xai_future}
+\end{figure}
+
+Figure~\ref{fig:ml_now_xai_future} illustrates the hope for explainable
+artificial intelligence. The current ML interactions are depicted along the top
+as traditional AI. Because ML acts as an opaque box, users are left questioning
+the decision provided by the AI. The hope is to provide users with an explainable model and
+explainable interface. The resulting system, shown at the bottom of the figure,
+is able to present explanations along with a decision or recommendation. To
+improve trust, the explanations need to provide an understanding of the system's
+overall reasoning and alternatives. The goal of XAI is to answer these important
+questions depicted in Figure \ref{fig:ml_now_xai_future} for
+users\cite{dw2019darpa}.
+
+The ability to map the learning classifier or recognizer to human-based
+explainability is challenging for human understandability. There are at least
+seventeen explainable techniques, such as decision tree-based, rule-based (i.e.,
+knowledgebase), salience mapping, Grad-CAM, sensitivity-based analysis, feature
+importance, fuzzy-based neural network, and genetic-programming based. These
+techniques use one of three basic evaluation approaches: application-grounded,
+human-grounded, and functionally grounded
+\cite{Survey18,Fuzzy19,Hagras18,GP18,selvaraju2017grad,doshi2017towards}.
+
+Several works have surveyed and systematically reviewed XAI techniques
+\cite{guidotti2018survey, vilone2020explainable, arrieta2020explainable}. Some
+explainable approaches relate explanations on feature importance, while others
+use a rule-based mechanism. Other popular explainable research has provided
+visual explanations to users, highlighting input that contributes to a decision.
+
+An Explainable Neural Network (NN) model posed by Vaughan et al. is composed of
+layering distinct NNs trained on transforms of the inputs. A layer then combines
+the outputs of the distinct NNs to perform a prediction. Explainability comes
+from each distinct NN modeling isolated aspects of the input, which lends to the
+interpretability of the architecture \cite{vaughan2018explainable}.
+
+%The XAI methodology from \cite{whitten21, whitten23, whitten24icmi} takes a
+%knowledge-based approach to construct a classification system with intrinsic
+%explainability. The method involves manually discovering multiple properties
+%across classes of input that contribute to explainability. Transforms related
+%to properties were identified and applied to alter inputs. Granular
+%property-based inferences combine to develop a global decision. Output from the
+%property-based methodology is a textual justification for the decision based on
+%the explainable properties.
+
+Case-based explanations for medical models, introduced by Caruana et al.,
+suggested using a method based on k-nearest neighbor (KNN) distance in
+multidimensional feature space as effective in identifying like cases from
+training as explanations for new samples \cite{Caruana1999CasebasedEO}. Cases
+from training should produce results similar to new samples if they are alike.
+The case-based method suggested that leveraging training data is more difficult
+for complex models such as NN as the training set is discarded. In the case of
+NNs, the activation of $n$ hidden neurons is translated into points in an
+$n$-dimensional space, and a KNN algorithm can be applied to find similar
+activation patterns. While this may suggest similarity to the NN's activation
+and behavior between like cases, the method does little to explain what is
+happening in the NN.
+
+Outstanding work on Local Interpretable Model-Agnostic Explanations (LIME)
+explains individual samples by perturbing the sample to retrieve local elements
+and present them to an explainable model. Results of LIME on images are in the
+form of highlighted regions (superpixels) of the image that contributed to the
+decision. Figure \ref{fig:lime_ex1} depicts an image LIME is applied to, and
+Figure \ref{fig:lime_ex1_mask} shows the area of the image highlighted that
+suggests the superpixels relevant to recognizing the image as a Bernese Mountain
+dog. In addition to explaining individual samples, LIME can assess overall trust
+in a model\cite{ribeiro2016should}.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.40\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An image of a Bernese Mountain dog}]{./images/lime_image1.png}
+        \caption{}
+        \label{fig:lime_ex1}
+    \end{subfigure}%
+    \begin{subfigure}{.40\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An image of a Bernese Mountain dog with superpixels highlighted by LIME}]{./images/lime_image1_mask.png}
+        \caption{}
+        \label{fig:lime_ex1_mask}
+    \end{subfigure}%
+
+    \caption{An example of LIME highlighting the superpixels that contribute to recognizing a Bernese Mountain dog\cite{lime_github}.}
+    \label{fig:lime_mask}
+\end{figure}
+
+Shapley Additive Explanations (SHAP) also provides visual explanations for
+decisions. In SHAP, the contribution of features of the image that contributed
+to a decision are identified via higher Shapley values. Figure
+\ref{fig:shap_mnist} shows SHAP applied to five MNIST samples.  The original
+application input is depicted on the left. The Shapley values for the pixels for
+each of the ten consecutive decimal digits are shown in the image from left to
+right.  Positive values, which contribute to recognition are shown in red.
+Negative Shapley values, those that detract from recognition are shown in blue.
+More red in the column indicates a match with that
+class\cite{lundberg2017unified}.
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=15.0cm, alt={A demonstration of SHAP on five MNIST digits}]{./images/shap_MNIST_Example_3_0.png}
+    \caption{SHAP applied to five MNIST digits. High (positive) Shapley values are depicted in red for the ten classes\cite{shap_docs}.}
+    \label{fig:shap_mnist}
+\end{figure}
+
+While some of the explainable methods discussed give a user visual hints about
+elements of images that contributed to a decision, no known method provides an
+adequate written explanation to a user.
+
+\section{AI Classifier Analysis: Performance Metrics}
+\label{sec:perf_metrics}
+
+Metrics such as Accuracy, Precision, and Recall have evolved from disciplines
+such as Statistics, Data Science, and Information
+Retrieval\cite{harter1971cranfield} to use in evaluating AI models. The terms
+sensitivity (also known as recall)  and specificity were introduced by American
+biostatistician Jacob Yerushalmy in 1947\cite{yerushalmy1947statistical}. The
+Accuracy metric \eqref{eq:accuracy} for a binary predictor is given by the ratio
+of correct predictions (positive and negative), the sum of True Positives ($TP$)
+and True Negatives ($TN$), to the total number of predictions which is given by
+the sum of $TP$, $TN$, False Positives ($FP$), and False Negatives ($FN$). The
+Precision metric \eqref{eq:precision} represents the ratio of correct positive
+predictions, $TP$, to all positive predictions, $TP + FP$. Recall
+\eqref{eq:recall} represents the ratio of correct positive predictions, $TP$, to
+all positive cases, $TP + FN$. Specificity \eqref{eq:specificity} represents the
+ratio of correct negative predictions, $TN$, to all negative cases, $TN + FP$.
+
+\begin{equation}\label{eq:accuracy}
+    Accuracy = ACC = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+
+\begin{equation}\label{eq:precision}
+    Precision = P = \frac{TP}{TP + FP}
+\end{equation}
+
+\begin{equation}\label{eq:recall}
+    %E  = \frac{|A|}{|B|} = \frac{TP}{TP + FN} = TPR = R % old effectiveness
+    Recall = R = \frac{TP}{TP + FN}
+\end{equation}
+
+\begin{equation}\label{eq:specificity}
+    Specificity = S = \frac{TN}{TN + FP}
+\end{equation}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Part of Pearson's contingency table showing the relationship between occupation of father and son\cite{pearson1904theory}.}
+    \label{tab:contigency_matrix}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|c|c|c|c|}
+        \multicolumn{2}{c}{}& \multicolumn{4}{c}{Father's Occupation}\\
+        & \multicolumn{1}{c}{} & \multicolumn{1}{c}{Army} & \multicolumn{1}{c}{Art} & \multicolumn{1}{c}{Law}
+        & \multicolumn{1}{c}{Med}  \\
+        \cline{3-6}
+        \multirow{4}{*}{{\rotatebox[origin=c]{90}{Son's Occupation}
+        }} & 
+        Army & $26$ & $2$ & $3$ & $0$ \\ \cline{3-6}
+        &   Art & $0$ & $51$ & $5$ & $4$ \\ \cline{3-6}
+        &   Law & $3$ & $1$ & $18$ & $0$ \\ \cline{3-6}
+        &   Med & $0$ & $0$ & $1$ & $20$ \\ \cline{3-6}
+    \end{tabular}
+\end{table}
+
+
+% \begin{figure}[H]
+%     %\centering
+%     \includegraphics[width=12.0cm]{./images/contingency_matrix_pearson.png}
+%     \caption{Part of Pearson's contingency table showing the relationship between occupation of father and son\cite{pearson1904theory}.}
+%     \label{fig:contigency_matrix}
+% \end{figure}
+
+Many of these metrics are easily attained from the confusion matrix.  The
+concept of a confusion matrix dates back to 1904 with Karl Pearson's work as a
+biostatistician where he posed contingency tables for illustrating the
+relationship between traits of immediate relatives.  Pearson provides several
+contingency tables for traits such as stature of father to stature of son.
+Table~\ref{tab:contigency_matrix} shows part of the contingency table for the
+occupation of a father as an indicator (predictor) of the occupation of a son.
+Four of the fourteen occupations are shown in Table~\ref{tab:contigency_matrix}.
+Columns represent the occupation of a father (predictor), while rows indicate
+the occupations of a son.  A note that Pearson's tables vary between the father
+as rows or columns. Table~\ref{tab:contigency_matrix} was changed from Pearson's
+work to have the father (predictor) as columns to be consistent with a typical
+confusion matrix\cite{pearson1904theory}.
+
+An effective indicator (predictor) would have high vales at the diagonal of the
+table, indicating the predicted class and actual class coincide, and low values
+elsewhere.  This is indeed the case with Table~\ref{tab:contigency_matrix} where
+the lowest diagonal value indicates eighteen sons of lawyers were lawyers.  The
+maximum non-diagonal value is five, where five sons of lawyer fathers took art
+as a profession\cite{pearson1904theory}.
+ 
+In AI, the confusion matrix shows the relationship between the forecasts of a
+model compared to actual observations when testing the effectiveness of a model.
+As in Pearson's contingency tables, the occurrences of predicted to observed
+(actual) results are often captured in cells as counts\cite{kruger2016activity,
+luque2019impact, gortler2022neo}.
+
+Table \ref{tab:confusion_matrix} illustrates a sample confusion matrix for four
+classes, a through d. Predicted classes are in columns and actual, or observed,
+classes are shown in rows. The particular confusion matrix in Table
+\ref{tab:confusion_matrix} is considering the class b and illustrating the one
+class versus other classes strategy.  Instead of counts in the cells of the
+matrix, it highlights the following:
+
+\begin{itemize}
+    \item True Positives at the confluence of row b and column b.
+    \item False Positives in cells where b was predicted but other classes were observed.
+    \item False Negatives in cells where b was observed but other classes were predicted.
+    \item True Negatives in cells where both predictions and observations were not b.
+\end{itemize}
+
+
+\begin{table}[H]
+    \centering
+    \caption{A sample confusion matrix, considering the class c, showing True Positives (TP), True Negatives(TN), False Positives (FP), and False Negatives (FN).}
+    \label{tab:confusion_matrix}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|c|c|c|c|}
+        \multicolumn{2}{c}{}& \multicolumn{4}{c}{Predicted}\\
+        & \multicolumn{1}{c}{} & \multicolumn{1}{c}{a} & \multicolumn{1}{c}{b} & \multicolumn{1}{c}{c}
+        & \multicolumn{1}{c}{d}  \\
+        \cline{3-6}
+        \multirow{4}{*}{{\rotatebox[origin=c]{90}{Actual}
+        }} & 
+        a & TN & FP & TN & TN \\ \cline{3-6}
+        &   b & FN & TP & FN & FN \\ \cline{3-6}
+        &   c & TN & FP & TN & TN \\ \cline{3-6}
+        &   d & TN & FP & TN& TN \\ \cline{3-6}
+    \end{tabular}
+\end{table}
+
+% \begin{figure}[h]
+%     %\centering
+%     \includegraphics[width=10.0cm]{./images/confusion_matrix_f.png}
+%     \caption{A sample confusion matrix.}
+%     \label{fig:confusion_matrix}
+% \end{figure}
+
+There has been extensive study of various metrics for gauging the performance of
+Machine Learning (ML) models \cite{picek2019curse, erickson2021magician,
+Naser_2021}. The Receiver Operating Characteristic (ROC) Curve provides a
+relationship between the True Positive and False Positive Rates for various
+thresholds, and the Area Under the ROC Curve (AUC) \cite{METZ1978283,
+Hanley_1982} provides a metric characterizing the performance of a classifier.
+
+The appropriate choice of performance metric is important, especially when faced
+with an imbalance in the data. Data with a high imbalance may produce misleading
+performance metrics. An imbalance ratio (IR) is a metric characterizing the
+balance of a dataset by comparing the cardinality of class
+instances. In the case of a two class dataset, the
+imbalance ratio is given by the number of majority class instances, $N_{maj}$,
+over the minority class instances, $N_{min}$, as shown in
+\eqref{eq:imbalance_ratio}.  A dataset is imbalanced if $IR > 1$.  The greater
+$IR$ is in a dataset represents a greater imbalance in the data\cite{KHAN2024122778}.
+
+\begin{equation}\label{eq:imbalance_ratio}
+    IR = \frac{N_{maj}}{N_{min}}
+\end{equation}
+
+In the case of a dataset with multiple classes, a one versus other classes
+strategy must be used when calculating performance metrics for a particular
+class.  Even if the data is balanced among the individual classes, the one
+$N_{min}$ versus others $(N_{maj})$ strategy will produce a high imbalance ratio
+and necessitate metrics that are resilient to imbalance.  Without the use of
+imbalance resilient metrics, result can be misleading.  This can be observed in
+Table \ref{tab:skel_fill_metrics} where accuracy, a very common metric gauging
+overall performance of a classifier, is near $90\%$ for nine out of ten classes
+despite very few true positive results.
+
+F1-Score is a metric that uses the harmonic mean of Recall and Precision of a
+model \cite{sasaki2007truth}. Cohen's Kappa was used as a metric for
+characterizing the agreement between observers of psychological behavior
+\cite{Cohen1960ACO,ben2008relationship}. In the case of ML models, Cohen's Kappa
+effectively compares agreement between labels and predictions. Matthew's
+Correlation Coefficient (MCC) is a leading metric for comparing imbalanced
+datasets \cite{MATTHEWS1975442, 9385097}. The explainable property-based
+architecture in this work compares AUC, F1-Score, Cohen's Kappa, and MCC as
+potential metrics for gauging the performance of ML models.
+
+\section{Handwritten Character Datasets}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/mnist_samples/0-0.png}
+        %\caption{}
+        %\label{fig:raw_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/mnist_samples/1-0.png}
+        %\caption{}
+        %\label{fig:raw_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/mnist_samples/2-0.png}
+        %\caption{}
+        %\label{fig:raw_7_17}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/mnist_samples/3-0.png}
+        %\caption{}
+        %\label{fig:raw_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/mnist_samples/4-0.png}
+        %\caption{}
+        %\label{fig:skel_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/mnist_samples/5-0.png}
+        %\caption{}
+        %\label{fig:skel_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/mnist_samples/6-0.png}
+        %\caption{}
+        %\label{fig:skel_7_17}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/mnist_samples/7-0.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/mnist_samples/8-0.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/mnist_samples/9-0.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+    \caption{Ten sample MNIST digits, one from each class.}
+    \label{fig:mnist_samples}
+\end{figure}
+
+Handwritten sample datasets, such as the Modified National Institute of
+Standards and Technology database (MNIST)\cite{mnist, deng2012mnist}, which
+consists of 70,000 samples of handwritten digits, and the Extended MNIST
+database\cite{cohen2017emnist} (EMNIST), which contains over 800,000 samples,
+serve as important datasets that have been utilized widely to evaluate ML
+algorithms and architectures.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/10-0.png}
+        %\caption{}
+        %\label{fig:raw_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/11-0.png}
+        %\caption{}
+        %\label{fig:raw_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/12-0.png}
+        %\caption{}
+        %\label{fig:raw_7_17}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/13-0.png}
+        %\caption{}
+        %\label{fig:raw_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/14-0.png}
+        %\caption{}
+        %\label{fig:skel_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/15-0.png}
+        %\caption{}
+        %\label{fig:skel_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/16-0.png}
+        %\caption{}
+        %\label{fig:skel_7_17}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/17-0.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/18-0.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/19-2.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+
+    \par\medskip
+
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/20-0.png}
+        %\caption{}
+        %\label{fig:raw_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/21-0.png}
+        %\caption{}
+        %\label{fig:raw_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/22-0.png}
+        %\caption{}
+        %\label{fig:raw_7_17}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/23-0.png}
+        %\caption{}
+        %\label{fig:raw_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/24-0.png}
+        %\caption{}
+        %\label{fig:skel_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/25-0.png}
+        %\caption{}
+        %\label{fig:skel_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/26-0.png}
+        %\caption{}
+        %\label{fig:skel_7_17}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/27-0.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/28-0.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/29-0.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+
+    \par\medskip
+
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/30-0.png}
+        %\caption{}
+        %\label{fig:raw_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/31-0.png}
+        %\caption{}
+        %\label{fig:raw_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/32-0.png}
+        %\caption{}
+        %\label{fig:raw_7_17}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/33-0.png}
+        %\caption{}
+        %\label{fig:raw_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/34-0.png}
+        %\caption{}
+        %\label{fig:skel_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/35-0.png}
+        %\caption{}
+        %\label{fig:skel_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/36-0.png}
+        %\caption{}
+        %\label{fig:skel_7_17}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/37-0.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/38-0.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/39-0.png}
+        %\caption{}
+        %\label{fig:skel_9_10}
+    \end{subfigure}%
+
+    \par\medskip
+
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/40-0.png}
+        %\caption{}
+        %\label{fig:raw_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/41-0.png}
+        %\caption{}
+        %\label{fig:raw_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/42-0.png}
+        %\caption{}
+        %\label{fig:raw_7_17}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/43-0.png}
+        %\caption{}
+        %\label{fig:raw_9_10}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/44-0.png}
+        %\caption{}
+        %\label{fig:skel_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/45-0.png}
+        %\caption{}
+        %\label{fig:skel_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/emnist_samples/46-0.png}
+        %\caption{}
+        %\label{fig:skel_7_17}
+    \end{subfigure}%
+
+    \caption{Sample EMNIST characters from the 37 classes, excluding digits.}
+    \label{fig:emnist_samples}
+\end{figure}
+
+The digit images from MNIST and EMNIST are stored as 28x28 pixel grayscale byte
+arrays in an image database. Figure~\ref{fig:mnist_samples} shows ten samples from
+NMNIST, one of each of the ten digits. EMNIST also contains ten decimal digits
+and includes uppercase and lowercase characters. Figure~\ref{fig:emnist_samples}
+shows samples from the 36 non-digit character classes in EMNIST. Note that some
+lowercase characters, closely resembling uppercase counterparts like
+\textit{'C'} and \textit{'I'}, are omitted.
+
+\begin{figure}[H]
+    \centering
+    \textbf{Uppercase D Samples}\par\medskip 
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/D-0.png}
+        %\caption{}
+        \label{fig:issue_D0}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/D-01.png}
+        %\caption{}
+        \label{fig:issue_D01}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/D-02.png}
+        %\caption{}
+        \label{fig:issue_D02}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/D-03.png}
+        %\caption{}
+        \label{fig:issue_D03}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/D-04.png}
+        %\caption{}
+        \label{fig:issue_D04}
+    \end{subfigure}\par\medskip
+    \textbf{Uppercase F Samples}\par\medskip
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/F-0.png}
+        %\caption{}
+        \label{fig:issue_F0}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/F-01.png}
+        %\caption{}
+        \label{fig:issue_F01}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/F-02.png}
+        %\caption{}
+        \label{fig:issue_F02}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/F-03.png}
+        %\caption{}
+        \label{fig:issue_F03}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/F-04.png}
+        %\caption{}
+        \label{fig:issue_F04}
+    \end{subfigure}\par\medskip
+    \textbf{Uppercase H Samples}\par\medskip
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/H-0.png}
+        %\caption{}
+        \label{fig:issue_H0}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/H-02.png}
+        %\caption{}
+        \label{fig:issue_H01}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/H-03.png}
+        %\caption{}
+        \label{fig:issue_H02}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/H-04.png}
+        %\caption{}
+        \label{fig:issue_H03}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/H-05.png}
+        %\caption{}
+        \label{fig:issue_H04}
+    \end{subfigure}\par\medskip
+    \textbf{Uppercase N Samples}\par\medskip
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/N-0.png}
+        %\caption{}
+        \label{fig:issue_N0}
+    \end{subfigure}%    
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/N-01.png}
+        %\caption{}
+        \label{fig:issue_N01}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/N-02.png}
+        %\caption{}
+        \label{fig:issue_N02}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/N-03.png}
+        %\caption{}
+        \label{fig:issue_N03}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/N-04.png}
+        %\caption{}
+        \label{fig:issue_N04}
+    \end{subfigure}\par\medskip
+    \textbf{Uppercase T Samples}\par\medskip
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/T-0.png}
+        %\caption{}
+        \label{fig:issue_T0}
+    \end{subfigure}%    
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/T-01.png}
+        %\caption{}
+        \label{fig:issue_T01}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/T-02.png}
+        %\caption{}
+        \label{fig:issue_T02}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/T-03.png}
+        %\caption{}
+        \label{fig:issue_T03}
+    \end{subfigure}%
+    \begin{subfigure}{.10\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/issues/T-04.png}
+        %\caption{}
+        \label{fig:issue_T04}
+    \end{subfigure}
+    \caption{EMNIST samples for the indicated uppercase letters.  Note that the first sample in each row appears as expected and others are ambiguous or mislabeled.}
+    \label{fig:emnist_label_errors}
+\end{figure}
+
+The datasets are valuable testbeds to leverage for research. Despite the wide
+use of MNIST and EMNIST, there are problems with samples that are ambiguous or
+mislabeled. Regarding ambiguity, several of the character classes closely
+resemble one another. For example, compare the uppercase \textit{'O'} to the
+zero, the two and \textit{'Z'}, as well as the \textit{'S'} and five. Examples
+of mislabeled samples can be observed in Figure~\ref{fig:emnist_samples} where the
+uppercase \textit{'F'}, the sixth image on the top row resembles a lowercase
+\textit{'f'} while the lowercase \textit{'f'}, the first image on the fourth row
+resembles an uppercase \textit{'F'}. Figure~\ref{fig:emnist_label_errors} show
+additional EMNIST errors found when browsing sample images. Each row in the
+figure represents samples from a class. The first sample of each row appears to
+be acceptable, but the subsequent samples in each row are not. One class,
+\textit{'F'}, had a large percentage, over 30\%, observed as lowercase f. These
+ambiguous and mislabeled samples are challenging to explainability.
+
+
+\section{Pruning Training Sets}
+
+Data sets with noise, such as problems with labels and ambiguous samples, are
+problematic to practical ML training and explainability. Automatic pruning using
+weak learners to prune noisy data sets produced good results in work by
+Angelova et al. \cite{angelova05}. The excellent work on Confident Learning
+produced an open-source framework, Cleanlab, to identify label issues in
+datasets \cite{northcutt2021}. This research utilizes Cleanlab in some pruning
+techniques to reduce ambiguous training data.
+
+
+\section{Digital Image Processing}
+
+Digital image processing is a field of computer science where images are
+processed using algorithms on a computer. The history of digital image
+processing goes back to 1920 when systems used compression techniques to speed
+the transmission of images over telegraph lines. Many fields such as medicine,
+robotics, military, and autonomous vehicles utilize digital image
+processing\cite{gonzalez2018image}. In digital image processing, techniques such
+as filtering and morphological image processing are used to achieve various
+tasks like feature extraction and object or shape detection.
+
+\begin{figure}[H]
+    \centering
+    \textbf{Raw Digit Images}\par\medskip 
+    \begin{subfigure}{.20\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/skeleton/2-5-raw.png}
+        %\caption{}
+        \label{fig:raw_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.20\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/skeleton/4-22-raw.png}
+        %\caption{}
+        \label{fig:raw_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.20\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/skeleton/7-17-raw.png}
+        %\caption{}
+        \label{fig:raw_7_17}
+    \end{subfigure}%
+    \begin{subfigure}{.20\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/skeleton/9-10-raw.png}
+        %\caption{}
+        \label{fig:raw_9_10}
+    \end{subfigure}%
+    \par\medskip
+    \textbf{Skeleton Transformations}\par\medskip
+    \begin{subfigure}{.20\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/skeleton/2-5-skel.png}
+        %\caption{}
+        \label{fig:skel_2_5}
+    \end{subfigure}%
+    \begin{subfigure}{.20\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/skeleton/4-22-skel.png}
+        %\caption{}
+        \label{fig:skel_4_22}
+    \end{subfigure}%
+    \begin{subfigure}{.20\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/skeleton/7-17-skel.png}
+        %\caption{}
+        \label{fig:skel_7_17}
+    \end{subfigure}%
+    \begin{subfigure}{.20\textwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST image}]{./images/skeleton/9-10-skel.png}
+        %\caption{}
+        \label{fig:skel_9_10}
+    \end{subfigure}%
+    \caption{The top row consists of sample MNIST digits while the bottom row shows the skeleton transformation of those digits.}
+    \label{fig:skeleton_samples}
+\end{figure}
+
+A skeleton is a minimally thin but fully connected representation of an object
+in an image. It is defined as the set of points of equal distance to the border
+of a region. The skeleton was traditionally obtained by thinning while
+preserving the topology or medial axis transformation\cite{LEE1994,
+gonzalez2018image}. Figure~\ref{fig:skeleton_samples} shows the skeleton transform
+for some sample handwritten digits. The skeleton results in a one-pixel thick
+representation of the digit.
+
+The Hough Transform helps find shapes such as lines and circles in an image. It
+was developed when attempting to recognize line patterns in a bubble chamber to
+detect subatomic particles. The Hough Transform significantly reduces the number
+of points that need to be considered in detecting shapes by searching the
+parameter space of the figures rather than the image space\cite{hough1962method,
+illingworth1988survey, princen1992formal}.
+
+The Harris-Stephens corner detector algorithm is used to extract corner features
+from digital images.  In the algorithm, autocorrelation is used with the corner
+edge response function to determine points where there is a shift in multiple
+directions, and therefore a corner\cite{harris1988combined}
+
+% The algorithm is related to Moravec's corner detector in which a small window
+% is passed (shifted) over the image considering the shift in values as three
+% cases: First, a corner is detected if there is a significant shift in multiple
+% directions.  Second, an edge (not a corner) is detected if there is a shift in
+% only one direction.
+
+\section{Handwriting Recognition}
+
+%\subsection{Optical Character Recognition (OCR)}
+
+In 1911, Goldberg filed an invention for a device\cite{goldberg1911} that would
+recognize printed characters and send them via Morse code over a telegraph. A
+very specific character set was required for this device. In 1929, Tauschek
+filed a patent for a Reading Machine\cite{tauschek1929} to digitize printed
+works. Optical Character Recognition (OCR) was later advanced in the 1970s by
+Kurzweil to recognize virtually any font. These approaches were particular to
+printed text.
+
+In 1989, LeCun et al. applied NN with backpropagation to recognize handwritten
+zipcodes\cite{lecun1989handwritten}. In the early 1990s, there were advances in
+recognizing handwriting recognition that applied feature extraction techniques.
+Machine learning techniques were later leveraged in the late 1990s to achieve
+systems that competed with humans to accurately recognize handwritten
+characters.
+
+SVMs have also achieved good results for handwriting recognition for
+decades\cite{schiilkop1995extracting, decoste2002training}.
+
+\section{Voting}
+
+Voting is a problem in computing where potentially multiple conflicting results
+may be posed. Components of a system may have inexact or incomplete information
+to make a decision, so a voting algorithm is utilized to select among the
+alternatives\cite{parhami1994voting, BENNETT19998787}. Distributed and fault
+tolerant systems research has provided several examples of voting
+\cite{avizienis} and probabilistic models for the voting problem \cite{blough}.
+
+\section{Principal Component Analysis}
+
+Principal component analysis (PCA) is a statistical technique attributed to
+Pearson in 1901\cite{Pearson01111901} for reducing the dimensionality of a
+dataset. In PCA, principal components (PC) are combinations of variables that
+capture the maximal variance in the data. In approaching
+PCA, one typically determines the percentage of variance one wishes to capture
+in a dataset and calculates the number, $k$, of PCs needed to achieve the
+desired variance. Alternatively, the number of PCs may be driven by the desired
+data reduction or found by iteratively attempting values until a performance
+peak is attained\cite{abdi2010principal, 7053842}.
+
+% PCA may be implemented in the following steps\cite{7053842}:
+
+% \begin{enumerate}
+%     \item Calculate the mean centered data by finding the mean sample in the data and subtracting the mean from each row.
+%     \item Find the covariance matrix of the mean centered data.
+%     \item Calculate the leading, $k$ eigenvalues and eigenvectors of the correlation matrix.
+%     \item Project the original dataset into $k$ dimensional space by multiplying
+%           the dataset and the $k$ eigenvectors.
+% \end{enumerate}
+
+\begin{figure}[H]
+    %\centering
+    \includegraphics[width=8.0cm, alt={An image showing four eigenfaces generated using PCA}]{./images/att-labs-eigenfaces.png}
+    \caption{Sample eigenfaces from the AT\&T labs ORL faces database\cite{lee2019portraits}.}
+    \label{fig:eigenfaces}
+\end{figure}
+
+In applying PCA on an image dataset, PCs may also be visualized. A visualization
+of a PC represents the highlighted features of the image in the principal
+component. One such visualization is depicted in Figure \ref{fig:eigenfaces} as
+a set of eigenfaces calculated with PCA from the AT\&T ORL faces database. Each
+of the four images shown in Figure~\ref{fig:eigenfaces} represents a
+PC\cite{139758, lee2019portraits}.
+
+
+\section {Hardware Trojans}
+
+\begin{figure}[H]
+    %\centering
+    \includegraphics[width=12.0cm, alt={A taxonomy of hardware trojans}]{./images/trojan_circuit_taxonomy.png}
+    \caption{Trojan circuit taxonomy\cite{4484928}.}
+    \label{fig:hw_trojan_circuit_taxonomy}
+\end{figure}
+
+As a result of cost-reducing measures in the semiconductor manufacturing
+industry leading to outsourcing integrated circuit processes, there is a
+security risk involving the insertion of hardware trojans into trusted
+integrated circuits. A hardware trojan circuit taxonomy is shown in
+Figure~\ref{fig:hw_trojan_circuit_taxonomy}. A hardware trojan circuit has two
+primary parts: the trigger, which activates the trojan, and the payload, which
+delivers the exploit. Triggers may be classified as digital or analog. Off-die
+sensors may trigger analog triggers. Rare values, k-bit synchronous or
+asynchronous delays, and rare sequences may activate triggers. Payloads may also
+be digital or analog. Digital payloads could alter control, status, or data
+lines. Analog payloads could exploit the circuit by introducing leakage,
+bridging, delay, or unintended activity\cite{4484928}.
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=12.0cm, alt={An example of a rare event hardware trojan}]{./images/trojan_example.png}
+    \caption{A rare event hardware trojan model\cite{4484928}.}
+    \label{fig:hw_trojan_eample}
+\end{figure}
+
+Figure~\ref{fig:hw_trojan_eample} is an example of a rare event hardware trojan.
+The trojan consists of two parts: the trigger, q-Trigger, and the payload,
+p-payload. In this example, the inputs to the trigger are the $n$ $q_i$ lines.
+The trojan is said to be triggered in this example when all $n$ inputs are high.
+It is beneficial for detection if rare states trigger the trojan. In this case
+$\frac{1}{2^n}$ states trigger the trojan. The trojan payload will be activated
+from the trigger, enabling memory Write Enable (WE) to corrupt
+memory\cite{4484928}.
+
+Haswega et al. introduced a method of detecting hardware trojans from a
+gate-level netlist \cite{7604700, hasegawa2020hardware}. Five features from each
+net are used to classify trojans. (a) Logic Gate Fanins (LGFi) represent the
+number of inputs to the logic gates two levels upstream from a net. (b)
+Flip-Flop Input (FFi) represents the number of upstream logic levels to a
+flip-flop. (c) Flip-Flop Output (FFo) represents the number of logic levels
+downstream to a flip-flop. (d) Primary Input (PI) which represents the number of
+logic levels upstream to the closest primary input. (e) Primary Output (PO)
+represents the number of logic levels downstream to the closest primary output.
+In the work, the authors also used three training strategies, due to the
+imbalance of the trojan to non-trojan training data ratio: no weighting, static
+weighting, and dynamic weighting. Dynamic weighting performed best. Other works
+address the imbalance in other means, such as synthetic method over-sampling
+techniques \cite{10444240}. These optimized methods still do not provide a
+better understanding of the ML results.
+
+\subsection{Trust-Hub Trojan Database}
+
+The Trust-Hub trojan benchmark circuits dataset provides a variety of hardware
+circuits, including communication peripherals and cryptographic cores,
+containing hardware trojans. The Trust-Hub dataset is often used in developing
+new techniques for detecting hardware trojans\cite{6657085,
+shakya2017benchmarking, slayback2015computer, px6s-sm21-22}. This work utilizes
+Trust-Hub trojan benchmark data in an application for the explainable methods.

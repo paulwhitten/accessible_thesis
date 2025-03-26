@@ -1,0 +1,583 @@
+\chapter{Explainable Methods Applied to Hardware Trojan Detection} \label{ch:trojan}
+% remove below this line and add your concluding remarks
+
+This chapter applies the explainable methodologies to the detection of hardware
+trojans. Before doing so, additional background on hardware trojans is
+presented. When approaching the steps for the explainable methods for hardware
+trojans, a large part of the work involved data processing. Compared to
+handwriting, much more data processing was required to obtain the required
+features from Verilog netlists. This research uses the five features from the
+work from Hasegawa et al.\cite{7604700}.
+
+After data processing, an immediate problem in the property-based method was
+identifying explainable properties from only five features. Much of the focus of
+the property-based method for hardware trojans is how the concept of explainable
+properties may be applied to the five features. The remaining method remains
+very similar to the previous handwriting application.
+
+Because of earlier work to analyze the importance of and select the optimal
+feature set for trojan detection\cite{7604700, hasegawa2020hardware}, the desire
+was to maintain five features and attempt properties consisting of the 31
+combinations of those features. This approach resulted in poor explainability
+for the property-based method. Applying the case-based method to the problem of
+trojan detection resulted in much better explainability.
+
+\section{Hardware Trojans}
+
+\begin{figure}[H]
+    %\centering
+    \includegraphics[width=14.0cm, alt={A diagram of the confidentiality, integrity, and availability hardware trojan}]{./images/Trojan_CIA_20240613.drawio.png}
+    \caption{Hardware trojan CIA impact model.}
+    \label{fig:cia_impact_model}
+\end{figure}
+
+Hardware trojans are malware circuits injected within an integrated circuit (IC)
+during the design stages before the IC is manufactured. Once manufactured, the
+trojan cannot be removed or easily bypassed by software patches because it is an
+inseparable and permanent part of the IC chip. The trojan has become part of the
+DNA of the IC chip and unknowingly part of the hardware design's intellectual
+property (IP). Hence, attackers use hardware trojans to weaken the information
+security of the IC chip, whose properties can be summarized as confidentiality,
+integrity, and availability (CIA), as shown in
+Figure~\ref{fig:cia_impact_model}. For example, an availability hardware trojan
+will change the privileged mode of a processor from user to supervisor mode,
+allowing root access within the software operating system. An integrity hardware
+trojan can periodically leak or corrupt sensitive information, such as
+encryption/decryption keys, to the primary outputs (PO).
+
+\begin{figure}[H]
+    %\centering
+    \includegraphics[width=12.0cm, alt={A confidentiality rare event hardware trojan}]{./images/Trojan_Model_20240612.drawio.png}
+    \caption{Confidentiality rare event hardware trojan model.}
+    \label{fig:cre_impact_model}
+\end{figure}
+
+Figure~\ref{fig:cre_impact_model} shows a specific implementation of a
+confidentially hardware trojan using logic gates within an IC design file
+netlist. The dashed lines represent additional levels of logic gates. The
+trigger is conditional on input patterns within the IC, which eventually
+originate from the primary inputs. The logical-and gate requires that all the
+inputs are logically true before triggering the payload. In order to be
+difficult to detect or accidentally trigger during IC test mode, the hardware
+trojan trigger should be a rare event condition. Given $n$ inputs to a
+combinational IP circuit, the rarest condition would be one of $2^n$ inputs.
+Once the hardware trojan is triggered, the multiplexor circuit within the
+payload switches from normal operation to leaking sensitive information on the
+primary output pin of the circuit where the attacker can observe it.
+
+This rare event hardware trojan model allows for detection through static
+circuit analysis by examining each net or group of logic gates within an IP
+circuit primary for input or fanin complexity. The greater the fanin, the higher
+the probability that a subcircuit is a potential suspect for a hardware trojan.
+Furthermore, payloads need to propagate their sensitive information to the
+primary output. The rare event fanin and primary output payload concepts form
+the basis of trojan analysis of several methodologies \cite{4484928, 7604700,
+hasegawa2020hardware, px6s-sm21-22}.
+
+Fanin and output payload are features of a net or set of logic gates. Features
+are used widely in ML classification and pattern recognition. Individual
+features may contribute little to identification. The combination of features,
+however, is useful for effective classification and can also explain a system's
+results.
+
+\section{Data Preparation} \label{trojan_data_prep}
+
+This work utilized Trust-Hub.org trojan benchmark data \cite{6657085,
+shakya2017benchmarking, px6s-sm21-22, slayback2015computer}.  The fifteen
+netlists used from Trust-Hub are shown in Table \ref{tab:netlists_used}.
+
+\begin{table}[h]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{The fifteen Trust-Hub netlists used in this work.}
+    %\resizebox{1.05\columnwidth}{!}{%
+    \begin{tabular}{|c||c|}
+        \hline
+        \bfseries Netlist Name & \bfseries Netlist Name \\
+        \hline
+        \hline
+        RS232-T1000 & s35932-T100 \\
+        \hline
+        RS232-T1100 & s35932-T200 \\
+        \hline
+        RS232-T1200 & s35932-T30 \\
+        \hline
+        RS232-T1300 & s38417-T100 \\
+        \hline
+        RS232-T1400 & s38417-T200 \\
+        \hline
+        RS232-T1500 & s38584-T100 \\
+        \hline
+        RS232-T1600 & s38584-T300 \\
+        \hline
+        s15850-T100  \\
+        \cline{0-0}
+    \end{tabular}
+    %}
+    \label{tab:netlists_used}
+\end{table}
+
+% \begin{itemize}
+%     \item RS232-T1000
+%     \item RS232-T1100
+%     \item RS232-T1200
+%     \item RS232-T1300
+%     \item RS232-T1400
+%     \item RS232-T1500
+%     \item RS232-T1600
+%     \item s15850-T100
+%     \item s35932-T100
+%     \item s35932-T200
+%     \item s35932-T300
+%     \item s38417-T100
+%     \item s38417-T200
+%     \item s38584-T100
+%     \item s38584-T300
+% \end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=11cm, alt={A flowchart representing data processing for extracting features from hardware trojans}]{./images/trojan_data_processing_flow.png}
+    \caption{Data processing flow.}
+    \label{fig:data_prep}
+\end{figure}
+
+Figure~\ref{fig:data_prep} depicts the detailed flow of data processing and
+preparation. The Verilog gate-level netlists containing trojans were processed
+using circuitgraph \cite{circuitgraph}, which uses Lark, a Python parsing
+toolkit \cite{lark}. Directed graph representations of the netlists were built
+with NetworkX \cite{networkx} and then queried to obtain each gate's five
+features and class. Class can be defined as trojan (1) or non-trojan (0). When
+referencing class, trojan is often abbreviated as $t$ and non-trojan as $n$.
+Submodules in trust-hub netlists were not processed. Omitting netlist submodules
+reduced the number of trojans in some netlists compared to other works.
+
+The focus of this work is explainability. Rather than consider each unique
+netlist as a test set and the remaining netlists as a training set, all netlists
+were combined. 20\% of the combined 52,737 entries from the fifteen netlists
+were randomly sampled and saved as a test set. The remaining (80\%) samples were
+used as a training set\cite{whitten2024naecon}.
+
+%TODO adjust numbers in this paragraph according to real number of samples
+
+
+\section{Property-Based Explainable Method} \label{prop_explainable_arch}
+
+This section will detail the implementation steps to produce an explainable
+property-based architecture for hardware trojans.  The initial data processing
+step is common to both explainable methods and was detailed above in Section
+\ref{trojan_data_prep}.
+
+\subsection{Discover Explainable Properties}
+
+When seeking explainable properties  in the trojan data, it was apparent that
+the low feature count presented a significant challenge in identifying
+properties. With only five features extracted from the netlists, there was
+little to relate to properties that could help explain the data. Further,
+individual features alone were not reliable for prediction.  A scheme for
+producing properties by the combinations of features was introduced. Table
+\ref{tab_prop_id} presents the 31 combinations of features used as properties
+in the explainable property-based methodology.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Properties, Features, and Explainability}
+    %\resizebox{1.05\columnwidth}{!}{%
+    \begin{tabular}{|c|c|c||c|c|c||c|c|c|}
+        \hline
+        \bfseries ID & \bfseries Features & \bfseries $X_j$ & \bfseries ID & \bfseries Features & \bfseries $X_j$ & \bfseries ID & \bfseries Features & \bfseries $X_j$ \\
+        \hline
+        \hline
+        1 & LGFI & 1.00 & 12 & ffi, PO & 0.75 & 23 & ffi, ffo, PO & 0.50 \\
+        \hline
+        2 & ffi & 1.00 & 13 & ffo, PI  & 0.75 & 24 & ffi, PI, PO & 0.50 \\
+        \hline
+        3 & ffo & 1.00 & 14 & ffo, PO & 0.75 & 25 & ffo, PI, PO & 0.50 \\
+        \hline
+        4 & PI & 1.00 & 15 & PI, PO & 0.75 & 26 & LGFi, ffi, ffo, PI & 0.25 \\
+        \hline
+        5 & PO & 1.00 & 16 & LGFi, ffi, ffo & 0.50 & 27 & LGFi, ffi, ffo, PO & 0.25 \\
+        \hline
+        6 & LGFi, ffi & 0.75 & 17 &  LGFi, ffi, PI & 0.50 & 28 & LGFi, ffi, PI, PO & 0.25 \\
+        \hline
+        7 & LGFi, ffo & 0.75 & 18 & LGFi, ffi, PO & 0.50 & 29 & LGFi, ffo, PI, PO & 0.25 \\
+        \hline
+        8 & LGFi, PI & 0.75 & 19 & LGFi, ffo, PI & 0.50 & 30 & ffi, ffo, PI, PO & 0.25 \\
+        \hline
+        9 & LGFi, PO & 0.75 & 20 & LGFi, ffo, PO & 0.50 & 31 & LGFi, ffi, ffo, PI, PO & 0.0\\
+        \hline
+        10 & ffi, ffo & 0.75 & 21 & LGFi, PI, PO & 0.50 \\
+        \cline{0-5}
+        11 & ffi, PI & 0.75 & 22 & ffi, ffo, PI & 0.50 \\
+        \cline{0-5}
+    \end{tabular}
+    %}
+    \label{tab_prop_id}
+\end{table}
+
+\subsection{Implement Property Transformations}
+
+Because the properties are merely combinations of the five features, the
+property transforms the transformation can be accomplished simply by writing a
+subroutine that will input a dataset with five features and output 31 distinct
+datasets with the possible combinations of the features.
+
+\subsection{Transform Training Data}
+
+Transforming the training data is accomplished by running the subroutine to take
+the training data and produce 31 datasets of the possible feature combinations.
+
+\subsection{Train ML Models}
+
+Each of the properties has an Inference Engine (IE) shown in that is used to
+cast votes based on the property. IEs were implemented as Support Vector
+Machines (SVM) from Scikit-learn \cite{scikitlearn}. The SVMs used a radial
+basis function kernel. SVM $C$ and $\gamma$ parameters were optimally set and
+then SVMs were trained based on training data.
+
+During implementation of the IEs, no weighting, static, and dynamic weighting
+methods were compared.  Static and dynamic weighting far outperformed no
+weighting. Both static weighting and dynamic weighting help overcome the highly
+imbalanced dataset.  When the static method utilizes a balance factor, $bf$,
+from \ref{eq:balance_factor} given for the trojan application in
+\ref{eq:balance}, rather than an arbitrary number, it performs comparably to
+dynamic weighting.  The balance factor for the trojan class, $bf(t)$, is given
+by the number of non-trojan nets over the number of trojan nets.  In the 80\%
+training set, $bf(trojan)=\frac{42190}{160}=263.7$.  When training the
+architecture, the static method, using balance factor, was employed due its
+performance and simplicity.
+
+% \begin{equation}\label{eq:balance}
+%     b=\frac{|non-trojan|}{|trojan|}
+% \end{equation}
+
+\begin{equation}\label{eq:balance}
+    bf(class) =
+    \begin{cases}
+        \frac{|non-trojan|}{|trojan|},& class = \text{ trojan ($t$)} \\
+        1.0,& class = \text{non-trojan ($n$)}
+    \end{cases}
+\end{equation}
+
+\subsection{Build Knowledgebase}
+
+Construction of the knowledgebase involved reprocessing the training data and
+storing the results so effectiveness metrics could be obtained for the voting
+scheme.  The implementation of the knowledgebase from handwriting remained
+unchanged.  JSON files were used to store predictions and metrics. 
+
+\subsection{Construct Voting Scheme}
+
+Again, the purpose of voting is to select among potentially conflicting opinions
+from the properties. The voting scheme from handwriting also remained unchanged.
+
+\subsection{Build Explanation Routine}
+
+The explanation routine only differed from the handwriting implementation in two
+ways. First the combinations of the features were referenced rather than
+descriptive text about the property and explainability metrics.  This resulted
+in an additional lookup that was performed to retrieve the feature names from
+identifiers representing the feature columns of the dataset.
+
+The second difference involved the explainability metric.  As was the case with
+handwriting, each property $P_j$ has an explainability metric, $X_j$, signifying
+how explainable that property is.  Exaplainbility was either 1.0 or 0 for
+handwriting. Explainability, $X_j$, for trojans is given in \eqref{eq:t_explainability}. The
+Explainability metric is based upon the number of features or cardinality of the
+$j^{th}$ property, $P$.  Again, $n$, is the number of features in the input
+vector to the architecture.
+
+A property with one feature would have high explainability, $X_j=1.0$.
+Properties with few features are more explainable, while a property with more
+features is difficult to explain.  Intuitively, this corresponds with reasoning
+that a ML model with the five features used by Haswega acted as an opaque box.
+If a single feature could easily indicate a trojan, that is likely explainable
+to a user.  Explainability for property combinations in this work for the
+properties is indicated in the $X_j$ column of Table \ref{tab_prop_id}.
+
+\begin{equation}\label{eq:t_explainability}
+    X_j = 1.0 - \frac{|P_j| - 1}{n - 1}
+\end{equation}
+
+In building the rationale in XAI, a threshold of 0.05 was used for registering a
+vote worthy of mention.  Without this threshold, each of the 31 properties were
+listed in the rationale, many with very little weight due to low effectiveness.
+The rationale composed by XAI is also organized with weights of properties
+sorted in a descending fashion to mention the highest contributing properties
+first.
+
+\subsection{Property-Based Explainable Architecture}
+
+% \begin{figure}
+%     \centering
+%     \setkeys{Gin}{width=1.0\linewidth}
+%     \begin{minipage}{1.0\linewidth}
+%     \includegraphics{./images/xai-arch.png}
+%     \caption{A general property-based explainable architecture.}
+%     \label{fig:prop_xai_arch}
+%     \end{minipage}
+%     \hfill
+%     \begin{minipage}{1.0\linewidth}
+%     \includegraphics{./images/arch-trojan.png}
+%     \caption{A property-based explainable architecture for trojan detection.}
+%     \label{fig:trojan_arch}
+%     \end{minipage} 
+% \end{figure}
+
+% \begin{figure}
+%     %\centering
+%     \includegraphics[width=9.0cm]{./images/xai-arch.png}
+%     \caption{A general property-based explainable architecture for feature data.}
+%     \label{fig:prop_xai_arch}
+% \end{figure}
+
+\begin{figure}[H]
+    %\centering
+    \includegraphics[width=16.0cm, alt={The property-based explainable architecture, with 31 properties, for hardware trojans}]{./images/arch-trojan.png}
+    \caption{A property-based explainable architecture for trojan detection.}
+    \label{fig:trojan_arch}
+\end{figure}
+
+% Figure~\ref{fig:prop_xai_arch} depicts an explainable architecture that operates
+% on feature vectors, of size $n$, input to the system.  The $n$ features are
+% transformed into all possible $2^n-1$ combinations of features, known as
+% properties, by the Combinational Feature Transform (CFT).  The CFT provides
+% properties as groupings of features to the Machine Learning Analysis Matrix
+% (MLAM). MLAM makes individual inferences (votes) based on the properties.
+% Inferences are provided to the Decision Making Process (DMP). The property
+% inferences are weighted for each property's effectiveness.  Effectiveness for
+% the properties is stored in the knowledgebase (KB) and retrieved by the DMP.
+% Weighted votes are tallied in the DMP to produce decisions and confidence for
+% each decision. Finally, decisions, confidence, and property votes are provided
+% to XAI, which assembles explanations based on the votes from properties.  Along
+% with decisions and confidence,  explanations based on properties are provided to
+% the user by the system to provide rationale for the decisions.
+
+% Applying the general architecture from Figure~\ref{fig:prop_xai_arch} to the problem of
+% hardware trojan identification is detailed in Figure~\ref{fig:trojan_arch}.  The
+% five features (LGFi, FFi, FFo, PI, PO) are shown as input to the architecture.
+% Property Transform blocks transform the five-element feature vector into each of
+% the $(2^n-1=31)$ properties.
+
+Figure~\ref{fig:trojan_arch} depicts an explainable architecture for
+classification of hardware trojans. The five features (LGFi, FFi, FFo, PI, PO)
+are shown as input to the architecture.  In the property transforms, the five
+features are transformed into all possible 31 combinations of features known as
+properties. Inference engines are trained ML models that pose opinions based on
+the transformed data. The Decision-Making Process (DMP) is responsible for
+considering the opinions from the IEs and making a system-wide decision. As the
+DMP receives votes from the IEs, it obtains property effectiveness weights from
+the KB. Effectiveness of the properties was stored in the KB by reprocessing the
+training data and analyzing results to obtain performance metrics for each IE.
+Effectiveness as weights are used in tallying the votes to produce decisions,
+suspected trojan ($t$) or non-trojan ($n$), and confidence of the decisions.  As
+was experienced with other highly imbalanced datasets, measuring effectiveness
+is a challenge. Effectiveness metrics were tried and $E_{PARS}$ performed
+best\cite{whitten2024naecon}.
+
+The XAI function takes the decisions, votes, and confidence producing an
+explanation to justify the decisions of the system.  The explanations relate to
+properties, hinting at relationships between features.
+
+% \begin{figure}
+%     %\centering
+%     \includegraphics[width=9.0cm]{./images/arch-trojan.png}
+%     \caption{A property-based explainable architecture for trojan detection.}
+%     \label{fig:trojan_arch}
+% \end{figure}
+
+
+
+% \begin{table}
+%     \renewcommand{\arraystretch}{1.3}
+%     \centering
+%     \caption{Explainable Weighting for Properties}
+%     %\resizebox{\columnwidth}{!}{%
+%     \begin{tabular}{|c|c|}
+%         \hline
+%         \bfseries Features in Property & \bfseries Explainability \\
+%         \hline
+%         \hline
+%         1 & 1.00  \\
+%         \hline
+%         2 & 0.75  \\
+%         \hline
+%         3 & 0.50  \\
+%         \hline
+%         4 & 0.25  \\
+%         \hline
+%         5 & 0.00  \\
+%         \hline
+%     \end{tabular}
+%     %}
+%     \label{tab_expl_metric}
+% \end{table}
+
+\section{Case-Based Explainable Method} \label{case_explainable_arch}
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=8.0cm]{./images/xai_training_index_flow.png}
+%     \caption{Flow of the case-based explainable method.}
+%     \label{fig:case_xai_flow}
+% \end{figure}
+
+% \begin{table*}
+%     \renewcommand{\arraystretch}{1.3}
+%     \centering
+%     \caption{Examples from the test set}
+%     %\resizebox{\columnwidth}{!}{%
+%     \begin{tabular}{|l|l|l|l|l|c|c|c|c|c|c|}
+%         \hline
+%         \bfseries Example ID & \bfseries Part Number & \bfseries Version & \bfseries Name & \bfseries Net & \bfseries LGFi & \bfseries FFi & \bfseries FFo & \bfseries PI & \bfseries PO & \bfseries Trojan \\
+%         \hline
+%         \hline
+%         1 & RS232 & T1200 & NAND4X1 & U293.QN & 8 & 1 & 3 & 2 & 3 & 1 \\
+%         \hline
+%         2 & s15850 & T100 & AND2X2 & Tg2\_Trojan1.Q & 3 & 3 & 5 & 3 & 5 & 1 \\
+%         \hline
+%         3 & s38417 & T200 & NAND3X0 & U4976.QN & 5 & 2 & 14 & 2 & 14 & 0 \\
+%         \hline
+%     \end{tabular}
+%     %}
+%     \label{tab_ex}
+% \end{table*}
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=7.0cm]{./images/case-based-xai-arch.png}
+%     \caption{A case-based explainable architecture using a training index.}
+%     \label{fig:case_xai_arch}
+% \end{figure}
+
+This section outlines the application of the case-based explainable method
+to detect hardware trojans.  This method came out of the problems encountered
+with the property-based architecture and the challenge of eliciting meaningful
+properties from only five features.
+
+Support vector machines (SVM) are used in this method as the inference engine as
+was done in earlier work.  SVMs are based on fitting hyperplanes to bound, in
+multidimensional space, classes that are learned by training data.  A KNN method
+is used for identifying like cases. KNN and the concept of distance translate
+well to the multidimensional space of features.  Despite the notion suggested by
+Caruana et al.\cite{Caruana1999CasebasedEO}, that KNN between a new sample and
+training data only explains the training data, this work suggests that using a
+KNN approach to training data is effective for providing an explanation, backed
+by training cases.
+
+\subsection{Data Processing}
+
+Figure~\ref{fig:case_xai_flow} depicts the flow of the case-based explainable
+method. It starts with data processing to produce the features. The data
+processing steps were detailed in Figure \ref{fig:data_prep} and Section
+\ref{trojan_data_prep} from the property-based method to produce the five
+features.
+
+An important new property of data processing for explainability and trust in
+case-based explanations is preserving the origin of each sample for storage in
+the training index as the samples are combined for training.  The origin in the
+context of training samples is comprised of the part number, version (indicating
+which of the 15 circuits the sample came from), line, name, and net.  While
+originating fields are not useful to decision-making and classification, they
+provide crucial context for the explanation. Input to data processing is fifteen
+Verilog netlists and result is a comma separated value file detailing the
+netlist, line number of the net in the Verilog file, name, five features, and
+class for each net.
+
+% A new concern
+% of the case-based method affecting data processing is maintaining the supporting
+% case data. Recall that it is important to provide as much information on like
+% cases, such as the origin of the cases.  In addition to the five features and
+% class for each gate, the originating netlist, gate name and line in the verlog
+% file was preserved.
+
+\subsection{Train ML Model}
+
+The next step involves training the ML model. Training the SVM was done in the
+same fashion as the inference engine with all five features in property-based
+method. Balance factor was used to rectify the imbalance of the training set
+when training the SVM.
+
+\subsection{Training Index}
+
+A training index is built in the next step. The Python training index
+construction method first assigns a unique identifier (ID) to each row in the
+training data.  A unique identifier is easily attained from the row number in
+the training data. Next the construction method indexes all unique combinations
+of the five features occurring in the training set to the training instances by
+ID. A key-value index of ID to origin data of the training cases, such as the
+netlist, line number, and name is next constructed.  Next the Euclidean
+distances between all unique points in five-dimensional feature space are
+calculated and sorted by distance to allow rapid retrieval and identification of
+nearest neighbors, given a point in feature space. The python program that
+indexes and serializes the training index for the hardware trojan dataset takes
+about 8.5 minutes to execute. The training index size in memory is about 3Gb.
+The training index includes distances and scaled distances so this size and time
+to compute may be reduced by eliminating duplication. As an optimization, the
+training index may be saved to non-volatile storage so it can be more rapidly
+retrieved in the future. The 3Gb in-memory training index results in about 1.5Gb
+serialized and takes about 10 seconds to deserialize.
+
+The training index was constructed of in-memory hashmaps to quickly retrieve the
+supporting data based on features. Hashmaps worked well for this application and
+relatively small dataset.  In larger datasets, other key-value stores could be
+employed with comparable results.  Because of the small size of the dataset and
+current compute, a simple linear search was sufficient for identifying nearest
+neighbors from training. If the CBE method is applied to larger datasets, a
+variety of more efficient algorithms exist for searching for nearest neighbors
+\cite{615448, abbasifard2014survey}. Since the dataset was small, the current
+search mechanism was sufficient.
+
+When constructing the training index for a low dimensional space, the number of
+collisions of data points is large and calculations are needed only once for
+coincident points. As the number of features in a training set is increased,
+with all other factors remaining equal, the incidence of coincident points
+decreases. With more features, the time to build the index and probability of
+additional calculation for finding cases for newly considered samples also
+increases.
+
+\subsection{Query Scheme}
+
+The next step is devising a query scheme.  The query scheme is implemented by
+using a lookup in key-value storage of the training index for a coincident point
+in the training set.  If an identical point is found, no calculation is needed
+as the sorted (by distance) nearest neighbors in the training set is already
+stored and may be retrieved. If an identical point is not found, the list of
+unique points from the training index is then used to calculate and then sort
+distances to retrieve nearest neighbors in the training set.
+
+\subsection{Case-Based Explanation Routine}
+
+The explanation routine leverages the query scheme and high probability of
+collisions to retrieve the sorted distances to the nearest training neighbors.
+When processing the trojan test set, only about 8.1\% of the test samples had no
+collisions in the training set.  In the event that a collision is not found, the
+penalty to calculate neighbors from unique training points is only approximately
+200 milliseconds on average.
+
+After retrieving, or in the unlikely event calculating, nearest neighbors, the
+explanation routine also retrieves the supporting origin case data from the nearest
+training neighbors within a threshold.  The neighbor information including distance
+and supporting case information is provided in descending distance from the sample.
+Examples of the explainable output is illustrated in Section \ref{case_exp_results}. 
+
+% A case-based explainable architecture is presented in
+% Figure~\ref{fig:case_xai_arch} using the trained SVM model, a TI, and an
+% explanation component from the flow.  Input samples are fed in at the left as a
+% feature vector.  The trained SVM model contributes a decision to the system. The
+% TI provides efficient retrieval of cases, supporting data used to justify the
+% decision.  The explanation component organizes the decision and KNN supporting
+% data to provide justification for the decision, in the form of neighbor
+% information from the training set and references to the training samples in
+% context.
+
+KNN information presented to the user includes distance from the sample being
+considered, the classes (trojan and non-trojan) of training samples, and
+references to the samples in the context of the netlists they were extracted
+from.  In addition to this information, the weight of neighboring trojans,
+$w(t)$, and non-trojans, $w(n)$, are calculated relative to the inverse square
+of distance, $d$, as shown in \ref{eq:weight_of_neighbors}.  Balance, from
+\ref{eq:balance}, is summed for each set of training samples at the distance to
+the sample considered.  The weights are then summed to provide a correspondence
+metric, $C$, for KNN as shown in \ref{eq:correspondence}.

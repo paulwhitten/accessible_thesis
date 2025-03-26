@@ -1,0 +1,426 @@
+\chapter{Discussion} \label{ch:discussion}
+
+This chapter discusses the explainable methods and their results, outlining
+where they perform well and the challenges that arise from the methods. In this
+chapter, the property-based and case-based explainable methods will also be
+compared and contrasted to another explainable AI method called LIME.
+
+\section{Property-Based Method}
+
+Positives of the property-based method are that the method is able to provide a
+level that resembles reasoning in a human to justify decision making. The
+rationale provided to the user in terms of handwritten digits related to the
+properties which were geometric elements of the images.  Most of the time they
+were of utility in explaining the decision.
+
+In some cases, however, the properties and transforms did not relate well to a
+particular character.  This can be observed in Figure
+\ref{table:mnist_example1_ex}, in the explainability matrix for MNIST example
+one, where the circle and ellipse had consistent votes for the digit zero
+despite the digit clearly resembling a four.  What was reassuring about the
+votes was that the effectiveness of the properties for that class was very low.
+
+Many of the transforms result in empty or misleading output transform.  A better
+strategy is required for dealing with these cases in order for the
+property-based architecture to perform better.
+
+The strategy of using a threshold to suppress low effectiveness output of an
+opinion was considered and implemented.  This is similar to the way a $5\%$
+threshold was used for hardware trojans in the property-based method, otherwise
+all 31 opinions would be registered.
+
+Results of applying a 5\% threshold to EMNIST uppercase letters produced
+an explainable accuracy of 94.2\%. Comparing the explainable results from the EMNIST
+example two in Figure \ref{fig:ex2} results in the  following:
+
+\begin{quote}
+\textit{The letter C was selected with high confidence, 1.000, and explainability 0.7676 due to the stroke, convex hull, endpoint, line, corner, ellipse-circle, and crossing properties. When selecting a letter C, 1.5\% of the time it is really a G.}
+\end{quote}
+
+Where the property-based method had significant challenges was the effort
+required to implement and the performance in low dimensionality datasets. It
+took significant time and analysis to discover the properties and implement
+transforms.  Much time included trial and error in the parameters used for
+transforms.
+
+While the property-based architecture performed admirably with handwritten
+characters, when applying to a minimal dataset, such as hardware trojans there
+was little to relate the five features to provide an explanation.  The resulting
+approach for trojans resulting in the combinations of the features to construct
+properties seemed cumbersome.
+
+\section{Case-Based Method}
+
+The case-based method was advantageous in that it was easy to implement and
+generalize. It took far less effort and hand-crafting than the property-based
+method.  The ability of the case-based system to present like cases from
+training seems reassuring but is not close to how a human would behave in
+explaining how it recognizes an element like a handwritten character. 
+
+When used for hardware trojans, the low data dimensionality of the trojan data
+set showed the advantages in pre-calculating the distances to neighbors. Since
+the trojan dataset has only five features and potential values of the features
+were relatively low, there were many collisions (duplicates). The pre-calculated
+distances could be leveraged a good deal of the time.
+
+In the case of handwritten digits with 784 pixels, each with a range of $[0,
+255]$, there were an astronomical number of possible images and no collisions in
+the dataset. There was no utility in caching distance calculations. As a result,
+distance calculations were worst case with every sample.  Still, in the case of
+MNIST calculation was reasonable at about 360 milliseconds per sample. With a
+much larger dataset, there could be challenges to scale.
+
+\section{LIME on Handwritten Digits}
+
+When applying LIME to MNIST digits, one has the ability to extract a mask for
+the image indicating the superpixels relevant to a decision. Figure
+\ref{fig:lime_mnist_masks} shows the first 20 MNIST test samples with LIME
+applied. Obtaining the mask examples involved first training a CNN on MNIST and
+then using LIME on the specific examples to retrieve explanation masks. The mask
+can be observed in yellow segmenting the image.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-0.png}
+        \caption{}
+        \label{fig:lime_mnist0}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-1.png}
+        \caption{}
+        \label{fig:lime_mnist1}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-2.png}
+        \caption{}
+        \label{fig:lime_mnist2}
+    \end{subfigure}
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-3.png}
+        \caption{}
+        \label{fig:lime_mnist3}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-4.png}
+        \caption{}
+        \label{fig:lime_mnist4}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-5.png}
+        \caption{}
+        \label{fig:lime_mnist5}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-6.png}
+        \caption{}
+        \label{fig:lime_mnsit6}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-7.png}
+        \caption{}
+        \label{fig:lime_mnist7}
+    \end{subfigure}
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-8.png}
+        \caption{}
+        \label{fig:lime_mnist8}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-9.png}
+        \caption{}
+        \label{fig:lime_mnist9}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-10.png}
+        \caption{}
+        \label{fig:lime_mnist10}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-11.png}
+        \caption{}
+        \label{fig:lime_mnist11}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-12.png}
+        \caption{}
+        \label{fig:lime_mnist12}
+    \end{subfigure}
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-13.png}
+        \caption{}
+        \label{fig:line_skel13m}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-14.png}
+        \caption{}
+        \label{fig:lime_mnist14}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-15.png}
+        \caption{}
+        \label{fig:lime_mnist10}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-16.png}
+        \caption{}
+        \label{fig:lime_mnist11}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-17.png}
+        \caption{}
+        \label{fig:lime_mnist12}
+    \end{subfigure}
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-18.png}
+        \caption{}
+        \label{fig:line_skel18ma}
+    \end{subfigure}%
+    \begin{subfigure}{.19\columnwidth}
+        \centering
+        \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/mask-19.png}
+        \caption{}
+        \label{fig:lime_mnist14}
+    \end{subfigure}
+
+    \caption{Examples of LIME masks on the first 20 MNIST test samples.}
+    \label{fig:lime_mnist_masks}
+\end{figure}
+
+Samples (a), (c), (f), (k), (n) and (r) in Figure \ref{fig:lime_mnist_masks} did
+not produce a mask.  It was not immediately clear why a mask was not shown for
+these samples. The lack of a mask did seem to occur with relative consistently
+for the digits zero, one, and seven twice in the first twenty samples. It is
+also of note that another zero, sample (d), and another one, sample (o), did result
+in explainable masks.
+
+The masks appear to merely provide a segmentation of the images into superpixel
+boundaries. Lime has the ability to indicate the superpixel regions that
+positively and negatively influenced the classification.  Identifying the
+positive and negative regions of the segmented image using LIME gave a better
+understanding of what regions LIME considers important.
+
+Figure \ref{fig:lime_pos_neg_ex0} depicts two samples from MNIST tests that did
+not produce masks. The original image is on the left and the illustration of
+positive and negative regions is on the right. Positive regions are shown in
+pink. Figure \ref{fig:lime_pos_neg_ex0} depicts the positive and negative
+regions of Figure \ref{fig:lime_mnist0}, while Figure \ref{fig:lime_pos_neg_ex2}
+shows Figure \ref{fig:lime_mnist2}.  The positive and negative region images
+appear to show that the entire image was important.  This was the case for all
+six of the samples from Figure \ref{fig:lime_mnist_masks} without masks.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{0.50\columnwidth}
+        \centering
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/orig-0.png}
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/pos-neg-0.png}
+        \caption{}
+        \label{fig:lime_pos_neg_ex0}
+    \end{subfigure}%
+    %\par\medskip
+    \begin{subfigure}{0.50\columnwidth}
+        \centering
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/orig-2.png}
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/pos-neg-2.png}
+        \caption{}
+        \label{fig:lime_pos_neg_ex2}
+    \end{subfigure}
+
+    \caption{LIME examples of the original digit image along with positive (pink) and negative regions for two MNIST test samples without masks.}
+    \label{fig:lime_pos_neg_no_mask}
+\end{figure}
+
+Two of the masks of the four, samples (e) and (g), in Figure
+\ref{fig:lime_mnist_masks} seemed to be consistent. An illustration of the
+positive and negative regions of the samples of the digit four are in Figure
+\ref{fig:lime_pos_neg_four_test}, where (a), (b), and (c) correspond to (e),
+(g), and (t) respectively in Figure \ref{fig:lime_mnist_masks}. The
+corresponding masks had the same positive region denoted by the lower left
+quadrant of the image's pink shading, while the positive region in Figure
+\ref{fig:lime_pos_neg_ex19} consisted of the other three quadrants.
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{0.50\columnwidth}
+        \centering
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/orig-4.png}
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/pos-neg-4.png}
+        \caption{}
+        \label{fig:lime_pos_neg_ex4}
+    \end{subfigure}%
+    %\par\medskip
+    \begin{subfigure}{0.50\columnwidth}
+        \centering
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/orig-6.png}
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/pos-neg-6.png}
+        \caption{}
+        \label{fig:lime_pos_neg_ex6}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{0.50\columnwidth}
+        \centering
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/orig-19.png}
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/pos-neg-19.png}
+        \caption{}
+        \label{fig:lime_pos_neg_ex19}
+    \end{subfigure}
+
+    \caption{LIME examples of the original digit image along with the positive (pink) and negative regions of the digit four in the first twenty MNIST test samples.}
+    \label{fig:lime_pos_neg_four_test}
+\end{figure}
+
+
+% \begin{figure}[H]
+%     \centering
+
+%     \begin{subfigure}{0.9\columnwidth}
+%         \centering
+%         \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/lime_pos_neg_4.png}
+%         \caption{}
+%         \label{fig:lime_pos_neg_ex4}
+%     \end{subfigure}%
+
+%     \par\medskip
+    
+%     \begin{subfigure}{0.9\columnwidth}
+%         \centering
+%         \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/lime_pos_neg_6.png}
+%         \caption{}
+%         \label{fig:lime_pos_neg_ex6}
+%     \end{subfigure}
+
+%     \par\medskip
+
+%     \begin{subfigure}{0.9\columnwidth}
+%         \centering
+%         \includegraphics[width=.90\textwidth, alt={An MNIST digit superpixel mask}]{./images/lime/lime_pos_neg_19.png}
+%         \caption{}
+%         \label{fig:lime_pos_neg_ex19}
+%     \end{subfigure}%
+
+%     \caption{Examples of the positive and negative regions of the digits four in the first twenty MNIST test samples..}
+%     \label{fig:lime_pos_neg_ex19}
+% \end{figure}
+
+
+When observing the several nine samples form the first 20 MNIST test samples in
+the figure they had more diverse masks. The positive and negative regions are
+depicted in Figure \ref{fig:lime_pos_neg_nine_test}. Sample (a) and (d) had
+similar positive regions, from the digit to the left of the image. Samples (b)
+and (c) again had different quadrants of the image as positive regions. 
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{0.50\columnwidth}
+        \centering
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/orig-7.png}
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/pos-neg-7.png}
+        \caption{}
+        \label{fig:lime_pos_neg_ex7}
+    \end{subfigure}%
+    %\par\medskip
+    \begin{subfigure}{0.50\columnwidth}
+        \centering
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/orig-9.png}
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/pos-neg-9.png}
+        \caption{}
+        \label{fig:lime_pos_neg_ex9}
+    \end{subfigure}
+
+    \par\medskip
+
+    \begin{subfigure}{0.50\columnwidth}
+        \centering
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/orig-12.png}
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/pos-neg-12.png}
+        \caption{}
+        \label{fig:lime_pos_neg_ex12}
+    \end{subfigure}%
+    %\par\medskip
+    \begin{subfigure}{0.50\columnwidth}
+        \centering
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/orig-16.png}
+        \includegraphics[width=.40\textwidth, alt={An illustration of LIME on an MNIST digit}]{./images/lime/pos-neg-16.png}
+        \caption{}
+        \label{fig:lime_pos_neg_ex16}
+    \end{subfigure}
+
+    \caption{LIME examples of the original digit image along with the positive (pink) and negative regions of the digit nine in the first twenty MNIST test samples.}
+    \label{fig:lime_pos_neg_nine_test}
+\end{figure}
+
+The work on LIME demonstrates that LIME works well to identify unanticipated
+behavior of a model\cite{ribeiro2016should}. LIME is well-suited for visually
+gauging the relevant regions in an application input to classification. However,
+the disparity of regions reported with similar application input samples and the
+cases observed where the entire image constituted the relevant region
+contributing to the classification cause some concern in trusting in what is
+reported from samples.
+
+\section{Comparison of Explainable Methods to LIME}
+
+In the case of images, LIME presents a visual explanation that highlights the
+regions of the image that contributed to a decision. When applying LIME to
+MNIST, some results with conflicting regions were observed as well as the region
+constituting the entire application input.  Such feedback is more useful in
+explaining the model behavior when one is developing an effective recognition
+system rather than providing a justification to an end user of such a system.
+
+The property based explainable architecture provides written rationale relating
+to explainable properties. Results from the property-based explainable
+architecture provide metrics on confidence and explainability metrics. Results
+of this form are better suited for providing an explanation to an end-user and
+not the developer of a recognition system like LIME.
+
+%TODO updated examples 20 MNIST  property based results with a threshold.
+
+The case-based explainable architecture also provides written rationale for the
+decision in the form of related samples from the training set to justify the decision.
+The case-based explainable architecture also provides a correspondence metric between
+
+LIME is model agnostic and can be applied to many different recognition systems.
+In a similar fashion, the case-based explainable methodology is model agnostic
+and can be generalized to apply to many different models. LIME may be applied
+after training and does not require the training data.  The case-based
+explainable architecture, however, does require the training data.
+
+As exhibited with the hardware trojan application, the case-based explainable
+architecture does not lend to some applications and models.  Application of
+the property-based method must be customized for the particular application
+and the performance in explaining results is going to rely on the explainable
+properties in the application.

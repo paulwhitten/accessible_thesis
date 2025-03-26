@@ -1,4 +1,739 @@
-\chapter{Method}
- % remove below this line and add your background
+\chapter{Methods} \label{ch:methods}
+% remove below this line and add your background
 
-\lipsum[1-2]
+This chapter presents two explainable methods and architectures. Each method
+provides a systematic means of assembling the explainable architectures from
+components to compose an explainable system. The methods uniquely addresses
+data dimensionality, imbalanced training data, and tradeoffs between prediction
+performance and explainability. The strengths and weaknesses of the two methods
+are outlined before detailing the methods.
+
+The first property-based method works well for high-dimensional data such as
+images in representational learning. When applied to a lower dimensional space,
+such as a minimal number of features, the property-based method suffers from low
+explainability. Low explainability in the property-based method will be
+illustrated later in Chapter \ref{ch:trojan_results} when using only five
+features in hardware trojan detection. The second case-based method works well
+in data with lower dimensions.
+
+The prediction performance between the two methods can differ. With the
+property-based method, there is a loss associated with the property
+transformations. Some property transforms have poor performance for particular
+classes. The poor performance will detract from overall prediction performance.
+The property-based system can mitigate some of the performance loss by
+introducing an unexplainable component. While gaining prediction performance,
+however, the unexplainable component detracts from explainability. 
+
+The case-based system does not suffer from the same loss of prediction
+performance. The ML model used in the case-based method is relatively
+independent and can use the best-performing models directly on the application
+data without the loss associated with property transformations. As a result, the
+prediction performance of the case-based system is competitive with the latest
+ML methods.
+
+Figure~\ref{fig:method_concepts} represents this work's explainable artificial
+intelligence (XAI) methodologies, highlighting related concepts, techniques,
+metrics, similarities, and differences. The property-based and case-based
+methods are represented in the distinct branches, extending from the root XAI
+node. Techniques used in the property-based method include transformations,
+voting, knowledgebase, and unexplainable components. Techniques used in the
+case-based method include KNN and a training index. Metrics introduced in the
+property-based method include effectiveness, confidence, and explainability. The
+case-based method presents correspondence and balance factor metrics. The
+methods' differences in dataset strengths are shown in the two
+\lq{dimensionality}\rq nodes. The property-based method performs better with
+high-dimensional datasets such as images, while the case-based method favors
+datasets with lower dimensions. Figure \ref{fig:method_concepts} also highlights
+similarities between the methods, such as techniques for handling imbalanced
+training data, bother leveraging storage, and having an explainable processing
+stage.
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=14.2cm, alt={A concept tree of the explainable methods}]{./images/method-intro-dot.png}}
+    \caption{A tree representing the explainable method concepts (such as explainable processing, unexplainable component, explainable property, and property transforms), techniques (such as KNN and voting), and metrics (like correspondence, balance factor, effectiveness, confidence, and explainability). Storage and dimensionality of the datasets are also reflected.}
+    \label{fig:method_concepts}
+\end{figure}
+
+% In the property-based method, explainable property transforms change the
+% input data and have been observed to typically diminish recognition accuracy. In
+% the property-based method, high performing unexplainable components are
+% introduced to improve prediction results beyond.  This comes at a cost to
+% explainability and reduces prediction accuracy from the highest performing
+% unexplainable models.
+
+
+% This chapter outlines the contributions of this work by presenting the
+% methodologies, architectures, as well as the experimental and computational
+% methods used in developing decision-making architectures that have the ability
+% to explain results. Initially the explainable property-based methodology is
+% presented.  The explainable property-based methodology is then detailed as it is
+% applied to explainable detecting handwritten characters.  A method and
+% architecture for case-based explanations follows. Both methodologies are then
+% applied to explainable detection of hardware trojans.
+
+%TODO: do we want to list the four IEEE papers and conference presentations
+%or is that better for the presentation?
+
+
+\section{Definitions and Terms}
+
+The following notions are defined here as relevant to the methodologies. A
+\textit{recognition system} is a type of AI used to identify and classify
+inputs. \textit{Application input} to the recognition system represents an
+element or sample, which may be of various classes. A \textit{class} is a type,
+category, or group of elements that a recognition system is designed to
+identify. In supervised learning, \textit{classes} are typically distinguished
+as unique labels. For example, a handwriting recognition system input may be a
+28x28 grayscale image representing a character. A class would be one of the
+characters the recognizer is designed to identify, such as a handwritten zero.
+
+A \textit{model} is a program implementing an AI algorithm that has been taught
+to recognize patterns or make decisions without outside intervention. In the
+case of supervised learning with an FFNN, the \textit{model} consists of the
+parameters, hyperparameters, and any code that may facilitate data processing of
+input samples.
+
+% The term problem domain is used to refer to the context in which the problem is
+% approached. It assumes some basic understanding of the subject matter concerning
+% the problem.
+
+%TODO lsit metrics used
+%\section{Metrics}
+
+% This section reviews metrics presented in this method.
+% 
+
+\section{Explainable Property-Based Methodology}
+
+The explainable property-based methodology is a seven-step process conceived by
+looking at how humans may explain why they recognize a sample as a particular
+handwritten character class. A notion of explainable properties of the samples
+emerged. The intent is to reason about the system's decisions regarding the
+explainable properties.
+
+\begin{figure}[H]
+    \centerline{\includegraphics[width=17cm, alt={A flowchart of the property-based explainable method}]{./images/pbe-flow.png}}
+    \caption{Flow of the property-based explainable methodology.}
+    \label{fig:prop_xai_flow}
+\end{figure}
+
+An enumeration of the seven steps of the explainable property-based methodology
+follows. The flow diagram in Figure~\ref{fig:prop_xai_flow} depicts the seven
+steps of the method. The methodology steps are in blue in
+Figure~\ref{fig:prop_xai_flow}. The steps begin at the start and proceed down
+the bold, directed edges. At each stage that produces an artifact, that artifact
+is depicted by a dotted directed edge. The methodology is intended to be
+iterative with feedback. At any time, past steps may be revisited to refine the
+result. The test phase in the flow is also used to assess overall performance
+and, if needed, revisit previous steps to make improvements. As the methodology
+is explained, more detail will be provided for each of the steps.
+
+\begin{enumerate}
+    \item Data processing
+    \item Discover explainable properties
+    \item Define and implement property transformations
+    \item Transform training data
+    \item Train ML models for each transform
+    \item Build a knowledgebase
+    \item Devise and implement a voting scheme
+    \item Build an explanation routine
+\end{enumerate}
+
+
+This methodology is meant to be used with supervised ML techniques. The ML
+algorithms employed may vary based on preferences, desired performance, or
+available compute. When examining the methodology regarding the AI taxonomies
+posed in Section \ref{sec:ai}, the explainable property-based methodology
+produces a weak (narrow) and limited memory AI. The resulting system is narrow
+as it addresses a particular problem. It is categorized as limited memory
+because it uses a knowledgebase to store historical information from long-term
+training.
+
+\subsection{Step One - Data Processing} % step 1
+
+Data processing involves curating data used to train and test the system.
+Effective data curation can improve model performance. Some common data
+processing tasks involve the initial acquisition or collection of the data. The
+data may need to be cleaned where inconsistencies or ambiguities are removed.
+Transformation of the data into new formats may be required for learning
+techniques. Data processing may involve feature engineering, where initial
+patterns may be used to improve model performance.
+
+\subsection{Step Two - Method Discover Explainable Properties} % step 2
+
+An explainable property is an attribute of an input sample that may
+differentiate between classes and provide a rationale for a classification
+decision to a user. An explainable property need not be present in all classes,
+and it need not distinguish all classes. Some samples of explainable properties
+for handwritten characters are common geometric features of characters such as
+lines, curves, enclosed regions, inflection points (corners), and crossings and
+endpoints.
+
+The second step of the explainable property-based methodology is to examine the
+problem and discover explainable properties. Discovering explainable properties
+is done by looking for sample attributes that help distinguish between classes.
+It could be accomplished by manually browsing through samples in training data
+or by some automated means, such as clustering among classes and looking for
+similarities of elements between clusters. Principal Component Analysis could be
+another means of discovering properties, providing the Principal Components can
+be interpreted and explained. After completing this step, there may be $n$
+properties to consider, as shown in Figure~\ref{fig:prop_xai_flow} with the
+Explainable Properties artifacts.
+
+%TODO: do we need to put PCA in the background?
+
+\subsection{Step Three - Property Transformations} % step 3
+
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=9.0cm, alt={A diagram of a property transform}]{./images/property_transform.png}
+    \caption{A property transformation modifies the input to produce output that highlights an explainable property.}
+    \label{fig:property_transform_ex}
+\end{figure}
+
+The third step of the methodology is to define and implement property
+transformations from the $n$ explainable properties identified in the first
+step. As shown in Figure~\ref{fig:property_transform_ex}, a property
+transformation is a function $T_p$ to modify an input sample, $i$, to bring out
+an explainable property, $p$, in the resulting output. A property transformation
+aims to highlight or exemplify explainable properties in the input. Transforms
+may be known feature detection and extraction algorithms related to explainable
+properties.
+
+Algorithms should be identified or implemented to transform input samples. In
+the case of existing algorithms serving as transforms, experimentation should be
+performed to find suitable parameters for the algorithm for the sample input.
+The association between explainable properties and property transforms will be
+maintained in the knowledgebase, which is discussed later, to aid in
+explainability. 
+
+Some explainable properties may not easily be paired with transforms, and others
+may have multiple means of transforming the input to exemplify the properties in
+the output. At the end of this step, there may be $m$ Transformation Routines as
+depicted in Figure~\ref{fig:prop_xai_flow}.
+
+\subsection{Step Four - Transform Training Data} % step 4
+
+After implementing property transformations, the fourth step in the methodology
+is to transform the training data, storing the transformed data for later
+training. Transforming training data involves feeding each training sample
+through the property transforms and storing them as depicted in
+Figure~\ref{fig:property_trans_training}. A training element, in this case, an
+image, $i$, is distributed to each of the $m$ property transforms. The resulting
+output, Transformed Training Data in Figure~\ref{fig:prop_xai_flow}, is stored
+in a training store for that property transformation. Naturally, it will be
+important to preserve the label of training samples. In the methods here, the
+order of training samples was preserved, so labels remained unchanged.
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=12.0cm, alt={A diagram illustrating the transformation of training data}]{./images/property-trans-training-db-dot.png}
+    \caption{Transforming and storing training data.}
+    \label{fig:property_trans_training}
+\end{figure}
+
+While transforming a single element by the $m$ transforms is not costly,
+transforming many training samples by $m$ transforms can take significant time.
+Exploiting parallelism in transforming the training data may result in a
+significant speedup.
+
+\subsection{Step Five - Train ML Models} % step 5
+
+The fifth step in the methodology involves producing an ML model for each
+property transformation. Producing an ML model is accomplished by selecting an
+appropriate ML algorithm and architecture and then training using the particular
+transformed training data for that property transform to produce the model. This
+step can be an iterative process involving training, testing, and adjusting the
+model hyperparameters. It may be necessary to revisit and reconsider property
+transform settings.
+
+\begin{figure}[h]
+    %\centering
+    \includegraphics[width=13.0cm, alt={A diagram illustrating transforms connected to inferece engines in the property-based architecture}]{./images/property-ml-dot.png}
+    \caption{Property transform ML models connected to property transforms begin to form the initial phases of the explainable property-based architecture.}
+    \label{fig:property_ml}
+\end{figure}
+
+Other areas of this work refer to the individual ML models associated with a
+property transform as an inference engine (IE). Figure~\ref{fig:prop_xai_flow}
+depicts the results of training models as a set of Inference Engines. At this
+point in the explainable methodology, a set of components can be used to begin
+constructing the explainable architecture, as shown in
+Figure~\ref{fig:property_ml}. The property transforms can be connected to a
+sample input function, and the output of the property transformations can be
+connected to each property transform's ML model to perform $m$ inference on an
+input sample. The inferences performed by each of the inference engines can be
+thought of as a local opinion based only upon that property transformation.
+
+\subsection{Step Six - Build a Knowledgebase} % step 6
+
+The previous steps of the methodology provided the components to construct an
+architecture that can perform $m$ inferences on input, as observed in
+Figure~\ref{fig:property_ml}. The following steps will allow those local
+inferences to be used to make a global decision. The knowledgebase is key to
+making the appropriate global decision, reasoning intelligently about the
+decision, and forming the explanation.
+
+This phase of the explainable property-based methodology involves constructing
+the knowledgebase that will be used as the explainable system performs
+inferences and explanations. The knowledgebase contains data necessary for
+making important decisions on the potentially conflicting local property
+transform inferences and details about properties and transforms that will help
+explain decisions.
+
+A key component stored in the knowledgebase is the effectiveness metrics, which
+are covered in Section \ref{voting_schme}. The effectiveness of each transform
+in predicting each class is calculated and stored in the knowledgebase. The
+voting scheme relies on effectiveness to weight, potentially conflicting
+opinions.
+
+Test data is fed back through the explainable architecture to produce summary
+results of inferences on the training data. Ideal summary data to store in the
+knowledgebase for the inferences are the confusion matrices for each ML model.
+This step may be best combined with the training step to take out-of-sample
+summary results of training. Experiments used raw training data, test data, and
+k-fold cross-validation without observing differences between the methods.
+Little difference between the methods is likely because the summary data is used
+to compare ML models, and any optimism resulting from in-sample data had little
+effect. 
+
+The knowledgebase will require information mapping each property transformation
+to its related property. Relating properties to transforms is necessary in
+formulating explanations. The relation between transforms and properties may be
+accomplished by using a descriptive string linking each transformation to its
+property.
+
+For the explainable property-based architecture to communicate when there is
+potential for error, it is also worthwhile to store test results in the form of
+a confusion matrix in the knowledgebase. This step can be completed after the
+voting phase.
+
+\subsection{Step Seven - Voting Scheme} % step 7
+\label{voting_schme}
+
+Voting involves the selection of a global decision when faced with conflicting
+opinions from property inferences. In many cases, the inference engines' local
+opinions will not agree. The seventh step in the methodology is to implement a
+voting scheme to select among the inference engine opinions. To improve
+explainability and the system's performance, careful selection of a voting
+algorithm is required.
+
+A key concept to making a good voting decision is the effectiveness of an
+inference engine in making a decision. Effectiveness is obtained from summary
+information in the knowledgebase from processing test data. The effectiveness of
+an inference engine, $j$, to correctly recognize an item of class $c$ is
+expressed as $E(j,c)$. A good choice of effectiveness metric depends on how
+balanced the data is. Good choices of effectiveness metrics are those resilient
+to data imbalance from Section \ref{sec:perf_metrics}. Once an appropriate
+effectiveness metric is selected, the effectiveness of each inference engine for
+each class is calculated from the summary metrics, and effectiveness is stored
+in the knowledgebase.
+
+The voting scheme posed involves considering the opinions (votes) of the
+inference engines in calculating the confidence $Conf(c)$ of a class, $c$ that
+was voted for by an inference engine, as the ratio of the weighted effectiveness
+of that class, $WE(c)$, over the weighed effectiveness of all classes with
+votes.
+
+The weighed effectiveness of a class, $c$, is given by $WE(c)$ in
+\eqref{eq:weighted_effectiveness} the sum of the effectiveness for the $j$
+inference engines that voted for $c$. The selection of the effectiveness metric
+$E$ is addressed In Section \ref{effectiveness_metrics}. 
+
+\begin{equation}\label{eq:weighted_effectiveness}
+    WE(c)=\sum_j E(j, c)
+\end{equation}
+
+The confidence, $Conf(c)$, for a class, $c$, is then calculated in
+\eqref{eq:conf} as the weighted effectiveness of the class $c$ over the sum of
+weighted effectiveness for the classes $k$, that each inference engine voted.
+Confidence of a class, $c$, will be $0 \leq Conf(c) \leq 1.0$. The sum of the
+confidence of all classes suggested will equal $1.0$.
+
+\begin{equation}\label{eq:conf}
+    Conf(c)=\frac{WE(c)}{\sum\limits_kWE(k)}
+\end{equation}
+
+The output of this phase is a Voter, as shown in Figure~\ref{fig:prop_xai_flow}.
+The Voter selects the class $c$ with the highest confidence as the winner. The
+Voter may also indicate the alternatives considered with their confidence
+metrics.
+
+\subsubsection{Effectiveness Metrics}
+\label{effectiveness_metrics}
+
+It is not enough to know that an inference engine is effective overall.
+Effectiveness must be examined at the class level. The effectiveness of a
+particular inference engine, $j$, for a class, $c$, is given as $E(j,c)$. The
+particular effectiveness metric is selected based on the optimal metric based on
+the data imbalance.
+
+In a dataset with multiple classes, the metrics are calculated as one versus all
+other classes. The one versus others strategy imposes a significant imbalance
+between the single class and others with many datasets, including those used in
+this work. Some metrics are sensitive to imbalanced data and produce misleading
+results. Imbalanced data is often the case in recognition problems with multiple
+classes. It is important to have metrics resilient to such imbalances.
+
+Particular metrics from the literature that were examined and evaluated as
+effectiveness in the explainable property-based methodology include Accuracy,
+Recall, Specificity, Precision, F1-Score, Cohen's Kappa, Matthews Correlation
+Coefficient, Balanced Accuracy, and the Area Under the Curve of the Receiver
+Operator Characteristic (AUC).
+
+In addition to evaluating metrics from the literature, some metrics were
+combined and compared experimentally. The combination of metrics found to have
+the best performance as per-class effectiveness was the product of class vs
+others Precision ($P$), Accuracy ($ACC$), Recall ($R$), and Specificity ($S$) as
+shown in \eqref{eq:epars} as the new effectiveness metric, $E_{PARS}$.
+Equation~\eqref{eq:epars_expansion} shows the expansion of $E_{PARS}$ in terms
+of  true positives $(TP)$, true negatives $(TN)$, false positives $(FP)$, and
+false negatives $(FN)$\cite{whitten24icmi}.
+
+\begin{equation}\label{eq:epars}
+    E_{PARS} = P \cdot ACC \cdot R \cdot S
+\end{equation}
+
+\begin{equation}\label{eq:epars_expansion}
+    %E_{PARS} = P \cdot ACC \cdot R \cdot S  \\
+    %&= {\scriptstyle \frac{TN \cdot TP^2(TP+TN)}{(TN+FP)(TP+FP)(TP+FN)(TP+TN+FP+FN)} }
+\frac{TN {\cdot} TP^3+TN^2 {\cdot} TP^2}{(TN{+}FP)(TP{+}FP)(TP{+}FN)(TP{+}TN{+}FP{+}FN)}
+\end{equation}
+
+\subsection{Step Eight - Property-Based Explanation Routine} % step 8
+
+The previous steps in the explainable property-based methodology allowed a
+system to be constructed that can make decisions. The eighth and final step in
+the methodology assembles an explanation from the data in previous steps based
+on the explainable properties.
+
+Particular opinions from the inference engines are important in composing the
+explanation. The classes and their confidence may be explained by attributing
+the decision based on the inference engines and associated properties that voted
+for a class. The descriptive strings stored in the knowledgebase may be used to
+formulate a textual explanation. The effectiveness of each inference engine can
+be leveraged to rank or quantify the contribution from the properties in
+providing an explanation.
+
+The algorithm for composing the explanation in the explainable property-based
+architecture is referred to as XAI and the output of this step is shown in
+Figure~\ref{fig:prop_xai_flow} as the XAI block. The XAI block may be
+implemented as a program, service, or subroutine requiring inference engine
+opinions, confidence from the voting scheme, and access to the knowledgebase for
+effectiveness and descriptive strings for property transforms.
+
+\subsection{Improving Results by Adding Unexplainability}
+
+In the property-based system, explainability is provided by explainable
+properties, used to justify a local decision in plain terms to a user. The
+performance of some inference engines is acceptable, while others are lacking.
+Poor results in some inference engines are because the transforms omit
+information in the original input. The recognition performance of the system may
+be improved by adding traditional ML models as new inference engines trained on
+the unaltered input. These new inference engines would have outstanding
+recognition performance but no explainability, like traditional opaque,
+unexplainable ML models. Because the new inference engines are not associated
+with an explainable property and, therefore, are considered unexplainable, a
+means of quantifying explainability is desired.
+
+With the introduction of unexplainable inference engines, each inference engine,
+$j$, is assigned an explainability metric $X_j$, where $ 0 \leq X_j \leq 1$. An
+$X_j$ close to zero would signify an unexplainable inference engine, while an
+$X_j$ near one would indicate an explainable inference engine. Examples in this
+work use $X_j=1$ for explainable and $X_j=0$ for the unexplainable inference
+engines.
+
+\begin{equation}\label{eq:explainability}
+Ex(c)=\frac{\sum{E(j,c)X_j}}{\sum{E(j,c)}}
+\end{equation}
+
+The explainability of a decision for class $c$ is given by $Ex(c)$ in
+\eqref{eq:explainability} where the numerator is the sum of the product of the
+explainability metric and effectiveness for the inference engines that voted for
+class $c$. The denominator is the sum of effectiveness for inference engines
+that voted for class $c$. Using the effectiveness in this way weights the
+explainability based on how much it contributed to the decision.
+
+\subsection{Explainable Property-Based Architecture}
+
+This next section poses an explainable property-based architecture based on the
+property-based explainable methodology. Figure~\ref{fig:xai_arch} depicts the
+explainable architecture, composed of produced artifacts in green from the steps
+of the property-based methodology in Figure~\ref{fig:prop_xai_flow}. The
+architecture in Figure~\ref{fig:xai_arch} has explainable and unexplainable
+contributions. Consider each horizontal element in the architecture incident on
+the Decision-Making Process as a Pre-Decision Flow (PDF) of the explainable
+system. An explainable PDF would contain one Property Transform and one
+Inference Engine (IE) related to an explainable property. An unexplainable PDF
+would consist of only one IE.  An explainable property and transform are lacking
+for an unexplainable PDF. The $1$ through $m$ explainable PDFs in the
+architecture are depicted as green, while the single unexplainable PDF is
+represented in yellow as $IE_u$. Again, explainable PDFs are related to
+properties that contribute to the explainability of the system. Often,
+explainable PDFs provide mediocre recognition results compared to an IE trained
+against untransformed data. The mediocre performance is often because a property
+may not pertain to each class. E.g., the ellipse property does not apply to a
+well-formed digit one.
+
+\begin{figure}[t]
+    %\centering
+    \includegraphics[width=15.0cm, alt={The property-based explainable architecture consisting of transforms, inference engines, a voter or decision making process, and an XAI block}]{images/xai-pipeline.png}
+    \caption{Property-Based Explainable AI Architecture}
+    \label{fig:xai_arch}
+\end{figure}
+
+In this architecture, the unexplainable PDF is the untransformed input image.
+The unexplainable flow contributes excellent recognition performance but deters
+from the explainability of the system since the IE is considered an opaque box
+without an explainable property for the justification of a decision. An
+explainability metric is introduced to quantify the impact of unexplainable PDFs
+on decisions in \eqref{eq:explainability}.
+
+In Figure~\ref{fig:xai_arch}, input flows into the system at the left. The
+initial stage of the architecture for explainable PDFs is the Transform phase.
+The input image is transformed according to the explainable property in the
+Transform phase. Transforms emphasize particular explainable properties in the
+input and are essential to explainability.
+
+The second stage of the architecture is the Property Inferencing stage. In
+Property Inferencing, IEs are used to make decisions based on local data. An IE
+may use an appropriate ML algorithm. IEs in this work are MLP, SVM, CNN, or
+ResNet models. Explainable IEs are trained on transformed training data. The
+unexplainable IE, $IE_u$, is trained on untransformed input. Training data and
+training results are stored in a knowledgebase (KB) as depicted at the bottom of
+Figure~\ref{fig:xai_arch}.
+
+Local decisions from Property Inferencing are passed to Decision-Making, where a
+global decision is made and assigned a confidence. The Decision-Making process
+may use a probabilistic voting scheme described in the methodology to make a
+global decision.
+
+The Explainability phase in the explainable Architecture,
+Figure~\ref{fig:xai_arch}, composes the textual rationale related to the
+explainable properties contributing to decisions. This is done by constructing
+phrases indicating the properties related to the opinions for each class that
+received a vote. The explainability measure, $Ex(c)$ from
+\eqref{eq:explainability}, is also determined in this phase of the system. The
+measure indicates how explainable each decision for a class, $c$, is based on
+the relation to an explainable property of the flows that suggested $c$. The
+user is finally presented with the ranked recognition results, the confidence of
+the decisions, the rationale for a decision, and the level of explainability for
+each decision. Sample explainable results are presented in Section
+\ref{ch:handwriting_results}.
+
+\subsection{Communicating when the Explainable Property-Based Architecture Fails}
+
+Referring back to Figure~\ref{fig:ml_now_xai_future}, one of the questions an
+explainable AI should answer is, "When do you fail?" The knowledgebase in the
+property-based explainable architecture can store the overall results from test
+data. With the results in a confusion matrix, metrics such as the false
+discovery rate (FDR) as given in \eqref{eq:fdr} indicate the rate of erroneous
+predictions for a given class.
+
+\begin{equation}\label{eq:fdr}
+    FDR = \frac{FP}{TP + FP} 
+\end{equation}
+
+Table \ref{tab:emnist_digit_svm} shows a confusion matrix for an SVM-based
+explainable system generated from running predictions on the EMNIST digit test
+set. Suppose the confusion matrix was stored in the knowledgebase of an
+explainable system. If that explainable system predicted an application input as
+the digit nine, the confusion matrix may be used to indicate that about 4.2\% of
+the time, the system is wrong when it predicts a nine. The value is obtained by
+calculating the false discovery rate of the digit nine, $FDR_9$, which is:
+
+\begin{equation}\label{eq:fdr_9}
+    FDR_9 = \frac{FP}{TP + FP} = \frac{2+7+1+6+1}{385+2+7+1+6+1} =  \frac{17}{402} = 0.042
+\end{equation}
+
+\begin{table}[H]
+    \centering
+    \caption{SVM confusion matrix for EMNIST digits.}
+    \label{tab:emnist_digit_svm}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{ll|c|c|c|c|c|c|c|c|c|c|}
+        \multicolumn{2}{c}{}& \multicolumn{10}{c}{Predicted}\\
+        & \multicolumn{1}{c}{} & \multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2}
+        & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6}
+        & \multicolumn{1}{c}{7} & \multicolumn{1}{c}{8} & \multicolumn{1}{c}{9} \\
+        \cline{3-12}
+        \multirow{10}{*}{{\rotatebox[origin=c]{90}{Actual}
+        }} & 
+        0 &     393 & 0 & 0 & 1 & 1 & 1 & 3 & 0 & 1 & 0 \\ \cline{3-12}
+        &   1 & 0 & 395 & 3 & 0 & 2 & 0 & 0 & 0 & 0 & 0 \\ \cline{3-12}
+        &   2 & 3 & 0 & 391 & 3 & 1 & 1 & 1 & 0 & 0 & 0 \\ \cline{3-12}
+        &   3 & 2 & 0 & 1 & 390 & 1 & 1 & 0 & 1 & 2 & 2 \\ \cline{3-12}
+        &   4 & 3 & 0 & 1 & 0 & 389 & 0 & 0 & 0 & 0 & 7  \\ \cline{3-12}
+        &   5 & 0 & 0 & 2 & 3 & 1 & 389 & 1 & 1 & 2 & 1 \\ \cline{3-12}
+        &   6 & 0 & 2 & 1 & 0 & 1 & 1 & 395 & 0 & 0 & 0 \\ \cline{3-12}
+        &   7 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 390 & 1 & 6 \\ \cline{3-12}
+        &   8 & 1 & 0 & 0 & 1 & 2 & 4 & 1 & 0 & 390 & 1 \\ \cline{3-12}
+        &   9 & 3 & 0 & 0 & 0 & 6 & 0 & 0 & 4 & 2 & 385 \\ \cline{3-12}
+    \end{tabular}
+\end{table}
+
+In addition to the FDR, the confusion matrix can be used to indicate which
+classes are the most likely to be erroneously suggested for the current
+prediction. Identifying such classes may be best approached using a threshold,
+for example, $1\%$. When predicting a nine, the system may further suggest that
+the digit four ($\frac{7}{402}=1.7\%$) and seven ($\frac{6}{402}=1.4\%$) are the
+digits most often confused when predicting the digit nine.
+
+\section{Case-Based Explainable Method}
+
+The case-based explainable method is inspired by a desire to relate details of
+what was learned from the training set to decisions made. In this method, cases
+like an input encountered during training should support the system's decision.
+When considering a new sample to a case-based explainable system, the system
+produces like cases with an analysis indicating correspondence based on those
+like cases.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=18.0cm, alt={A flowchart of the case-based explainable method.}]{./images/case-based-xai-flow.png}
+    \caption{Flow of the case-based explainable method.}
+    \label{fig:case_xai_flow}
+\end{figure}
+
+Figure~\ref{fig:case_xai_flow} depicts the flow of the case-based explainable
+method with steps in the flow as the green nodes connected by the heavy directed
+edge. Where steps in the flow produce artifacts as output, those are depicted in
+purple with dotted directed edges. An enumeration and then details of the steps
+in the case-based explainable method follows:
+
+\begin{enumerate}
+    \item Data processing
+    \item Train a machine learning model
+    \item Construct a training index
+    \item Devise a training index query scheme
+    \item Implement a case-based explanation routine
+\end{enumerate}
+
+\subsection{Step One - Data Processing}
+
+As with the property-based method and other general applications of machine
+learning algorithms, the first phase involves preparing data for the learning
+process. These methods will often be unique to the problem and are important,
+since the methods applied in data processing on training data are also used with
+a deployed AI system on the input.
+
+\subsection{Step Two - Train ML Model}
+
+A machine learning model is trained using data produced in step one, which is
+intended explicitly for training the model. The model training will be done
+traditionally (without transforms) and will, therefore, be unexplainable. The
+output of this phase is a trained machine learning model capable of performing
+the desired task, recognizing new input based upon its training.
+
+\subsection{Step Three - Training Index}
+
+The training data used to construct the ML model is processed to construct a
+training index. The training index allows the training data to be rapidly
+retrieved. Rapid retrieval may be accomplished by assigning identifiers (a
+unique ID) to the distinct training samples and using a key-value storage
+mechanism.
+
+In addition to rapid lookup, the training index can be used to cache information
+to reduce repeated calculations in the future. For example, distances can be
+cached in the training index. Caching distances will significantly assist in
+cases where the data dimensionality is low, and collisions are frequent. In the
+case of high data dimensionality, the chance for collisions is low, and there is
+less opportunity to use cached calculations.
+
+\subsection{Step Four - Query Scheme} %TODO should this be called search?
+
+The query scheme is crucial for this methodology as it allows similar cases from
+the training set to be identified. The query scheme should allow a sample input
+to be quickly matched to similar cases from training. One leading candidate for
+a query scheme is clustering and nearest neighbor search. In the case of a
+nearest neighbor search, the $k$ nearest neighbors in the training set are
+retrieved by identifier.
+
+\subsection{Step Five - Case-Based Explanation Routine}
+
+A case-based explanation routine provides the textual justification linking an
+input to similar cases from training. This routine takes the nearest neighbors
+from the query and data from the training index to provide information on cases
+similar to the input. Rather than merely providing neighboring samples, it is
+crucial to provide metrics to quantify the samples in terms of the class
+selected by the inference engine.
+
+In addition to providing similar cases from training, the case-based explanation
+routine provides metrics to support the data presented. In doing so, it is
+important to account for the imbalance in the dataset in this method. Recall
+from \eqref{eq:imbalance_ratio} the imbalance ratio is the number of majority
+class instances over minority class instances. The desire is to consider
+majority and minority instances relative to the imbalance. Overcoming imbalance
+is accomplished by discounting the majority by the inverse of the imbalance
+ratio. In \eqref{eq:balance_factor}, the balance factor, $bf$, of a class $c$ is
+given as the inverse of the imbalance ratio if the class $c$ is the majority
+class, otherwise $1.0$.
+
+\begin{equation}\label{eq:balance_factor}
+    bf(c) = 
+    \begin{cases}
+    \frac{1}{IR},& c = maj\\
+    1.0,& c = min
+    \end{cases}
+\end{equation}
+
+Nearest neighbor information presented to the user includes distance, $d$, from
+the sample being considered, the classes of training samples, and references to
+the samples, including potential origins from data processing. This originating
+data for cases is important in providing transparency to the training data. In
+low dimensionality datasets, neighbors tend to be grouped at coinciding
+distances, $d$, from the sample where the number of distinct distances, $l$ of
+the $k$ neighbors is commonly $l < k$.
+
+As shown in \eqref{eq:weight_of_neighbors}, the neighbor data is used to
+calculate the weight of neighbors, $WN$, of a class $c$ relative to the inverse
+square of the distance, $d$, from the input sample considered. Each instance,
+$i$, of a class $c$ in the $k$ neighbors is summed by taking the balance factor
+from \eqref{eq:balance_factor} over the sum of the distance from that sample
+$d_i$ and $1.0$. Because a training instance can be identical to a sample and
+have a distance of zero, the $1.0$ is used in the denominator to prevent a
+divide-by-zero situation. 
+
+In \eqref{eq:correspondence}, the correspondence, $Corr$, of a class, $c$, is
+given by the weight of that class over the weights of all classes in the $k$
+neighbors. Correspondence of a class signifies how well the $k$ neighbor
+instances agree with the class selection. Correspondence of a class $c$ will be
+on the interval $0 \ge C(c) \le 1.0$. A high correspondence, near $1.0$, will
+signify an agreement between the class selected and neighboring samples. In
+contrast, a low correspondence, near 0, will signify little agreement between
+the class selected and neighboring samples. The class with the high
+correspondence is considered as the suggested class by neighbors. Alternatives,
+the classes in the K neighbors with lower correspondence, are also presented.
+
+\begin{equation}\label{eq:weight_of_neighbors}
+    WN(c) = \sum_{i=1}^{c_i \in k} \frac{bf(c)}{(d_i+1.0)^2} 
+\end{equation}
+
+\begin{equation}\label{eq:correspondence}
+    Corr(c) = \frac{WN(c)}{\sum_{j=1}^{c_j \in k}{WN(c_j)}} 
+\end{equation}
+
+The explanation routine presents the prediction of the trained ML model as a
+class, the correspondence of that class based on the $k$ neighbors, and neighbor
+data as the case-based justification for accepting or seeking an alternative. In
+the rare event that the neighbors select a different class from the ML model,
+the explanation routine will indicate the conflict.
+
+\subsection{Case Based Explainable Architecture}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=14.0cm, alt={The case-based explainable architecture consisting of a trained ML model, a training index, a query routine, and an explanation routine}]{./images/case-based-xai-arch.png}
+    \caption{A case-based explainable architecture.}
+    \label{fig:case_xai_arch}
+\end{figure}
+
+A case-based explainable architecture is presented in
+Figure~\ref{fig:case_xai_arch} using the trained machine learning model, a
+training index, and an explanation routine as artifacts produced from the flow
+in Figure~\ref{fig:case_xai_flow}. Input samples are fed in at the left. The
+trained machine learning model contributes a prediction to the system. The
+training index efficiently retrieves cases and supporting data used to justify
+the decision. The explanation component organizes the decision, correspondence
+metric, and $k$ neighbors as supporting data to justify the decision.

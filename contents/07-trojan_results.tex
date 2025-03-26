@@ -1,0 +1,409 @@
+\chapter{Hardware Trojan Results} \label{ch:trojan_results}
+
+This chapter presents the results of applying the explainable methodologies on
+the application of explainable detection of hardware trojans.  The
+property-based explainable method suffers from poor explainability while the
+case-based explainable method shows promising explainable results by providing
+like cases from training along with meaningful metrics showing correspondence to
+neighboring training cases and explainability.
+
+
+\section{Property-Based Explainable Results for Trojan Detection} \label{prop_exp_results_trojan}
+
+SVMs were trained using the three methods: no weighting, static weighting, and
+dynamic weighting.  When static weighting used a balance factor, $bf$ from
+\ref{eq:balance}, corresponding to the ratio of non-trojans to trojans, static
+weighting appeared to perform equivalent to dynamic weighting.
+
+Results of performing unexplainable inference on the test set using the three
+methods is shown in Table~\ref{tab_unexp_weight_comp}. Dynamic weighting showed
+that it had a true positive rate (TPR) of 0.609, compared to 0.696 for static
+weighting, but a slightly lower true negative rate (TNR) at 0.934 versus 0.936
+for static weighting. The consequence of this can be observed where dynamic
+weighting over reports trojans with 695 false positives (FP) versus 670 FP for
+static weighting.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Unexplainable inference results on hardware trojan test data.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+         Weighting &  TPR &  TNR &  TP &  TN &  FP &  FN \\
+        \hline
+        \hline
+        None & 0.457 & 0.999 & 21 & 10496 & 5 & 25 \\
+        \hline
+        Static & 0.696 & 0.936 & 32 & 9831 & 670 & 14 \\
+        \hline
+        Dynamic & 0.609 & 0.934 & 28 & 9806 & 695 & 18 \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab_unexp_weight_comp}
+\end{table}
+
+Results through the property-based explainable architecture with static
+weighting resulted in a TPR of 0.696 and a TNR of 0.933. There were 32 true
+positives (TP), 8902 true negative (TN), 699 FP, and 14 false negatives (FN) for
+static weighting. Results from other weighting methods are depicted in Table
+\ref{tab_exp_weight_comp}.  The dynamic method of weighting showed a significant
+increase in false positives. In general, the property-based explainable accuracy
+results are slightly less than unexplainable results.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Explainable results of inference on the hardware trojan test data using the property-based architecture.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+         Weighting &  TPR &  TNR &  TP &  TN &  FP &  FN \\
+        \hline
+        \hline
+        None  & 0.261 & 1.000 & 12 & 10500 & 1 & 34 \\
+        \hline
+        Static & 0.696 & 0.933 & 32 & 8902 & 699 & 14 \\
+        \hline
+        Dynamic & 0.391 & 0.698 & 18 & 7325 & 3176 & 28 \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab_exp_weight_comp}
+\end{table}
+
+%1 = sample 1024
+%2 = sample 1821
+%3 = sample 3237
+
+Table~\ref{tab_ex} depicts the three examples from the test set used to
+demonstrate explainability. The first column in the table represents the example
+identifier (ID). The next five columns are the features.  The last column
+indicates if the sample is a trojan (1) or non-trojan (0). The examples
+presented in this section for the property-based architecture are using the
+static weighting technique.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Three hardware trojan examples from the test set.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+         Example ID &  LGFi &  FFi &  FFo &  PI &  PO &  Trojan \\
+        \hline
+        \hline
+        1 & 8 & 1 & 3 & 2 & 3 & 1 \\
+        \hline
+        2 & 3 & 3 & 5 & 3 & 5 & 1 \\
+        \hline
+        3 & 5 & 2 & 14 & 2 & 14 & 0 \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab_ex}
+\end{table}
+
+Hardware trojan example one results, are shown in Table~\ref{tab_prop_exp_ex_1}.
+Note the presentation of this table differs from handwritten examples as the
+number of properties is about three times the properties used in handwriting.
+The rows in the table signify the two possible predictions 1, trojan, and 0,
+non-trojan. The confidence column indicates the computed confidence of the
+prediction based on the decision-making process using effectiveness metric,
+$E_{PARS}$.  The third column shows the property identifiers sorted by
+effectiveness over a threshold of 5\%. Explainability is shown in the final
+column.
+
+Example one  was appropriately predicted as a trojan (1) with 99.6\% confidence.
+Fifteen properties, listed by ID from Table~\ref{tab_prop_id} in order of
+effectiveness, contributed sufficiently weighted votes to be registered (above
+the 5\% threshold).  Despite the high confidence, explainability was weighted at
+41.1\%, because fourteen of the properties above the threshold had three or more
+features, so they had limited explainability ($X_j\leq0.5$ in Table
+\ref{tab_prop_id}). The alternate decision to identify example one as a trojan
+had confidence $<$ 1\% with none of the remaining properties above the
+threshold.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Hardware trojan example one property-based explainable results.}
+    %\resizebox{\columnwidth}{!}{%
+    %{|c|c|c|c|}
+    \begin{tabular}{|c|c|p{0.32\columnwidth}|c|}
+        \hline
+         Prediction &  Confidence &  Properties (Table \ref{tab_prop_id}) &  Explainability \\
+        \hline
+        \hline
+        1 & 99.6\% & 31, 28, 26, 29, 27, 30, 21, 18, 16, 19, 24, 17, 22, 25, 15 & 41.1\% \\
+        \hline
+        0 & 0.4\% & No opinion & 0\% \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab_prop_exp_ex_1}
+\end{table}
+
+The XAI output from the property-based explainable architecture,
+Figure~\ref{fig:trojan_arch}, provided the following rationale: ``Trojan was
+winner with high confidence due to the property with (LGFi,ffi,ffo,PI,PO)
+features, the property with (LGFi,ffi,PI,PO) features, the property with
+(LGFi,ffi,ffo,PI) features, the property with (LGFi,ffo,PI,PO) features, the
+property with (LGFi,ffi,ffo,PO) features, the property with (ffi,ffo,PI,PO)
+features, the property with (LGFi,PI,PO) features, the property with
+(LGFi,ffi,PO) features, the property with (LGFi,ffi,ffo) features, the property
+with (LGFi,ffo,PI) features, the property with (ffi,PI,PO) features, the
+property with (LGFi,ffi,PI) features, the property with (ffi,ffo,PI) features,
+the property with (ffo,PI,PO) features, and the property with (PI,PO)
+features.''
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Hardware trojan example two property-based explainable results.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|c|c|p{0.32\columnwidth}|c|}
+        \hline
+         Prediction &  Confidence &  Properties (Table \ref{tab_prop_id}) &  Explainability \\
+        \hline
+        \hline
+        1 & 25.7\% & 30, 24, 22, 25, 15 & 50.0\% \\
+        \hline
+        0 & 74.3\% & 31, 28, 26, 29, 27, 21, 18, 16, 19, 17 & 35.0\% \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab_prop_exp_ex_2}
+\end{table}
+
+The property-based architecture improperly identified example two, suggesting
+the winning decision with medium, 74.3\%, confidence was non-trojan.
+Table~\ref{tab_prop_exp_ex_2} illustrates the properties, confidence, and
+explainability for example two.  Ten properties voted for a non-trojan, while
+five suggested a trojan.  Again, the explainability was low at only 35.0\% for
+the winning decision due to the relatively large number of features in voting
+properties.
+
+The XAI output rationale provided by the
+architecture for decision was cited as: ``Not a trojan was winner with medium
+confidence due to the property with (LGFi,ffi,ffo,PI,PO) features, the property
+with (LGFi,ffi,PI,PO) features, the property with (LGFi,ffi,ffo,PI) features,
+the property with (LGFi,ffo,PI,PO) features, the property with (LGFi,ffi,ffo,PO)
+features, the property with (LGFi,PI,PO) features, the property with
+(LGFi,ffi,PO) features, the property with (LGFi,ffi,ffo) features, the property
+with (LGFi,ffo,PI) features, and the property with (LGFi,ffi,PI) features.'' The
+rationale had an average explainability of 0.350 since all ten properties had
+three or more features.
+
+Alternatively, for example two with 25.6\% confidence, a trojan was identified
+with XAI output rationale: ``Trojan was suggested with medium confidence due to
+the property with (ffi,ffo,PI,PO) features, the property with (ffi,PI,PO)
+features, the property with (ffi,ffo,PI) features, the property with (ffo,PI,PO)
+features, and the property with (PI,PO) features.''  This rationale had an average
+explainability 0f 0.500 with only one property having greater than three features.
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Hardware trojan example three property-based explainable results.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|c|c|p{0.32\columnwidth}|c|}
+        \hline
+         Prediction &  Confidence &  Properties (Table \ref{tab_prop_id}) &  Explainability \\
+        \hline
+        \hline
+        1 & 58.4\% & 28, 26, 21, 18, 16, 20, 24, 22, 15 & 47.2\% \\
+        \hline
+        0 & 41.6\% & 31, 29, 27, 30, 17, 24 & 29.1\% \\
+        \hline
+    \end{tabular}
+    %}
+    \label{tab_prop_exp_ex_3}
+\end{table}
+
+Example three is labeled as non-trojan in the test set.  The architecture
+improperly identified the sample as a trojan with medium, 58.4\%, confidence. In
+Table~\ref{tab_prop_exp_ex_3} nine properties suggested the sample as a trojan while
+six suggested a normal net.  Explainability was among the highest at 47.2\%.
+
+The XAI rationale
+was: ``Trojan was winner with medium confidence due to the property with
+(LGFi,ffi,PI,PO) features, the property with (LGFi,ffi,ffo,PI) features, the
+property with (LGFi,PI,PO) features, the property with (LGFi,ffi,PO) features,
+the property with (LGFi,ffi,ffo) features, the property with (LGFi,ffo,PI)
+features, the property with (ffi,PI,PO) features, the property with (ffi,ffo,PI)
+features, and the property with (PI,PO) features.'' The average explainability
+of this rationale was 0.472.
+
+In example three, six properties suggested the sample was not a trojan with a
+confidence of 41.6\%. The XAI rationale provided was ``Not a trojan was
+suggested with medium confidence due to the property with (LGFi,ffi,ffo,PI,PO)
+features, the property with (LGFi,ffo,PI,PO) features, the property with
+(LGFi,ffi,ffo,PO) features, the property with (ffi,ffo,PI,PO) features, the
+property with (LGFi,ffi,PI) features, and the property with (ffo,PI,PO)
+features.''  Average explainability for this rationale was 0.291.
+
+\section{Case-Based Explainable Results for Trojan Detection} \label{case_exp_results}
+
+The case based explainable architecture performed well, providing relevant KNN
+for all of the test samples.  Weights of KNN corresponded to the decision of the
+architecture in 97.4\% of the cases in the 20\% test set.
+
+The SVM in the case-based architecture for hardware trojan example one voted for
+a trojan.  The KNN cases provided by the architecture are shown in
+Table~\ref{tab_index_exp_ex_1}.  In the table nearest neighbor groups are shown
+in rows. The distance column indicates the Euclidean distance to the sample
+group.  A distance of zero indicates a sample group has the same feature vector
+as the sample.  The feature values indicate the feature vector of the training
+sample(s).  The $t:n$ column indicates the ratio of trojan ($t$) to non-trojan
+($n$) nets for the samples in the group at the point in feature space. The
+$WN(class)$ columns indicate the weight of neighbors for each class, trojan
+($t$) and non-trojan ($n$) from \ref{eq:weight_of_neighbors}.
+
+%1 = sample 1024
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Hardware trojan example one case-based explainable results.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|c|c|c|r|r|}
+        \hline
+         Distance &  Feature Values & $t:n$ & \multicolumn{1}{c|}{$WN(t)$} & \multicolumn{1}{c|}{$WN(n)$} \\
+        \hline
+        \hline
+        0.00 & \textlangle 8, 1, 3, 2, 3\textrangle & 11:0 & 2893.0 & 0.00 \\
+        \hline
+        1.00 & \textlangle 8, 2, 3, 2, 3\textrangle & 0:34 & 0.00 & 8.50 \\
+        \hline
+        1.00 & \textlangle 8, 1, 3, 1, 3\textrangle & 1:204 & 65.75 & 51.00 \\
+        \hline
+        1.41 & \textlangle 8, 1, 4, 2, 4\textrangle & 3:0 & 135.37 & 0.00 \\
+        \hline
+        %\cline{2-5}
+        \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{Sum} & $15+238=253$ & 3094.12 & 59.50 \\
+        \cline{2-5}
+        \multicolumn{2}{c|}{} & \multicolumn{1}{l|}{Correspondence} & 98.1\% & 1.9\% \\
+        \cline{3-5}
+    \end{tabular}
+    %}
+    \label{tab_index_exp_ex_1}
+\end{table}
+
+For example, the first row of Table~\ref{tab_index_exp_ex_1} indicates there are
+eleven training samples grouped as the same point as hardware trojan example
+one. all of the samples in the group were trojans.  The resulting weight of
+trojans from that grouping is $2893.0$.  The second row indicates that at a
+distance of $1.0$ from example one at $\textlangle 8, 2, 3, 2, 3\textrangle$
+there is a group of 34 non-trojans.  The non-trojan weight for that group is
+$8.50$.  The third row shows also  at a distance of $1.0$ from example one there
+is a grouping at $\textlangle 8, 1, 3, 1, 3\textrangle$ with one trojan and 204
+non-trojans.  Because of the balance factor, the trojan weight is $65.75$ while
+the non-trojan weight is $51.00$.  The final row indicates a group of three
+trojans are found a distance of $1.41$ from example one. The trojan weight of
+this group is $135.37$. Summing the wight rows results in an overall trojan
+weight of $3094.12$ to non-trojan $59.50$.
+
+%TODO add wi columns and explainability
+%add test to indicate 253 is the sum of column Trojan:Normal
+
+The case-based architecture further provides a quantitative measure for hardware
+trojan example one indicating the decision corresponds with neighbor weighting
+by suggesting a correspondence of 98.1\% for the prediction of trojan based on
+neighbors from training data.
+
+References to the neighboring cases for example one are helpful in identifying
+those cases in context.  Neighbors at $\textlangle 8, 1, 3, 2, 3\textrangle$
+include all eleven matches e.g., part number RS232, version T1500, line 40, name
+NAND4X1, and net U294.QN as well as part RS232, version T1000, line 35, name
+NAND4X1, and net U299.QN. The output of the explainability results produces all
+references to the 253 KNN examples from the case-based training set.
+
+%2 = sample 1821
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Hardware trojan example two case-based explainable results}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|c|c|c|r|r|}
+        \hline
+         Distance &  Feature Values & $t:n$ & \multicolumn{1}{c|}{$WN(t)$} & \multicolumn{1}{c|}{$WN(n)$} \\
+        \hline
+        \hline
+        0.00 & \textlangle 3, 3, 5, 3, 5\textrangle & 0:57 & 0.00 & 57.00 \\
+        \hline
+        1.00 & \textlangle 4, 3, 5, 3, 5\textrangle & 1:24 & 65.75 & 6.00 \\
+        \hline
+        1.00 & \textlangle 2, 3, 5, 3, 5\textrangle & 0:104 & 0.00 & 26.00 \\
+        \hline
+        2.00 & \textlangle 5, 3, 5, 3, 5\textrangle & 0:11 & 0.00 & 1.22 \\
+        \hline
+        %\cline{2-5}
+        \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{Sum} & $1+196=197$ & 65.75 & 90.22 \\
+        \cline{2-5}
+        \multicolumn{2}{c|}{} & \multicolumn{1}{l|}{Correspondence} & 42.2\% & 57.8\% \\
+        \cline{3-5}
+    \end{tabular}
+    %}
+    \label{tab_index_exp_ex_2}
+\end{table}
+
+Example two was incorrectly identified as non-trojan by the case-based
+architecture. The KNN cases are depicted in Table~\ref{tab_index_exp_ex_2}. The
+architecture assigned a medium correspondence of 57.8\% for the prediction of no
+trojan based on neighbors from training data. This was due to the single
+neighboring trojan's weight at distance one being overcome by other neighboring
+196 samples. References to all 197 samples from training were provided for
+context.
+
+%3 = sample 3237
+
+\begin{table}[H]
+    \renewcommand{\arraystretch}{1.3}
+    \centering
+    \caption{Hardware trojan example three case-based explainable results.}
+    %\resizebox{\columnwidth}{!}{%
+    \begin{tabular}{|c|c|c|r|r|}
+        \hline
+         Distance &  Feature Values & $t:n$ & \multicolumn{1}{c|}{$WN(t)$} & \multicolumn{1}{c|}{$WN(n)$} \\
+        \hline
+        \hline
+        0.00 & \textlangle 5, 2, 14, 2, 14\textrangle & 0:1 & 0.00 & 1.00 \\
+        \hline
+        1.41 & \textlangle 5, 2, 13, 2, 13\textrangle & 0:2 & 0.00 & 0.34 \\
+        \hline
+        1.73 & \textlangle 4, 2, 13, 2, 13\textrangle & 7:0 & 246.65 & 0.00 \\
+        \hline
+        2.45 & \textlangle 3, 2, 13, 2, 13\textrangle & 3:0 & 66.31 & 0.0 \\
+        \hline
+        %\cline{2-5}
+        \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{Sum} & $10+3=13$ & 312.96 & 1.34 \\
+        \cline{2-5}
+        \multicolumn{2}{c|}{} & \multicolumn{1}{l|}{Correspondence} & 99.6\% & 0.4\% \\
+        \cline{3-5}
+    \end{tabular}
+    %}
+    \label{tab_index_exp_ex_3}
+\end{table}
+
+Example three, shown in Table~\ref{tab_index_exp_ex_3}, was correctly identified
+as not a trojan by the SVM.  The KNN gave a rare conflicting 99.6\%
+correspondence metric for a trojan contradicting the prediction of the SVM.  The
+two closest samples from training were all non-trojan with three samples.  The
+three samples were overcome by the ten samples that were the next closest due to
+the balance.
+
+
+In example three, the case-based explainable architecture further went on to
+explain, ``The decision contradicts the high correspondence $99.6\%$ for the
+prediction of a trojan based on neighbors from training data.''  This indicates
+the incidence of the ten trojans, despite their further distance, outweighed the
+three closer non-trojan training samples.  Such disagreement could be approached
+by modifying the NN weighting to decrease the influence based on distance.  A
+scheme in \ref{eq:weight_of_neighbors}, taking the inverse cube of distance
+could help to lower the impact of trojans further from the considered sample.
+Like all other samples, all originating data from the thirteen KNN training
+samples were provided for context by the case-based explainable architecture. 
+
