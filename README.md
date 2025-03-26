@@ -80,3 +80,6 @@ pandoc thesis.tex -s -o thesis-2025-03-11-0100.docx
 
 If using VS Code, the rewrap plugin is really useful to
 manage text lines so they don't get too long.
+
+I used this website to submit sample thesis to see what issues existed.
+https://pave-pdf.org/index.html?lang=en
