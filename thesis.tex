@@ -36,19 +36,19 @@
 \begin{titlepage}
 \begin{center}
 %TODO replace with your title below
-\large{\bfseries{
-    The First Line in the Title of your Thesis:\\ This is the Second Title Line\\
+\Large{\bfseries\MakeUppercase{
+    The First Line in Thesis:\\ This is the Second Title Line\\
  }}
  % ----------------------------------------------------------------
- \vspace{1.5cm}
+ \vspace{.5cm}
+ \large{\bfseries{by}}\\ \vspace{.5cm}
+ \vspace{.5cm}
  %TODO replace with author name below
- {\textsc{\Large Author Name}}\\[5pt]
+\Large{\bfseries\MakeUppercase{Author Name}}\\[5pt]
 
   % ----------------------------------------------------------------
 \vspace{2cm}
-\large{Thesis} \\[5pt]
-\small{submitted in partial fulfillment for the award of the Degree
- of} \\[0.5cm]
+\large{Submitted in partial fulfillment of the requirements for the degree of} \\[0.5cm]
  %TODO Change the degree
 \textsc{\Large{{Doctor of Philosophy}}} \\[5pt]
 \vfill
@@ -60,16 +60,13 @@
 %TODO change Department Name
 \large{Department Name}\\[5pt]
 %TODO Change University Name
-\textsc{University Name}\\[0.5cm]
+\textsc{Case Western Reserve University}\\[0.5cm]
 
  %TODO Graduation month and year
 {May, 2025}
 \end{center}
 \end{titlepage}
 % ----------------------------------------------------------------
-
-
-
 
 % ----------------------------------------------------------------
 \newpage
@@ -96,117 +93,22 @@
     Date of Defense \\
     \textbf{March 27, 2025}
 \end{center}
-
 % ----------------------------------------------------------------
 
-
-
-
-
+\bibliographystyle{plain} % We choose the "plain" reference style
+%\bibliography{refs} % Entries are in the refs.bib file
 
 \tableofcontents
+\listoffigures
+\listoftables
 
 
-\chapter*{Abstract}
-\addcontentsline{toc}{chapter}{Abstract}
-\thispagestyle{plain}
-
-\lipsum[1-3]
-\thispagestyle{plain}
+\include{contents/00-abstract}
+\include{contents/01-introduction}
+\include{contents/02-background}
+\include{contents/03-method}
 
 
-
-\chapter{Introduction}
-\pagenumbering{arabic}
-
-
-\lipsum[3]
-
-\section{Some Section Name}
-
-\lipsum{1}
-
-We can reference Figure \ref{fig:logo} just like that. The figure should also
-have alt text for accessibility as provided by the alt tag.
-
-\begin{figure}[hbt!]
-    \centering
-    \includegraphics[width=.5\textwidth,alt={This is alt text for a figure of the CWRU logo.}]{cwru_logo.eps}
-    \caption{This is a figure of the CWRU logo.}
-    \label{fig:logo}
-\end{figure}
-
-\lipsum[1]
-
-An interesting table shown as Table \ref{table:mnist_example1_ex}. The table is
-pretty big but we shrink to the linewidth using the resizebox command.
-
-\begin{table}[h!]
-        \renewcommand{\arraystretch}{1.3}
-        \captionof{table}{Explainability Matrix for MNIST Example one}\label{table:mnist_example1_ex}
-        \centering
-        \resizebox{\linewidth}{!}{%
-        \begin{tabular}{| c | c | c | c | c | c || c | c | c |}
-        \cline{4-9}
-        \multicolumn{3}{c}{} & \multicolumn{3}{|c||}{PDF Effectiveness} & \multicolumn{3}{c|}{PDF Explainability} \\
-        \hline
-        $F_j$ & Property & Class Vote & $E(j,0)$ & $E(j,4)$ & $E(j,9)$ & $Ex(0)$ & $Ex(4)$ & $Ex(9)$ \\
-        \hline
-        \hline
-        $F_1$ & Stroke & $4$ &  & $1.0$ &  &  & $1.0$ & \\ 
-        \hline
-        $F_2$ & Circle & $0$ & $0.039$ &  &  & $1.0$ &  & \\
-        \hline
-        $F_3$ & Crossing & $0$ & $0.018$ &  &  & $1.0$ &  & \\
-        \hline
-        $F_4$ & Ellipse & $0$ & $0.004$ &  &  & $1.0$ &  & \\
-        \hline
-        $F_5$ & Ell-Cir & $0$ & $0.069$ &  &  & $1.0$ &  & \\
-        \hline
-        $F_6$ & Endpoint & $4$ &  & $0.974$ &  &  & $1.0$ & \\
-        \hline
-        $F_7$ & Encl. Reg. & $0$ & $0.021$ &  &  & $1.0$ &  & \\
-        \hline
-        $F_8$ & Line & $9$ &  &  & $0.496$ &  &  & $1.0$ \\
-        \hline
-        $F_9$& Convex Hull & $4$ &  & $0.826$ &  &  & $1.0$ & \\
-        \hline
-        $F_{10}$& Corner & $4$ &  & $0.538$ &  &  & $1.0$ & \\
-        \hline
-        $F_{11}$& No Property & $4$ &  & $1.0$ &  &  & $0.0$ & \\
-        \hline
-        \hline
-        \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $0.151$ & $4.337$ & $0.496$ & $0.151$ & $3.337$ & $0.496$ \\
-        \cline{0-8}
-        \multicolumn{3}{|c|}{Confidence / Explainability} & $3.03\%$ & $87.0\%$ & $9.96\%$ & $100\%$ & $76.9\%$ & $100\%$ \\
-        \cline{0-8}
-        \end{tabular}
-        }
-\end{table}
-
-\lipsum[1]
-
-\begin{table}[h!]
-    \renewcommand{\arraystretch}{1.3}
-    \captionof{table}{Explanation for MNIST Example two} \label{table:mnist_example2_explanation}
-    %\centering
-    %\resizebox{\columnwidth}{!}{%
-    \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
-    \hline
-     Class & Confidence & Explainability & Explainable Description \\
-    \hline \hline
-    $2$ & $93.1\%$ & $80.0\%$ & Confidence is high for interpreting this character as a two due to the stroke, endpoint, convex hull, corner, and line properties. \\ 
-    \hline
-    $8$ & $5.37\%$ & $100\%$ & Confidence is low for interpreting this character as an eight due to the ellipse-circle property. \\
-    \hline
-    $0$ & $1.53\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the circle, fill, crossing, and ellipse properties. \\
-    \hline
-    \end{tabular}
-    %}
-\end{table}
-
-\section{Another Section Name}
-
-\lipsum[1]
+\bibliography{refs.bib}
 
 \end{document}
