@@ -1,20 +1,22 @@
 \chapter{Introduction}
 \pagenumbering{arabic} % needed to begin traditional numbering
+% remove below this line and add your intro.
 
-This thesis is written in \LaTeX\cite{knuthwebsite}.
+This thesis is written in \LaTeX\cite{knuthwebsite}. There is an example of
+an accessible figure in Figure \ref{fig:logo}.
 
 \lipsum[3]
 
 \section{Some Section Name}
 
-\lipsum{1}
+\lipsum[1]
 
 We can reference Figure \ref{fig:logo} just like that. The figure should also
 have alt text for accessibility as provided by the alt tag.
 
 \begin{figure}[hbt!]
     \centering
-    \includegraphics[width=.5\textwidth,alt={This is alt text for a figure of the CWRU logo.}]{cwru_logo.eps}
+    \includegraphics[width=.5\textwidth,alt={This is alt text for a figure of the CWRU logo.}]{./images/cwru_logo.eps}
     \caption{This is a figure of the CWRU logo.}
     \label{fig:logo}
 \end{figure}
