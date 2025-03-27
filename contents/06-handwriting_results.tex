@@ -46,8 +46,9 @@ especially Resnet50.
 
 \begin{table}
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Accuracy of models and architectures on MNIST}
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{|l|c|c|c|}
         \cline{2-4}
@@ -66,13 +67,15 @@ especially Resnet50.
         \hline
     \end{tabular}
     %}
+    \end{center}
     \label{tab:mnist_accuracy_results}
 \end{table}
 
 \begin{table}
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Average explainability of the winning choice for models and architectures on MNIST}
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{|l|c|c|c|}
         \cline{2-4}
@@ -91,6 +94,7 @@ especially Resnet50.
         \hline
     \end{tabular}
     %}
+    \end{center}
     \label{tab:mnist_explainability_results}
 \end{table}
 
@@ -121,8 +125,9 @@ nine.
 % \end{figure}
 
 \begin{table}[H]
-    \centering
+    %\centering
     \caption{Confusion matrix for the single unexplainable MLP on MNIST.}
+    \begin{center}
     \label{tab:mnist_conf_mlp}
     \renewcommand{\arraystretch}{1.3}
     \begin{tabular}{ll|c|c|c|c|c|c|c|c|c|c|}
@@ -144,6 +149,7 @@ nine.
         &   8 & 7 & 0 & 2 & 2 & 2 & 0 & 0 & 2 & $~955$ & 4 \\ \cline{3-12}
         &   9 & 7 & 2 & 0 & 3 & 6 & 3 & 1 & 6 & 2 & $~979$ \\ \cline{3-12}
     \end{tabular}
+    \end{center}
 \end{table}
 
 
@@ -155,8 +161,9 @@ nine.
 
 
 \begin{table}[H]
-    \centering
+    %\centering
     \caption{Confusion matrix for the single unexplainable SVM on MNIST.}
+    \begin{center}
     \label{tab:mnist_conf_svm}
     \renewcommand{\arraystretch}{1.3}
     \begin{tabular}{ll|c|c|c|c|c|c|c|c|c|c|}
@@ -178,6 +185,7 @@ nine.
         &   8 & 3 & 0 & 2 & 6 & 3 & 2 & 2 & 3 & $~950$ & 3 \\ \cline{3-12}
         &   9 & 3 & 4 & 1 & 7 & 10 & 2 & 1 & 7 & 4 & $~970$ \\ \cline{3-12}
     \end{tabular}
+    \end{center}
 \end{table}
 
 Table \ref{tab:mnist_conf_exp_cnn} illustrates the confusion matrix on the MNIST
@@ -187,8 +195,9 @@ that thirteen times the digit four was erroneously predicted as a nine and in
 ten instance a handwritten five was erroneously predicted as a three.
 
 \begin{table}[H]
-    \centering
+    %\centering
     \caption{Confusion matrix for an explainable Resnet50 architecture with ten explainable and one unexplainable flows on MNIST.}
+    \begin{center}
     \label{tab:mnist_conf_exp_cnn}
     \renewcommand{\arraystretch}{1.3}
     \begin{tabular}{ll|c|c|c|c|c|c|c|c|c|c|}
@@ -210,6 +219,7 @@ ten instance a handwritten five was erroneously predicted as a three.
         &   8 & 4 & 0 & 2 & 1 & 0 & 0 & 0 & 2 & $~960$ & 5 \\ \cline{3-12}
         &   9 & 3 & 1 & 0 & 1 & 7 & 0 & 0 & 3 & 0 & $~994$ \\ \cline{3-12}
     \end{tabular}
+    \end{center}
 \end{table}
 
 
@@ -266,8 +276,9 @@ for digit examples is in Table~\ref{tab:mnist_example_conf_matrix}.  The confusi
 Was stored in the knowledgebase and was used to suggest how the system can fail for the examples.
 
 \begin{table}[H]
-    \centering
+    %\centering
     \caption{MLP explainable architecture confusion matrix for MNIST examples.}
+    \begin{center}
     \label{tab:mnist_example_conf_matrix}
     \renewcommand{\arraystretch}{1.3}
     \begin{tabular}{ll|c|c|c|c|c|c|c|c|c|c|}
@@ -289,6 +300,7 @@ Was stored in the knowledgebase and was used to suggest how the system can fail 
         &   8 & 10  &  3   &  1   &  4  &  2  &  0  &  6  &  2   & 939 &  7  \\ \cline{3-12}
         &   9 &  7  &  3   &  0   &  3  &  9  &  1  &  1  &  3   &  1  & 981 \\ \cline{3-12}
     \end{tabular}
+    \end{center}
 \end{table}
 
 % mnist test sample index 4 a digit 4
@@ -329,7 +341,7 @@ calculating the explainability of the rationale for each class.
     %\begin{minipage}{0.85\linewidth}
         \renewcommand{\arraystretch}{1.3}
         \captionof{table}{Explainability Matrix for MNIST Example one}\label{table:mnist_example1_ex}
-        \centering
+        \begin{center}
         %\resizebox{0.85\linewidth}{!}{%
         \begin{tabular}{| c | c | c | c | c | c || c | c | c |}
         \cline{4-9}
@@ -367,6 +379,7 @@ calculating the explainability of the rationale for each class.
         \cline{0-8}
         \end{tabular}
         %}
+        \end{center}
     %\end{minipage}
 \end{table}
 
@@ -406,6 +419,7 @@ across the flows $j$ that suggested the digit four in
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Explanation for MNIST Example one} \label{table:mnist_example1_explanation}
     %\centering
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
@@ -419,6 +433,7 @@ across the flows $j$ that suggested the digit four in
     \hline
     \end{tabular}
     %}
+    \end{center}
 \end{figure}
 
 Table \ref{table:mnist_example1_explanation} presents the results from the XAI
@@ -486,7 +501,8 @@ in \eqref{eq:explainability_mnist_example2}.
     %\begin{minipage}{0.85\linewidth}
         \renewcommand{\arraystretch}{1.3}
         \captionof{table}{Explainability Matrix for MNIST Example two}\label{table:mnist_example2_ex}
-        \centering
+        %\centering
+        \begin{center}
         %\resizebox{0.85\linewidth}{!}{%
         \begin{tabular}{| c | c | c | c | c | c || c | c | c |}
         \cline{4-9}
@@ -524,6 +540,7 @@ in \eqref{eq:explainability_mnist_example2}.
         \cline{0-8}
         \end{tabular}
         %}
+        \end{center}
     %\end{minipage}
 \end{table}
 
@@ -539,6 +556,7 @@ as eight and zero.  The rationale provided for the winning selection indicates:
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Explanation for MNIST Example two} \label{table:mnist_example2_explanation}
     %\centering
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
@@ -552,6 +570,7 @@ as eight and zero.  The rationale provided for the winning selection indicates:
     \hline
     \end{tabular}
     %}
+    \end{center}
 \end{table}
 
 The explainable system references the confusion matrix in the knowledgebase and
@@ -586,7 +605,8 @@ one flow each suggested the digits three, four, and seven.
     %\begin{minipage}{0.85\linewidth}
         \renewcommand{\arraystretch}{1.3}
         \captionof{table}{Explainability Matrix for MNIST Example three}\label{table:mnist_example3_ex}
-        \centering
+        %\centering
+        \begin{center}
         \resizebox{\linewidth}{!}{%
         \begin{tabular}{| c | c | c | c | c | c | c | c || c | c | c | c | c |}
         \cline{4-13}
@@ -624,6 +644,7 @@ one flow each suggested the digits three, four, and seven.
         \cline{0-12}
         \end{tabular}
         }
+        \end{center}
     %\end{minipage}
 \end{table}
 
@@ -642,6 +663,7 @@ closest alternative to the nine is the digit seven with $11.5\%$ confidence.
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Explanation for MNIST Example three} \label{table:mnist_example3_explanation}
     %\centering
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
@@ -659,6 +681,7 @@ closest alternative to the nine is the digit seven with $11.5\%$ confidence.
     \hline
     \end{tabular}
     %}
+    \end{center}
 \end{table}
 
 Table \ref{table:mnist_example3_explanation} presents the explainable description from the
@@ -731,8 +754,9 @@ characters.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Benchmark unexplainable accuracy results on the full and various splits of the balanced EMNIST data sets with differing ML models.}
+    \begin{center}
     \resizebox{\linewidth}{!}{%
     \begin{tabular}{|l|c|c|c|c|}
         \cline{2-5}
@@ -751,6 +775,7 @@ characters.
         \hline
     \end{tabular}
     }
+    \end{center}
     \label{tab_unexplainable_accuracy_results}
 \end{table}
 
@@ -765,8 +790,9 @@ performed slightly better on the splits.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Explainable accuracy results on the full and various splits of the balanced EMNIST data sets with differing ML models using ten explainable flows.}
+    \begin{center}
     \resizebox{\linewidth}{!}{%
     \begin{tabular}{|l|c|c|c|c|}
         \cline{2-5}
@@ -785,6 +811,7 @@ performed slightly better on the splits.
         \hline
     \end{tabular}
     }
+    \end{center}
     \label{tab_explainable_accuracy_results}
 \end{table}
 
@@ -796,8 +823,9 @@ the benchmark unexplainable accuracy in Table \ref{tab_unexplainable_accuracy_re
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Explainable accuracy results on the full and various splits of the balanced EMNIST data sets with differing ML models using ten explainable and one unexplainable flow.}
+    \begin{center}
     \resizebox{\linewidth}{!}{%
     \begin{tabular}{|l|c|c|c|c|}
         \cline{2-5}
@@ -816,6 +844,7 @@ the benchmark unexplainable accuracy in Table \ref{tab_unexplainable_accuracy_re
         \hline
     \end{tabular}
     }
+    \end{center}
     \label{tab_exp_unexp_accuracy_results_no_thresh}
 \end{table}
 
@@ -827,8 +856,9 @@ is due to the unexplainable flow rather than those associated with a property.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Average explainability results for the winning vote on the full and various splits of the balanced EMNIST data sets with differing ML models using ten explainable and one unexplainable flow.}
+    \begin{center}
     \resizebox{\linewidth}{!}{%
     \begin{tabular}{|l|c|c|c|c|}
         \cline{2-5}
@@ -847,6 +877,7 @@ is due to the unexplainable flow rather than those associated with a property.
         \hline
     \end{tabular}
     }
+    \end{center}
     \label{tab_exp_unexp_explainability_results_no_thresh}
 \end{table}
 
@@ -923,7 +954,8 @@ confidence of 92.4\%.
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
     \caption{Explainability matrix for EMNIST example one.}\label{table:emnist_example1_ex}
-    \centering
+    %\centering
+    \begin{center}
     \resizebox{\linewidth}{!}{%
     \begin{tabular}{| c | c | c | c | c | c || c | c | c |}
     \cline{4-9}
@@ -961,6 +993,7 @@ confidence of 92.4\%.
     \cline{0-8}
     \end{tabular}%
     }
+    \end{center}
 \end{table}
 
 Explainable rationale provided by XAI is depicted in
@@ -971,6 +1004,7 @@ votes from the NNs.
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Explanation for EMNIST Example one} \label{table:emnist_example1_explanation}
     %\centering
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
@@ -984,6 +1018,7 @@ votes from the NNs.
     \hline
     \end{tabular}
     %}
+    \end{center}
 \end{table}
 
 Figure \ref{fig:ex2} shows example two, index 30 from the EMNIST balanced test
@@ -1006,7 +1041,8 @@ very low in comparison, C wins with $93.6\%$ confidence.
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
     \caption{Explainability matrix for EMNIST example two.}\label{table:emnist_example2_ex}
-    \centering
+    %\centering
+    \begin{center}
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{| c | c | c | c | c | c | c || c | c | c | c |}
     \cline{4-11}
@@ -1044,6 +1080,7 @@ very low in comparison, C wins with $93.6\%$ confidence.
     \cline{0-10}
     \end{tabular}%
     }
+    \end{center}
     \label{table:example2}
 \end{table}
 
@@ -1053,6 +1090,7 @@ Table \ref{table:emnist_example2_explanation} shows the explanation for Example 
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Explanation for EMNIST Example two} \label{table:emnist_example2_explanation}
     %\centering
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
@@ -1068,6 +1106,7 @@ Table \ref{table:emnist_example2_explanation} shows the explanation for Example 
     \hline
     \end{tabular}
     %}
+    \end{center}
 \end{table}
 
 The vote for an uppercase X, by the enclosed region, is unexpected as there
@@ -1132,7 +1171,8 @@ accuracy, to recall, and finally to $E_{PARS}$.
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Explainability Matrix for EMNIST example three based on the Accuracy metric.}\label{table:example4a}
-    \centering
+    %\centering
+    \begin{center}
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{| c | c | c | c | c | c | c || c | c | c | c |}
     \cline{4-11}
@@ -1170,12 +1210,14 @@ accuracy, to recall, and finally to $E_{PARS}$.
     \cline{0-10}
     \end{tabular}
     }
+    \end{center}
 \end{table}
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Explanation for EMNIST example three based on the Accuracy metric.} \label{table:exexample4a}
     %\centering
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
         \hline
@@ -1191,6 +1233,7 @@ accuracy, to recall, and finally to $E_{PARS}$.
        \hline
     \end{tabular}
     %}
+    \end{center}
 \end{table}
 
 When examining the Explainability data from Tables \ref{table:example4r},
@@ -1221,7 +1264,8 @@ the rationale provided to the user.
 \begin{table}[H]
         \renewcommand{\arraystretch}{1.3}
         \captionof{table}{Explainability matrix for EMNIST example three based on the Recall metric.}\label{table:example4r}
-        \centering
+        %\centering
+        \begin{center}
         \resizebox{\textwidth}{!}{%
         \begin{tabular}{| c | c | c | c | c | c | c || c | c | c | c |}
         \cline{4-11}
@@ -1259,12 +1303,14 @@ the rationale provided to the user.
         \cline{0-10}
         \end{tabular}
         }
+        \end{center}
 \end{table}
     
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Explanation for EMNIST example three based on the Recall metric.} \label{table:exexample4r}
     %\centering
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
         \hline
@@ -1279,7 +1325,8 @@ the rationale provided to the user.
         n & $1.40\%$ & $100\%$ & Confidence is low for interpreting this character as an n due to the ellipse property. \\
         \hline
     \end{tabular}
-        %}
+    %}
+    \end{center}
 \end{table}
 
 Observe in Tables \ref{table:example4r} and \ref{table:exexample4r} that the
@@ -1291,7 +1338,8 @@ the \lq{S}\rq~with medium confidence, $43.5\%$. Since Recall in
 \eqref{eq:recall} has $TP$ in the numerator, high $TP$ and very low $FN$ counts
 of the PDFs that voted for the digit one observed in Table
 \ref{table:example4eff_metrics} explains why the digit one wins using the Recall
-metric.
+metric. Observe that the Recall metrics for each flow that voted for one is near
+or above $99\%$.
 
 Tables \ref{table:example4a} and \ref{table:exexample4a} contain data and
 results from using the Accuracy metric on the example.  Accuracy is given in
@@ -1307,7 +1355,8 @@ with part ($20.2\%$) of the contribution for the decision.
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Explainability Matrix for EMNIST example three based on the $E_{PARS}$ metric.}\label{table:example4epars}
-    \centering
+    %\centering
+    \begin{center}
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{| c | c | c | c | c | c | c || c | c | c | c |}
     \cline{4-11}
@@ -1345,12 +1394,14 @@ with part ($20.2\%$) of the contribution for the decision.
     \cline{0-10}
     \end{tabular}
     }
+    \end{center}
 \end{table}
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Explanations for EMNIST example three based on the $E_{PARS}$ metric.} \label{table:exexample4epars}
     %\centering
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
@@ -1366,6 +1417,7 @@ with part ($20.2\%$) of the contribution for the decision.
     \hline
     \end{tabular}
     %}
+    \end{center}
 \end{table}   
 
 Table~\ref{tab:mnist_emnist_eff_metrics} depicts the MNIST and EMNIST overall
@@ -1384,8 +1436,9 @@ accuracy using ten explainable and one unexplainable flow.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Comparison of an explainable system's overall performance (\% accuracy) using various effectiveness metrics.}
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{| l | c | c || c | c || c | c || c | c |}
         \cline{2-9}
@@ -1413,6 +1466,7 @@ accuracy using ten explainable and one unexplainable flow.
         \hline
     \end{tabular}
     %}
+    \end{center}
     \label{tab:mnist_emnist_eff_metrics}
 \end{table}
 
@@ -1452,7 +1506,8 @@ not result in similar performance.
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Ex.~2 Effectiveness Metrics (\%) based on Votes}\label{table:example4eff_metrics} 
-    \centering
+    %\centering
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{| c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
     \hline
@@ -1483,6 +1538,7 @@ not result in similar performance.
     \hline
     \end{tabular}
     %}
+    \end{center}
 \end{table}
 
 The final set of Explainability and Explanations Tables,
@@ -1542,8 +1598,9 @@ with the U and V classes.
 
 
 \begin{table}[H]
-    \centering
+    %\centering
     \caption{Explainable confusion matrix for select unpruned uppercase letters.}
+    \begin{center}
     \label{tab:raw_cap_confusion_matrix}
     \renewcommand{\arraystretch}{1.3}
     \begin{tabular}{ll|c|c|c|c|c|c|c|c|}
@@ -1563,6 +1620,7 @@ with the U and V classes.
         &   U &  4  &  1   &  0   &  1  &  9  &  0  & 305 &  29  \\ \cline{3-10}
         &   V &  0  &  0   &  2   &  0  &  2  &  2  &  9  &  326 \\ \cline{3-10}
     \end{tabular}
+    \end{center}
 \end{table}
 
 
@@ -1606,8 +1664,9 @@ letters from 82.9\% without pruning.
 % \end{table}
 
 \begin{table}[H]
-    \centering
+    %\centering
     \caption{Explainable confusion matrix for select uppercase letters after a single round of Cleanlab pruning.}
+    \begin{center}
     \label{tab:raw_cap_cleanlab_confusion_matrix}
     \renewcommand{\arraystretch}{1.3}
     \begin{tabular}{ll|c|c|c|c|c|c|c|c|}
@@ -1627,6 +1686,7 @@ letters from 82.9\% without pruning.
         &   U &  2  &  0   &  1   &  1  &  0  &  22  & 304 &  17  \\ \cline{3-10}
         &   V &  0  &  0   &  3   &  1  &  0  &  21  &  13  &  315 \\ \cline{3-10}
     \end{tabular}
+    \end{center}
 \end{table}
 
 
@@ -1672,8 +1732,9 @@ explainable architecture.
 % \end{table}
 
 \begin{table}[H]
-    \centering
+    %\centering
     \caption{Explainable confusion matrix for select uppercase letters after three rounds of Cleanlab pruning.}
+    \begin{center}
     \label{tab:raw_cap_cleanlab_third_confusion_matrix}
     \renewcommand{\arraystretch}{1.3}
     \begin{tabular}{ll|c|c|c|c|c|c|c|c|}
@@ -1693,6 +1754,7 @@ explainable architecture.
         &   U &  1  &  0   &  1   &  9  &  0  &  1  & 305 &  29  \\ \cline{3-10}
         &   V &  0  &  2   &  0   &  2  &  2  &  1  &  9  &  326 \\ \cline{3-10}
     \end{tabular}
+    \end{center}
 \end{table}
 
 Images pruned from the training set due to issues such as mislabeled or
@@ -1938,8 +2000,9 @@ $97.7\%$ of the time.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Accuracy and correspondence of the case-based explainable architecture on MNIST.}
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{|l|c|c|}
         \hline
@@ -1958,6 +2021,7 @@ $97.7\%$ of the time.
         \hline
     \end{tabular}
     %}
+    \end{center}
     \label{tab:mnist_case_based_results}
 \end{table}
 
@@ -1993,8 +2057,9 @@ the digit four agrees with the SVM.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Ten nearest neighbors for case-based MNIST example one.}
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{|c|c|c|}
         \hline
@@ -2023,6 +2088,7 @@ the digit four agrees with the SVM.
         \hline
     \end{tabular}
     %}
+    \end{center}
     \label{tab:mnist_case_based_ex1}
 \end{table}
 
@@ -2056,8 +2122,9 @@ two based on the ten nearest neighbors.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Ten nearest neighbors for case-based MNIST example two.}
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{|c|c|c|}
         \hline
@@ -2086,6 +2153,7 @@ two based on the ten nearest neighbors.
         \hline
     \end{tabular}
     %}
+    \end{center}
     \label{tab:mnist_case_based_ex2}
 \end{table}
 
@@ -2118,8 +2186,9 @@ neighbors is $1.0$.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Ten nearest neighbors for case-based MNIST example three.}
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{|c|c|c|}
         \hline
@@ -2148,6 +2217,7 @@ neighbors is $1.0$.
         \hline
     \end{tabular}
     %}
+    \end{center}
     \label{tab:mnist_case_based_ex3}
 \end{table}
 
@@ -2179,8 +2249,9 @@ improperly suggested a five.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{Ten nearest neighbors for case-based MNIST example four.}
+    \begin{center}
     %\resizebox{\columnwidth}{!}{%
     \begin{tabular}{|c|c|c|}
         \hline
@@ -2209,6 +2280,7 @@ improperly suggested a five.
         \hline
     \end{tabular}
     %}
+    \end{center}
     \label{tab:mnist_case_based_ex4}
 \end{table}
 

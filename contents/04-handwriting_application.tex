@@ -1,4 +1,4 @@
-\chapter{Explainable Methods Applied to Handwritten Characters} \label{ch:handwriting}
+\chapter{Application to Handwritten Characters} \label{ch:handwriting}
 % remove below this line and add your method(s)
 
 This chapter first outlines the application of the explainable property-based
@@ -63,7 +63,7 @@ $T_j(I_i)$.
 \begin{table}[h]
 \renewcommand{\arraystretch}{1.3}
 \caption{Properties and transforms for the MNIST example}
-\centering
+\begin{center}
 %\resizebox{\columnwidth}{!}{%
 \begin{tabular}{ c | c | c | ccc | }
 \cline{2-6}
@@ -93,6 +93,7 @@ $T_{10}$ & Corner & Harris Corner & \raisebox{-.5\height}{\includegraphics[width
 \hline
 \end{tabular}%
 %}
+\end{center}
 \centering
 \label{tab:transsample}
 \end{table}
@@ -679,8 +680,8 @@ the other transforms related to enclosed regions, it was dropped.
 
 \begin{table}[H]
     \renewcommand{\arraystretch}{1.3}
-    \centering
     \caption{MNIST training metrics for the Skeleton Fill inference engine. Metric values are percentages (\%).}
+    \begin{center}
     %\resizebox{\textwidth}{!}{%
     \begin{tabular}{| c | r | r | r | r | r |}
         \hline
@@ -700,6 +701,7 @@ the other transforms related to enclosed regions, it was dropped.
         \hline
     \end{tabular}
     %}
+    \end{center}
     \label{tab:skel_fill_metrics}
 \end{table}
 
@@ -1043,8 +1045,9 @@ However, poor accuracy results were observed\cite{whitten23}.
 
 \begin{table}
     \renewcommand{\arraystretch}{1.3}
-    \centering
+    %\centering
     \caption{The number of pruned samples based on a 75\% confidence threshold}
+    \begin{center}
     %\resizebox{\textwidth}{!}{%
     \begin{tabular}{|c|c|}
         \hline
@@ -1062,6 +1065,7 @@ However, poor accuracy results were observed\cite{whitten23}.
         \hline
     \end{tabular}
     %}
+\end{center}
     \label{tab:threshold_pruning_qty}
 \end{table}
 
