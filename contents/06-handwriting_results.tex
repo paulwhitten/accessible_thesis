@@ -1927,11 +1927,13 @@ could help a user to confidently resolve issues with labels.
 \section{Case-Based Explainable Results on Handwritten Digits}
 \label{sec:case_based_handwriting_results}
 
-The overall case-based results are shown in Table
-\ref{tab:mnist_case_based_results}. The 75 PC dataset performed the best with
-$98.5\%$ accuracy and a rate of $97.7\%$ corresponmdence. The correspondence
-figure indicates that the K training neighbors had a weight theat favored
-the class that the inference engine selected $97.7\%$ of the time.
+The overall case-based results using an SVM for inference are shown in Table
+\ref{tab:mnist_case_based_results}. The rows indicate unchanged MNIST data and
+then reduced PCA data with various principal components. The 75 PC dataset
+performed the best with $98.5\%$ accuracy and a rate of $97.7\%$
+corresponmdence. The correspondence figure indicates that the K training
+neighbors had a weight that favored the class that the inference engine selected
+$97.7\%$ of the time.
 
 
 \begin{table}[H]
