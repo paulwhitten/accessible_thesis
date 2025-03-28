@@ -49,7 +49,7 @@ especially Resnet50.
     %\centering
     \caption{Accuracy of models and architectures on MNIST}
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    %\resizebox{\textwidth}{!}{%
     \begin{tabular}{|l|c|c|c|}
         \cline{2-4}
         \multicolumn{1}{c|}{} & \multicolumn{3}{c|}{Architecture} \\
@@ -76,7 +76,7 @@ especially Resnet50.
     %\centering
     \caption{Average explainability of the winning choice for models and architectures on MNIST}
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    %\resizebox{\textwidth}{!}{%
     \begin{tabular}{|l|c|c|c|}
         \cline{2-4}
         \multicolumn{1}{c|}{} & \multicolumn{3}{c|}{Architecture} \\
@@ -420,7 +420,7 @@ across the flows $j$ that suggested the digit four in
     \captionof{table}{Explanation for MNIST Example one} \label{table:mnist_example1_explanation}
     %\centering
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
      Class & Confidence & Explainability & Explainable Description \\
@@ -432,7 +432,7 @@ across the flows $j$ that suggested the digit four in
     $0$ & $3.03\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the ellipse-circle, circle, flood fill, crossing, and ellipse properties. \\
     \hline
     \end{tabular}
-    %}
+    }
     \end{center}
 \end{figure}
 
@@ -557,7 +557,7 @@ as eight and zero.  The rationale provided for the winning selection indicates:
     \captionof{table}{Explanation for MNIST Example two} \label{table:mnist_example2_explanation}
     %\centering
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
      Class & Confidence & Explainability & Explainable Description \\
@@ -569,7 +569,7 @@ as eight and zero.  The rationale provided for the winning selection indicates:
     $0$ & $1.53\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the circle, flood fill, crossing, and ellipse properties. \\
     \hline
     \end{tabular}
-    %}
+    }
     \end{center}
 \end{table}
 
@@ -664,7 +664,7 @@ closest alternative to the nine is the digit seven with $11.5\%$ confidence.
     \captionof{table}{Explanation for MNIST Example three} \label{table:mnist_example3_explanation}
     %\centering
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
      Class & Confidence & Explainability & Explainable Description \\
@@ -680,7 +680,7 @@ closest alternative to the nine is the digit seven with $11.5\%$ confidence.
     $0$ & $1.85\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the ellipse-circle, circle, and ellipse properties. \\
     \hline
     \end{tabular}
-    %}
+    }
     \end{center}
 \end{table}
 
@@ -731,7 +731,7 @@ characters.
 %     \renewcommand{\arraystretch}{1.3}
 %     \centering
 %     \caption{Unexplainable accuracy results on various balanced EMNIST data sets with differing ML models}
-%     %{\columnwidth}{!}{%
+%     %{\textwidth}{!}{%
 %     \begin{tabular}{|l|c|c|c|c|c|c|c|c|}
 %         \cline{2-9}
 %         \multicolumn{1}{c}{} & \multicolumn{8}{|c|}{Accuracy (\%)} \\
@@ -1005,7 +1005,7 @@ votes from the NNs.
     \captionof{table}{Explanation for EMNIST Example one} \label{table:emnist_example1_explanation}
     %\centering
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
      Class & Confidence & Explainability & Explainable Description \\
@@ -1017,7 +1017,7 @@ votes from the NNs.
     G & $3.03\%$ & $100\%$ & Confidence is low for interpreting this character as a G due to the ellipse property. \\
     \hline
     \end{tabular}
-    %}
+    }
     \end{center}
 \end{table}
 
@@ -1091,7 +1091,7 @@ Table \ref{table:emnist_example2_explanation} shows the explanation for Example 
     \captionof{table}{Explanation for EMNIST Example two} \label{table:emnist_example2_explanation}
     %\centering
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
      Class & Confidence & Explainability & Explainable Description \\
@@ -1105,7 +1105,7 @@ Table \ref{table:emnist_example2_explanation} shows the explanation for Example 
     X & $0.01\%$ & $100\%$ & Confidence is low for interpreting this character as an X due to the enclosed region property. \\ 
     \hline
     \end{tabular}
-    %}
+    }
     \end{center}
 \end{table}
 
@@ -1218,7 +1218,7 @@ accuracy, to recall, and finally to $E_{PARS}$.
     \captionof{table}{Explanation for EMNIST example three based on the Accuracy metric.} \label{table:exexample4a}
     %\centering
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
         \hline
         Class & Confidence & Explainability & Explainable Description \\
@@ -1232,7 +1232,7 @@ accuracy, to recall, and finally to $E_{PARS}$.
         E & $10.1\%$ & $100\%$ & Confidence is low for interpreting this character as an E due to the convex hull property. \\
        \hline
     \end{tabular}
-    %}
+    }
     \end{center}
 \end{table}
 
@@ -1311,7 +1311,7 @@ the rationale provided to the user.
     \captionof{table}{Explanation for EMNIST example three based on the Recall metric.} \label{table:exexample4r}
     %\centering
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
         \hline
          Class & Confidence & Explainability & Explainable Description \\
@@ -1325,7 +1325,7 @@ the rationale provided to the user.
         n & $1.40\%$ & $100\%$ & Confidence is low for interpreting this character as an n due to the ellipse property. \\
         \hline
     \end{tabular}
-    %}
+    }
     \end{center}
 \end{table}
 
@@ -1402,7 +1402,7 @@ with part ($20.2\%$) of the contribution for the decision.
     \captionof{table}{Explanations for EMNIST example three based on the $E_{PARS}$ metric.} \label{table:exexample4epars}
     %\centering
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
      Class & Confidence & Explainability & Explainable Description \\
@@ -1416,7 +1416,7 @@ with part ($20.2\%$) of the contribution for the decision.
     n & $1.40\%$ & $100\%$ & Confidence is low for interpreting this character as an n due to the ellipse property. \\
     \hline
     \end{tabular}
-    %}
+    }
     \end{center}
 \end{table}   
 
@@ -1439,7 +1439,7 @@ accuracy using ten explainable and one unexplainable flow.
     %\centering
     \caption{Comparison of an explainable system's overall performance (\% accuracy) using various effectiveness metrics.}
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{| l | c | c || c | c || c | c || c | c |}
         \cline{2-9}
         \multicolumn{1}{l}{} & \multicolumn{4}{| c ||}{MNIST} & \multicolumn{4}{ c |}{EMNIST} \\
@@ -1465,7 +1465,7 @@ accuracy using ten explainable and one unexplainable flow.
         Recall ($R$) & 52.4 & 68.0 & 85.1 & 91.7 & 2.53 & 3.35 & 50.5 & 63.7 \\
         \hline
     \end{tabular}
-    %}
+    }
     \end{center}
     \label{tab:mnist_emnist_eff_metrics}
 \end{table}
@@ -1508,7 +1508,7 @@ not result in similar performance.
     \captionof{table}{Ex.~2 Effectiveness Metrics (\%) based on Votes}\label{table:example4eff_metrics} 
     %\centering
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    %\resizebox{\textwidth}{!}{%
     \begin{tabular}{| c | c | c | c | c | c | c | c | c | c | c | c | c | c |}
     \hline
     Property & Class & TP & TN & FP & FN & R & ACC & $E_{PARS}$ \\
@@ -1570,7 +1570,7 @@ with the U and V classes.
 %     \renewcommand{\arraystretch}{1.3}
 %     \centering
 %     \caption{Explainable confusion matrix for unpruned uppercase letters H - M, U, and V.  TODO: this needs to be formatted like other confusion matrices}
-%     %\resizebox{\columnwidth}{!}{%
+%     %\resizebox{\textwidth}{!}{%
 %     \begin{tabular}{ |c|c|c|c|c|c|c|c|c|}
 %     \hline
 %      & H & I & J & K & L & M & U & V \\
@@ -1637,7 +1637,7 @@ letters from 82.9\% without pruning.
 %     \renewcommand{\arraystretch}{1.3}
 %     \centering
 %     \caption{Explainable confusion matrix for uppercase letters H - M, U, and V after a single Cleanlab pruning.  TODO this confusion matrix needs to be formatted like others}
-%     %\resizebox{\columnwidth}{!}{%
+%     %\resizebox{\textwidth}{!}{%
 %     \begin{tabular}{ |c|c|c|c|c|c|c|c|c|}
 %     \hline
 %     ~ & H & I & J & K & L & M & U & V \\
@@ -1705,7 +1705,7 @@ explainable architecture.
 %     \renewcommand{\arraystretch}{1.3}
 %     \centering
 %     \caption{Explainable confusion matrix for uppercase letters H - M, U, and V after three rounds of Cleanlab pruning}
-%     %\resizebox{\columnwidth}{!}{%
+%     %\resizebox{\textwidth}{!}{%
 %     \begin{tabular}{ |c|c|c|c|c|c|c|c|c|}
 %     \hline
 %     ~ & H & I & J & K & L & M & U & V \\
@@ -1769,31 +1769,31 @@ able to correctly inference, according to human recognition, mislabeled samples.
 \begin{figure}[H]
     \centering
     %\textbf{Pruned Samples}\par\medskip 
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-inferred-S.png}
         \caption{G label}
         \label{fig:inf_issue_G0}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-T-5-inferred-u.png}
         \caption{T label}
         \label{fig:inf_issue_T5}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-inferred-M.png}
         \caption{O label}
         \label{fig:inf_issue_O7}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-W-3-inferred-M.png}
         \caption{W label}
         \label{fig:inf_issue_W3}
     \end{subfigure}%
-    %\begin{subfigure}{.20\columnwidth}
+    %\begin{subfigure}{.20\textwidth}
     %    \centering
     %    \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-10-inferred-F.png}
     %    \caption{O label}
@@ -1806,31 +1806,31 @@ able to correctly inference, according to human recognition, mislabeled samples.
 \begin{figure}[h]
     \centering
     %\textbf{Pruned Samples}\par\medskip 
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-stroke.png}
         \caption{Stroke}
         %\label{fig:inf_issue_G0_stroke}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-circle.png}
         \caption{Circles}
         %\label{fig:inf_issue_T5}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-el-circle.png}
         \caption{Ellipse}
         %\label{fig:inf_issue_O7}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-area.png}
         \caption{Area}
         %\label{fig:inf_issue_W3}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-line.png}
         \caption{Line}
@@ -1850,31 +1850,31 @@ Figure~\ref{fig:g0_trans}.
 \begin{figure}[H]
     \centering
     %\textbf{Pruned Samples}\par\medskip 
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-T-5-stroke.png}
         \caption{Stroke}
         %\label{fig:inf_issue_G0_stroke}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-T-5-area.png}
         \caption{Area}
         %\label{fig:inf_issue_T5}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-T-5-endpoint.png}
         \caption{Endpoint}
         %\label{fig:inf_issue_O7}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-T-5-circle.png}
         \caption{Circle}
         %\label{fig:inf_issue_W3}
     \end{subfigure}%
-    %\begin{subfigure}{.20\columnwidth}
+    %\begin{subfigure}{.20\textwidth}
     %    \centering
     %    \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-G-0-line.png}
     %    \caption{Line}
@@ -1893,31 +1893,31 @@ depicts relevant transforms.
 \begin{figure}[H]
     \centering
     %\textbf{Pruned Samples}\par\medskip 
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-stroke.png}
         \caption{Stroke}
         %\label{fig:inf_issue_G0_stroke}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-endpoint.png}
         \caption{Endpoint}
         %\label{fig:inf_issue_T5}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-area.png}
         \caption{Area}
         %\label{fig:inf_issue_O7}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-circle.png}
         \caption{Circle}
         %\label{fig:inf_issue_W3}
     \end{subfigure}%
-    %\begin{subfigure}{.20\columnwidth}
+    %\begin{subfigure}{.20\textwidth}
     %    \centering
     %    \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-fill.png}
     %    \caption{Enclosed Region}
@@ -1936,31 +1936,31 @@ transforms that contributed to the decision.
 \begin{figure}[H]
     \centering
     %\textbf{Pruned Samples}\par\medskip 
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-W-3-stroke.png}
         \caption{Stroke}
         %\label{fig:inf_issue_G0_stroke}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-W-3-endpoint.png}
         \caption{Endpoint}
         %\label{fig:inf_issue_T5}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-W-3-area.png}
         \caption{Area}
         %\label{fig:inf_issue_O7}
     \end{subfigure}%
-    \begin{subfigure}{.20\columnwidth}
+    \begin{subfigure}{.20\textwidth}
         \centering
         \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-W-3-line.png}
         \caption{Line}
         %\label{fig:inf_issue_W3}
     \end{subfigure}%
-    %\begin{subfigure}{.20\columnwidth}
+    %\begin{subfigure}{.20\textwidth}
     %    \centering
     %    \includegraphics[width=.90\textwidth, alt={An EMNIST character}]{./images/issues/excluded-O-7-fill.png}
     %    \caption{Enclosed Region}
@@ -2003,7 +2003,7 @@ $97.7\%$ of the time.
     %\centering
     \caption{Accuracy and correspondence of the case-based explainable architecture on MNIST.}
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    %\resizebox{\textwidth}{!}{%
     \begin{tabular}{|l|c|c|}
         \hline
         Data & Accuracy & Correspondence \\
@@ -2060,7 +2060,7 @@ the digit four agrees with the SVM.
     %\centering
     \caption{Ten nearest neighbors for case-based MNIST example one.}
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    %\resizebox{\textwidth}{!}{%
     \begin{tabular}{|c|c|c|}
         \hline
         Distance & \multicolumn{1}{p{3cm}|}{\centering Training\\Index}  & Label \\
@@ -2125,7 +2125,7 @@ two based on the ten nearest neighbors.
     %\centering
     \caption{Ten nearest neighbors for case-based MNIST example two.}
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    %\resizebox{\textwidth}{!}{%
     \begin{tabular}{|c|c|c|}
         \hline
         Distance & \multicolumn{1}{p{3cm}|}{\centering Training\\Index}  & Label \\
@@ -2189,7 +2189,7 @@ neighbors is $1.0$.
     %\centering
     \caption{Ten nearest neighbors for case-based MNIST example three.}
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    %\resizebox{\textwidth}{!}{%
     \begin{tabular}{|c|c|c|}
         \hline
         Distance & \multicolumn{1}{p{3cm}|}{\centering Training\\Index}  & Label \\
@@ -2252,7 +2252,7 @@ improperly suggested a five.
     %\centering
     \caption{Ten nearest neighbors for case-based MNIST example four.}
     \begin{center}
-    %\resizebox{\columnwidth}{!}{%
+    %\resizebox{\textwidth}{!}{%
     \begin{tabular}{|c|c|c|}
         \hline
         Distance & \multicolumn{1}{p{3cm}|}{\centering Training\\Index}  & Label \\

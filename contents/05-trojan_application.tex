@@ -194,7 +194,7 @@ in the explainable property-based methodology.
     %\centering
     \caption{Properties, Features, and Explainability}
     \begin{center}
-    %\resizebox{1.05\columnwidth}{!}{%
+    \resizebox{1.05\textwidth}{!}{%
     \begin{tabular}{|c|c|c||c|c|c||c|c|c|}
         \hline
         \bfseries ID & \bfseries Features & \bfseries $X_j$ & \bfseries ID & \bfseries Features & \bfseries $X_j$ & \bfseries ID & \bfseries Features & \bfseries $X_j$ \\
@@ -223,7 +223,7 @@ in the explainable property-based methodology.
         11 & ffi, PI & 0.75 & 22 & ffi, ffo, PI & 0.50 \\
         \cline{0-5}
     \end{tabular}
-    %}
+    }
     \end{center}
     \label{tab_prop_id}
 \end{table}
@@ -264,7 +264,7 @@ performance and simplicity.
 %     b=\frac{|non-trojan|}{|trojan|}
 % \end{equation}
 
-\begin{equation}\label{eq:balance}
+\sqsupseteq \begin{equation}\label{eq:balance}
     bf(class) =
     \begin{cases}
         \frac{|non-trojan|}{|trojan|},& class = \text{ trojan ($t$)} \\
@@ -346,7 +346,7 @@ first.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=15.0cm, alt={The property-based explainable architecture, with 31 properties, for hardware trojans}]{./images/arch-trojan.png}
+    \includegraphics[width=14.0cm, alt={The property-based explainable architecture, with 31 properties, for hardware trojans}]{./images/arch-trojan.png}
     \caption{A property-based explainable architecture for trojan detection.}
     \label{fig:trojan_arch}
 \end{figure}
