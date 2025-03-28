@@ -75,7 +75,7 @@ pretty big but we shrink to the linewidth using the resizebox command.
     \renewcommand{\arraystretch}{1.3}
     \captionof{table}{Explanation for MNIST Example two} \label{table:mnist_example2_explanation}
     %\centering
-    %\resizebox{\columnwidth}{!}{%
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{| m{0.06\linewidth} | m{0.14\linewidth} | m{0.17\linewidth} | m{0.55\linewidth} |}
     \hline
      Class & Confidence & Explainability & Explainable Description \\
@@ -87,7 +87,7 @@ pretty big but we shrink to the linewidth using the resizebox command.
     $0$ & $1.53\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the circle, fill, crossing, and ellipse properties. \\
     \hline
     \end{tabular}
-    %}
+    }
 \end{table}
 
 \section{Another Section Name}
