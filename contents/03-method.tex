@@ -3,7 +3,7 @@
 
 This chapter presents two explainable methods and architectures. Each method
 provides a systematic means of assembling the explainable architectures from
-components to compose an explainable system. The methods uniquely addresses
+components to compose an explainable system. The methods uniquely address
 data dimensionality, imbalanced training data, and tradeoffs between prediction
 performance and explainability. The strengths and weaknesses of the two methods
 are outlined before detailing the methods.
@@ -384,9 +384,9 @@ Operator Characteristic (AUC).
 
 In addition to evaluating metrics from the literature, some metrics were
 combined and compared experimentally. The combination of metrics found to have
-the best performance as per-class effectiveness was the product of class vs
-others Precision ($P$), Accuracy ($ACC$), Recall ($R$), and Specificity ($S$) as
-shown in \eqref{eq:epars} as the new effectiveness metric, $E_{PARS}$.
+the best performance as per-class effectiveness was the product of Precision
+($P$), Accuracy ($ACC$), Recall ($R$), and Specificity ($S$) as shown in
+\eqref{eq:epars} as the new effectiveness metric, $E_{PARS}$.
 Equation~\eqref{eq:epars_expansion} shows the expansion of $E_{PARS}$ in terms
 of  true positives $(TP)$, true negatives $(TN)$, false positives $(FP)$, and
 false negatives $(FN)$\cite{whitten24icmi}.
@@ -468,12 +468,13 @@ An explainable PDF would contain one Property Transform and one Inference Engine
 (IE) related to an explainable property. An unexplainable PDF would consist of
 only one IE.  An explainable property and transform are lacking for an
 unexplainable PDF. The $1$ through $n$ explainable PDFs in the architecture are
-depicted, while the single unexplainable PDF is represented at the bottom
-as $IE_u$. Again, explainable PDFs are related to properties that contribute to
-the explainability of the system. Often, explainable PDFs provide mediocre
+depicted, while the single unexplainable PDF is represented at the bottom as
+$IE_u$. Again, explainable PDFs are related to properties that contribute to the
+explainability of the system. Often, explainable PDFs provide mediocre
 recognition results compared to an IE trained against untransformed data. The
 mediocre performance is often because a property may not pertain to each class.
-E.g., the ellipse property does not apply to a well-formed digit one.
+One such example is the ellipse property does not apply to a well-formed digit
+one.
 
 \begin{figure}[H]
     \centering

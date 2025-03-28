@@ -6,8 +6,10 @@ trojans. Before doing so, additional background on hardware trojans is
 presented. When approaching the steps for the explainable methods for hardware
 trojans, a large part of the work involved data processing. Compared to
 handwriting, much more data processing was required to obtain the required
-features from Verilog netlists. This research uses the five features from the
-work from Hasegawa et al.\cite{7604700}.
+features from Verilog netlists. A dataset was not available representing the
+desired features so parsing the Verilog and feature extraction was necessary.
+This research uses the five features from the work from Hasegawa et
+al.\cite{7604700}.
 
 After data processing, an immediate problem in the property-based method was
 identifying explainable properties from only five features. Much of the focus of
@@ -15,12 +17,18 @@ the property-based method for hardware trojans is how the concept of explainable
 properties may be applied to the five features. The remaining method remains
 very similar to the previous handwriting application.
 
-Because of earlier work to analyze the importance of and select the optimal
-feature set for trojan detection\cite{7604700, hasegawa2020hardware}, the desire
-was to maintain five features and attempt properties consisting of the 31
-combinations of those features. This approach resulted in poor explainability
-for the property-based method. Applying the case-based method to the problem of
-trojan detection resulted in much better explainability.
+This research aims to build trust in AI systems through explainability. The
+hardware trojan application in this chapter uses the methods from earlier work
+to analyze the importance of and select a suitable feature set, consisting of
+five features, for trojan detection\cite{7604700, hasegawa2020hardware}. The
+explainable methods are applied to this application to gauge their effectiveness
+in explaining the detection of hardware trojans. It was difficult to devise
+explainable properties from only five features in the property-based method.
+Instead, properties were formed using the 31 feature combinations. This approach
+resulted in poor explainability for the property-based method due to the limited
+explainability and meaning of the feature combinations. Applying the case-based
+method to the problem of trojan detection resulted in much better
+explainability.
 
 \section{Hardware Trojans}
 
@@ -286,7 +294,7 @@ identifiers representing the feature columns of the dataset.
 
 The second difference involved the explainability metric.  As was the case with
 handwriting, each property $P_j$ has an explainability metric, $X_j$, signifying
-how explainable that property is.  Exaplainbility was either 1.0 or 0 for
+how explainable that property is.  Explainability was either 1.0 or 0 for
 handwriting. Explainability, $X_j$, for trojans is given in \eqref{eq:t_explainability}. The
 Explainability metric is based upon the number of features or cardinality of the
 $j^{th}$ property, $P$.  Again, $n$, is the number of features in the input
@@ -546,7 +554,7 @@ increases.
 The next step is devising a query scheme.  The query scheme is implemented by
 using a lookup in key-value storage of the training index for a coincident point
 in the training set.  If an identical point is found, no calculation is needed
-as the sorted (by distance) nearest neighbors in the training set is already
+as the sorted (by distance) nearest neighbors in the training set are already
 stored and may be retrieved. If an identical point is not found, the list of
 unique points from the training index is then used to calculate and then sort
 distances to retrieve nearest neighbors in the training set.

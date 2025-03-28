@@ -273,7 +273,7 @@ this section, the following confidence ranges apply:
 
 The confusion matrix from the MNIST test set for the explainable property-based architecture used
 for digit examples is in Table~\ref{tab:mnist_example_conf_matrix}.  The confusion matrix
-Was stored in the knowledgebase and was used to suggest how the system can fail for the examples.
+was stored in the knowledgebase and used to suggest how the system can fail for the examples.
 
 \begin{table}[H]
     %\centering
@@ -362,7 +362,7 @@ calculating the explainability of the rationale for each class.
         \hline
         $F_6$ & Endpoint & $4$ &  & $0.974$ &  &  & $1.0$ & \\
         \hline
-        $F_7$ & Encl. Reg. & $0$ & $0.021$ &  &  & $1.0$ &  & \\
+        $F_7$ & Flood Fill & $0$ & $0.021$ &  &  & $1.0$ &  & \\
         \hline
         $F_8$ & Line & $9$ &  &  & $0.496$ &  &  & $1.0$ \\
         \hline
@@ -370,7 +370,7 @@ calculating the explainability of the rationale for each class.
         \hline
         $F_{10}$& Corner & $4$ &  & $0.538$ &  &  & $1.0$ & \\
         \hline
-        $F_{11}$& No Property & $4$ &  & $1.0$ &  &  & $0.0$ & \\
+        $F_{11}$& Unexplainable & $4$ &  & $1.0$ &  &  & $0.0$ & \\
         \hline
         \hline
         \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $0.151$ & $4.337$ & $0.496$ & $0.151$ & $3.337$ & $0.496$ \\
@@ -399,7 +399,7 @@ four is at $87.0\%$.
 The explainability columns in the explainability matrix indicate the
 explainability metric, $Ex(c)$, of the flows that voted for class, $c$.
 In these examples, the explainability metric will be $1.0$ for all PDFs but the
-unexplainable pdf, where the metric will be $0.0$ due to the lack of
+unexplainable PDF, where the metric will be $0.0$ due to the lack of
 explainability.  In calculating the explainability for each class $c$, the
 product of effectiveness and the explainbility metric is summed for each class
 resulting in an explainbility that is weighted by the effectiveness of the PDFs.
@@ -429,7 +429,7 @@ across the flows $j$ that suggested the digit four in
     \hline
     $9$ & $9.96\%$ & $100\%$ & Confidence is low for interpreting this character as a nine due to the line property. \\
     \hline
-    $0$ & $3.03\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the ellipse-circle, circle, fill, crossing, and ellipse properties. \\
+    $0$ & $3.03\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the ellipse-circle, circle, flood fill, crossing, and ellipse properties. \\
     \hline
     \end{tabular}
     %}
@@ -523,7 +523,7 @@ in \eqref{eq:explainability_mnist_example2}.
         \hline
         $F_6$ & Endpoint & $2$ &  & $0.901$ &  &  & $1.0$ & \\
         \hline
-        $F_7$ & Encl. Reg. & $0$ & $0.021$ &  &  & $1.0$ &  & \\
+        $F_7$ & Flood Fill & $0$ & $0.021$ &  &  & $1.0$ &  & \\
         \hline
         $F_8$ & Line & $2$ &  & $0.564$ &  &  & $1.0$ & \\
         \hline
@@ -531,7 +531,7 @@ in \eqref{eq:explainability_mnist_example2}.
         \hline
         $F_{10}$& Corner & $2$ &  & $0.729$ &  &  & $1.0$ & \\
         \hline
-        $F_{11}$& No Property & $2$ &  & $1.0$ &  &  & $0.0$ & \\
+        $F_{11}$& Unexplainable & $2$ &  & $1.0$ &  &  & $0.0$ & \\
         \hline
         \hline
         \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $0.082$ & $4.990$ & $0.288$ & $0.082$ & $3.990$ & $0.288$ \\
@@ -566,7 +566,7 @@ as eight and zero.  The rationale provided for the winning selection indicates:
     \hline
     $8$ & $5.37\%$ & $100\%$ & Confidence is low for interpreting this character as an eight due to the ellipse-circle property. \\
     \hline
-    $0$ & $1.53\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the circle, fill, crossing, and ellipse properties. \\
+    $0$ & $1.53\%$ & $100\%$ & Confidence is low for interpreting this character as a zero due to the circle, flood fill, crossing, and ellipse properties. \\
     \hline
     \end{tabular}
     %}
@@ -627,7 +627,7 @@ one flow each suggested the digits three, four, and seven.
         \hline
         $F_6$ & Endpoint & $9$ &  &  &  &  & $0.920$ &  &  &  &  & $1.0$ \\
         \hline
-        $F_7$ & Encl. Reg. & $9$ &  &  &  &  & $0.789$ &  &  &  &  & $1.0$ \\
+        $F_7$ & Flood Fill & $9$ &  &  &  &  & $0.789$ &  &  &  &  & $1.0$ \\
         \hline
         $F_8$ & Line & $4$ &  &  & $0.562$ &  &  &  &  & $1.0$ &  & \\
         \hline
@@ -635,7 +635,7 @@ one flow each suggested the digits three, four, and seven.
         \hline
         $F_{10}$& Corner & $7$ &  &  &  & $0.697$ &  &  &  &  & $1.0$ &  \\
         \hline
-        $F_{11}$& No Property & $9$ &  &  &  &  & $1.0$ & & & & & $0.0$ \\
+        $F_{11}$& Unexplainable & $9$ &  &  &  &  & $1.0$ & & & & & $0.0$ \\
         \hline
         \hline
         \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $0.112$ & $0.221$ & $0.562$ & $0.697$ & $4.449$ & $0.112$ & $0.221$ & $0.562$ & $0.697$ & $3.449$ \\
@@ -669,7 +669,7 @@ closest alternative to the nine is the digit seven with $11.5\%$ confidence.
     \hline
      Class & Confidence & Explainability & Explainable Description \\
     \hline \hline
-    $9$ & $73.7\%$ & $77.5\%$ & Confidence is medium for interpreting this character as a nine due to the stroke, endpoint, fill, and convex hull properties. \\ 
+    $9$ & $73.7\%$ & $77.5\%$ & Confidence is medium for interpreting this character as a nine due to the stroke, endpoint, flood fill, and convex hull properties. \\ 
     \hline
     $7$ & $11.5\%$ & $100\%$ & Confidence is low for interpreting this character as a seven due to the corner property. \\
     \hline
@@ -976,7 +976,7 @@ confidence of 92.4\%.
     \hline
     $F_5$ & Endpoint & Q &  & $0.596$ &  &  & $1.0$ &   \\
     \hline
-    $F_6$ & Encl. Reg. & Q &  & $0.888$ &  &  &$1.0$ &   \\
+    $F_6$ & Flood Fill & Q &  & $0.888$ &  &  &$1.0$ &   \\
     \hline
     $F_7$ & Line & Q &  & $0.271$ &  &  & $1.0$ &    \\
     \hline
@@ -984,7 +984,7 @@ confidence of 92.4\%.
     \hline
     $F_9$ & Corner & Q &  & $0.257$ &  &  &  $1.0$ &   \\
     \hline
-    $F_{10}$ & No Property & Q &  & $0.992$ &  &  & $0.0$ &  \\
+    $F_{10}$ & Unexplainable & Q &  & $0.992$ &  &  & $0.0$ &  \\
     \hline
     \hline
     \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $0.168$ & $5.102$ & $0.250$ & $0.167$ & $4.111$ & $0.250$ \\
@@ -1063,7 +1063,7 @@ very low in comparison, C wins with $93.6\%$ confidence.
     \hline
     $F_5$ & Endpoint & C & $0.574$ &  &  &  & $1.0$ & & &  \\
     \hline
-    $F_6$ & Encl. Reg. & X &  &  &  & $0.005$ &  & & & $1.0$  \\
+    $F_6$ & Flood Fill & X &  &  &  & $0.005$ &  & & & $1.0$  \\
     \hline
     $F_7$ & Line & U &  &  & $0.244$ &  &  &  & $1.0$ & \\
     \hline
@@ -1071,7 +1071,7 @@ very low in comparison, C wins with $93.6\%$ confidence.
     \hline
     $F_9$ & Corner & C & $0.369$ &  &  &  & $1.0$ & & &  \\
     \hline
-    $F_{10}$ & No Property & C & $0.989$ &  &  &  & $0.0$ & & &  \\
+    $F_{10}$ & Unexplainable & C & $0.989$ &  &  &  & $0.0$ & & &  \\
     \hline
     \hline
     \multicolumn{3}{|c|}{Weights - $WE(c)$ / $\sum E(j,c)X_j$} & $3.801$ & $0.009$ & $0.244$ & $0.005$ & $2.812$ & $0.009$ & $0.244$ & $0.005$ \\
@@ -1193,7 +1193,7 @@ accuracy, to recall, and finally to $E_{PARS}$.
     \hline
     $F_6$ & Endpoint & S &  &  & $0.978$ &  &  &  & $1.0$ & \\
     \hline
-    $F_7$ & Encl. Reg. & 1 & $0.362$ &  &  &  & $1.0$ &  &  & \\
+    $F_7$ & Flood Fill & 1 & $0.362$ &  &  &  & $1.0$ &  &  & \\
     \hline
     $F_8$ & Line & S &  &  & $0.979$ &  &  &  & $1.0$ & \\
     \hline
@@ -1201,7 +1201,7 @@ accuracy, to recall, and finally to $E_{PARS}$.
     \hline
     $F_{10}$& Corner & S &  &  & $0.979$ &  &  &  & $1.0$ & \\
     \hline
-    $F_{11}$& No Property & S &  &  & $0.996$ &  &  &  & $0.0$ & \\
+    $F_{11}$& Unexplainable & S &  &  & $0.996$ &  &  &  & $0.0$ & \\
     \hline
     \hline
     \multicolumn{3}{|c|}{Weights} & $2.783$ & $0.977$ & $4.928$ & $0.977$ & $2.783$ & $0.977$  & $3.932$ & $0.977$ \\
@@ -1239,7 +1239,7 @@ accuracy, to recall, and finally to $E_{PARS}$.
 When examining the Explainability data from Tables \ref{table:example4r},
 \ref{table:example4a}, and \ref{table:example4epars}, each flow identifier,
 $F_j$, is in the first column where $j$ denotes the flow number.  The second
-column indicates the property name. Flow $F_{11}$ is labeled as no property
+column indicates the property name. Flow $F_{11}$ is labeled as Unexplainable
 because it represents an unexplainable flow, without an explainable property.
 The Class Vote column indicates the class that was selected by each flow.
 
@@ -1286,7 +1286,7 @@ the rationale provided to the user.
         \hline
         $F_6$ & Endpoint & S &  &  & $0.496$ &  &  &  & $1.0$ & \\
         \hline
-        $F_7$ & Encl. Reg. & 1 & $0.999$ &  &  &  & $1.0$ &  &  & \\
+        $F_7$ & Flood Fill & 1 & $0.999$ &  &  &  & $1.0$ &  &  & \\
         \hline
         $F_8$ & Line & S &  &  & $0.495$ &  &  &  & $1.0$ & \\
         \hline
@@ -1294,7 +1294,7 @@ the rationale provided to the user.
         \hline
         $F_{10}$& Corner & S &  &  & $0.509$ &  &  &  & $1.0$ & \\
         \hline
-        $F_{11}$& No Property & S &  &  & $0.924$ &  &  &  & $0.0$ & \\
+        $F_{11}$& Unexplainable & S &  &  & $0.924$ &  &  &  & $0.0$ & \\
         \hline
         \hline
         \multicolumn{3}{|c|}{Weights} & $3.974$ & $0.260$ & $3.347$ & $0.108$ & $3.974$ & $0.260$  & $2.423$ & $0.1078$ \\
@@ -1377,7 +1377,7 @@ with part ($20.2\%$) of the contribution for the decision.
     \hline
     $F_6$ & Endpoint & S &  &  & $0.227$ &  &  &  & $1.0$ & \\
     \hline
-    $F_7$ & Encl. Reg. & 1 & $0.004$ &  &  &  & $1.0$ &  &  & \\
+    $F_7$ & Flood Fill & 1 & $0.004$ &  &  &  & $1.0$ &  &  & \\
     \hline
     $F_8$ & Line & S &  &  & $0.240$ &  &  &  & $1.0$ & \\
     \hline
@@ -1385,7 +1385,7 @@ with part ($20.2\%$) of the contribution for the decision.
     \hline
     $F_{10}$& Corner & S &  &  & $0.251$ &  &  &  & $1.0$ & \\
     \hline
-    $F_{11}$& No Property & S &  &  & $0.839$ &  &  &  & $0.0$ & \\
+    $F_{11}$& Unexplainable & S &  &  & $0.839$ &  &  &  & $0.0$ & \\
     \hline
     \hline
     \multicolumn{3}{|c|}{Weights} & $0.211$ & $0.107$ & $2.391$ & $0.041$ & $0.2106$ & $0.107$  & $1.552$ & $0.041$ \\
@@ -1514,7 +1514,7 @@ not result in similar performance.
     Property & Class & TP & TN & FP & FN & R & ACC & $E_{PARS}$ \\
     \hline
     \hline
-    Encl. Reg. & 1 & 2.13 & 34.0 & 63.8 & 0.0 & 99.9 & 36.2 & 0.40 \\ 
+    Flood Fill & 1 & 2.13 & 34.0 & 63.8 & 0.0 & 99.9 & 36.2 & 0.40 \\ 
     \hline
     Circle & 1 & 2.12 & 82.1 & 15.8 & 0.0 & 99.5 & 84.2 &  8.29 \\
     \hline
@@ -1524,7 +1524,7 @@ not result in similar performance.
     \hline
     Convex Hull & E & 0.55 & 97.1 & 0.76 & 1.57 & 26.0 & 97.7 & 10.7 \\
     \hline
-    No Property & S & 1.97 & \bf{97.7} & 0.19 & 0.16 & 92.4 & 99.6 & 83.9 \\
+    Unexplainable & S & 1.97 & \bf{97.7} & 0.19 & 0.16 & 92.4 & 99.6 & 83.9 \\
     \hline
     Stroke & S & 1.96 & \bf{97.7} & 0.20 & 0.16 & 92.3 & 99.6 & 83.4 \\
     \hline
