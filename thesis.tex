@@ -7,6 +7,13 @@
 }
 
 \documentclass[12pt, oneside]{book}
+
+% TODO change the real thesis title, author name, and degree in these variables 
+\newcommand{\thesistitle}{The First Line in Thesis:\\This is the Second Title Line\\}
+\newcommand{\authorname}{Author M. Name}
+\newcommand{\degreename}{Doctor of Philosophy}
+
+
 \usepackage{graphicx}
 \RequirePackage[comma, super, numbers, sort&compress]{natbib}
 \usepackage{lipsum}
@@ -24,12 +31,13 @@
 %TODO Change these per your thesis
 \hypersetup{
     pdflang={en},
-    pdftitle={the title},
-    pdfauthor={the author},
+    pdftitle={\thesistitle},
+    pdfauthor={\authorname},
     pdfsubject={what subject},
     pdfkeywords={comma delimited keywords},
     hidelinks % this removes the boxes around links in the TOC
 }
+
 
 %-----------------------------------------------------------------
 \begin{document}
@@ -43,19 +51,19 @@
 \begin{center}
 %TODO replace with your title below
 \Large{\bfseries\MakeUppercase{
-    The First Line in Thesis:\\ This is the Second Title Line\\
+    \thesistitle
  }}
  % ----------------------------------------------------------------
  \vspace{.5cm}
  \large{\bfseries{by}}\\
  \vspace{.5cm}
  %TODO replace with author name below
-\Large{\bfseries\MakeUppercase{Author Name}}\\
+\Large{\bfseries\MakeUppercase{\authorname}}\\
 
   % ----------------------------------------------------------------
 \vspace{1cm}
  %TODO Change the degree at the end of the next line, if needed
- \large{Submitted in partial fulfillment of the requirements for the degree of \textsc{Doctor of Philosophy}}\\[0.75cm]
+ \large{Submitted in partial fulfillment of the requirements for the degree of \textsc{\degreename}}\\[0.75cm]
 \vfill
 
 % Thesis advisor was on a past template but was not in the graduate studies
@@ -87,8 +95,8 @@
     \textbf{\MakeUppercase{School of Graduate Studies}}
     \vfill
     We hereby approve the thesis/dissertation of \par
-    \textbf{Author Name} \par
-    candidate for the degree of \textbf{Degree Here}\footnote{We also certify that written approval has been obtained for any proprietary material contained therein.}.\\
+    \textbf{\authorname} \par
+    candidate for the degree of \textbf{\degreename}\footnote{We also certify that written approval has been obtained for any proprietary material contained therein.}.\\
     \vfill
     Committee Chair \\
     \textbf{CommitteeChair Name}\\
