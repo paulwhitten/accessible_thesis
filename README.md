@@ -57,7 +57,7 @@ TODO: what else is needed for accessible pdfs?
 You will want a recent tex installation like
 [tex-live](https://www.tug.org/texlive/) 2025.
 
-You want []`make`](https://www.gnu.org/software/make/). You can install make in
+You want [`make`](https://www.gnu.org/software/make/). You can install make in
 Ubuntu Linux by running `apt install build-essential`. Alternatively, use
 something like VS Code and the LaTeX Workshop plugin.
 
