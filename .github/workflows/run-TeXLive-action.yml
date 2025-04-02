@@ -1,0 +1,63 @@
+name: run make inside TeXLive Action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2            # v4.2.2
+
+    - name: Github TeXLive Action
+      continue-on-error: true
+      uses: xu-cheng/texlive-action@3586544d56723b23ab69aec1e9d73e7220d9c313     # v2
+      with:
+        scheme: full
+        run: |
+          make
+
+    - name: List
+      id: list
+      run: |
+        echo "::group::List env vars"
+        env | sort
+        echo "::endgroup::"
+        echo "::group::working directory (pwd)"
+        pwd
+        echo "::endgroup::"
+        echo "::group::Recursive list files from working directory"
+        ls -lR
+        echo "::endgroup::"
+        echo "::group::Set workflownamestring variable"
+        printf 'workflownamestring=["%s"]\n' "${GITHUB_WORKFLOW}" | tee -a "$GITHUB_OUTPUT"
+        echo "::endgroup::"
+        echo "::group::Set thesis variable"
+        if [ -e thesis.pdf ] ; then
+          echo 'thesis=["thesis.pdf"]' | tee -a "$GITHUB_OUTPUT"
+        fi
+        echo "::endgroup::"
+        echo "::group::Output thesis.log"
+        if [ -e thesis.log ] ; then
+          echo 'logfile=["thesis.log"]' | tee -a "$GITHUB_OUTPUT"
+          cat thesis.log
+        fi
+        echo "::endgroup::"
+        echo "::group::Is pandoc installed"
+        type pandoc || true
+        echo "::endgroup::"
+
+    - name: Release
+      if: true
+      uses: softprops/action-gh-release@ab50eebb6488051c6788d97fa95232267c6a4e23 # v2.2.1
+      with:
+        name: Thesis via ${{ join(fromJSON(steps.list.outputs.workflownamestring), ' ') }}
+        draft: true
+        files: |-
+            ${{ join(fromJSON(steps.list.outputs.logfile), '
+            ')}}
+            ${{ join(fromJSON(steps.list.outputs.thesis), '
+            ')}}
