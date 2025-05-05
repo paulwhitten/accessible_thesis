@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2            # v4.2.2
 
     - name: Github Action for LaTeX
-      uses: xu-cheng/latex-action@1ccd8e9a1ba76e30b547a1baf0e9c6d5ca33aea3       # 3.2.0
+      uses: xu-cheng/latex-action@e2f99d4b3685b0da93f97e1b86ad8fab81105098       # 3.2.0
       with:
         root_file: thesis.tex
 
