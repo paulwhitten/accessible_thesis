@@ -1,0 +1,71 @@
+name: run latex-action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2            # v4.2.2
+      with:
+        lfs: true
+
+    - name: Github Action for LaTeX
+      uses: xu-cheng/latex-action@1ccd8e9a1ba76e30b547a1baf0e9c6d5ca33aea3       # 3.2.0
+      with:
+        root_file: thesis.tex
+
+    - name: List
+      id: list
+      run: |
+        echo "::group::List env vars"
+        env | sort
+        echo "::endgroup::"
+        echo "::group::working directory (pwd)"
+        pwd
+        echo "::endgroup::"
+        echo "::group::Recursive list files from working directory"
+        ls -lR
+        echo "::endgroup::"
+        echo "::group::Set workflownamestring variable"
+        printf 'workflownamestring=["%s"]\n' "${GITHUB_WORKFLOW}" | tee -a "$GITHUB_OUTPUT"
+        echo "::endgroup::"
+        releasefiles='[""]'
+        echo "::group::Set thesis variable"
+        f="thesis.pdf"
+        if [ -e ${f} ] ; then
+          printf 'thesis=["%s"]\n' "${f}" | tee -a "$GITHUB_OUTPUT"
+          tmpstr=$(echo ${releasefiles} | sed 's/^[^=]*=//')
+          releasefiles=$(echo "${tmpstr}" | jq -c --arg f "${f}" '. + [$f]' | jq -c 'del(.. | select(. == "" or . == null))')
+        else
+          printf 'thesis=[""]\n' | tee -a "$GITHUB_OUTPUT"
+        fi
+        echo "::endgroup::"
+        echo "::group::Output thesis.log"
+        f="thesis.log"
+        if [ -e ${f} ] ; then
+          printf 'logfile=["%s"]\n' "${f}" | tee -a "$GITHUB_OUTPUT"
+          tmpstr=$(echo ${releasefiles} | sed 's/^[^=]*=//')
+          releasefiles=$(echo "${tmpstr}" | jq -c --arg f "${f}" '. + [$f]' | jq -c 'del(.. | select(. == "" or . == null))')
+          cat thesis.log
+        else
+          printf 'logfile=[""]\n' | tee -a "$GITHUB_OUTPUT"
+        fi
+        echo "::endgroup::"
+        echo "::group::Output releasefiles array"
+        printf 'releasefiles=%s\n' "${releasefiles}" | tee -a "$GITHUB_OUTPUT"
+        echo "::endgroup::"
+
+
+    - name: Release
+      if: true
+      uses: softprops/action-gh-release@ab50eebb6488051c6788d97fa95232267c6a4e23 # v2.2.1
+      with:
+        name: Thesis via ${{ join(fromJSON(steps.list.outputs.workflownamestring), ' ') }}
+        draft: true
+        files: |-
+            ${{ join(fromJSON(steps.list.outputs.releasefiles), '
+            ')}}

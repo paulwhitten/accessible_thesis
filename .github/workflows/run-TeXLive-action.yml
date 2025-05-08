@@ -1,0 +1,110 @@
+name: run make inside TeXLive Action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2            # v4.2.2
+      with:
+        lfs: true
+
+    - name: Github TeXLive Action
+      id: make-run1
+      continue-on-error: true
+      uses: xu-cheng/texlive-action@3586544d56723b23ab69aec1e9d73e7220d9c313     # v2
+      with:
+        scheme: full
+        run: |
+          # trap/capture exit codes
+          # https://github.com/orgs/community/discussions/46992#discussioncomment-9395504
+          trap 'make_exit_code="$?"; echo "make_exit_code=${make_exit_code}" | tee -a "$GITHUB_OUTPUT"; if [[ "${make_exit_code}" == "2" ]]; then exit 0; fi' EXIT
+          make setmem
+          make
+
+    - name: Glue Logic testing for rerun of make/LaTeX
+      id: glue
+      run: |
+        echo "::group::Determing if another run of make/LaTeX is needed"
+        rerun="false"
+        if [ -f thesis.log ] && [ ! -f thesis.pdf ] ; then
+          countstr=$(egrep -c -i '\sRerun to correct this|\sRerun to get citations correct|\sRerun to get cross-references right' thesis.log)
+          if [ ${countstr} -gt 0 ] ; then
+            mv -v thesis.log run1-thesis.log
+            rerun="true"
+          fi
+        fi
+        echo "rerun=${rerun}" | tee -a $GITHUB_OUTPUT
+        echo "::endgroup::"
+
+    - name: Run TeXLive-Action make again
+      if: "${{ steps.glue.outputs.rerun == 'true' }}"
+      id: make-run2
+      uses: xu-cheng/texlive-action@3586544d56723b23ab69aec1e9d73e7220d9c313     # v2
+      with:
+        scheme: full
+        run: |
+          # trap/capture exit codes
+          # https://github.com/orgs/community/discussions/46992#discussioncomment-9395504
+          trap 'make_exit_code="$?"; echo "make_exit_code=${make_exit_code}" | tee -a "$GITHUB_OUTPUT"; if [[ "${make_exit_code}" == "2" ]]; then exit 0; fi' EXIT
+          make
+
+    - name: List
+      id: list
+      run: |
+        echo "::group::List env vars"
+        env | sort
+        echo "::endgroup::"
+        echo "::group::working directory (pwd)"
+        pwd
+        echo "::endgroup::"
+        echo "::group::Recursive list files from working directory"
+        ls -lRa
+        echo "::endgroup::"
+        echo "::group::Set workflownamestring variable"
+        printf 'workflownamestring=["%s"]\n' "${GITHUB_WORKFLOW}" | tee -a "$GITHUB_OUTPUT"
+        echo "::endgroup::"
+        if [ -e run1-thesis.log ] ; then
+          releasefiles='["run1-thesis.log"]'
+        else
+          releasefiles='[""]'
+        fi
+        echo "::group::Set thesis variable"
+        f="thesis.pdf"
+        if [ -e ${f} ] ; then
+          printf 'thesis=["%s"]\n' "${f}" | tee -a "$GITHUB_OUTPUT"
+          tmpstr=$(echo ${releasefiles} | sed 's/^[^=]*=//')
+          releasefiles=$(echo "${tmpstr}" | jq -c --arg f "${f}" '. + [$f]' | jq -c 'del(.. | select(. == "" or . == null))')
+        else
+          printf 'thesis=[""]\n' | tee -a "$GITHUB_OUTPUT"
+        fi
+        echo "::endgroup::"
+        echo "::group::Output thesis.log"
+        f="thesis.log"
+        if [ -e ${f} ] ; then
+          printf 'logfile=["%s"]\n' "${f}" | tee -a "$GITHUB_OUTPUT"
+          tmpstr=$(echo ${releasefiles} | sed 's/^[^=]*=//')
+          releasefiles=$(echo "${tmpstr}" | jq -c --arg f "${f}" '. + [$f]' | jq -c 'del(.. | select(. == "" or . == null))')
+          cat thesis.log
+        else
+          printf 'logfile=[""]\n' | tee -a "$GITHUB_OUTPUT"
+        fi
+        echo "::endgroup::"
+        echo "::group::Output releasefiles array"
+        printf 'releasefiles=%s\n' "${releasefiles}" | tee -a "$GITHUB_OUTPUT"
+        echo "::endgroup::"
+
+    - name: Release
+      if: true
+      uses: softprops/action-gh-release@ab50eebb6488051c6788d97fa95232267c6a4e23 # v2.2.1
+      with:
+        name: Thesis via ${{ join(fromJSON(steps.list.outputs.workflownamestring), ' ') }}
+        draft: true
+        files: |-
+            ${{ join(fromJSON(steps.list.outputs.releasefiles), '
+            ')}}
