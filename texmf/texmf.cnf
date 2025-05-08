@@ -1,0 +1,30 @@
+% Remember this is TeX/LaTeX and comments are %
+% This file is to live in the directory listed in TEXMFCNF
+%
+% A user (Cyker) on StackExchange said it well (https://tex.stackexchange.com/a/548708 archived)
+% https://archive.ph/ZZBIs or https://web.archive.org/web/20250403210519/https://tex.stackexchange.com/questions/410592/texlive-personal-texmf-cnf/548708#548708
+%
+%%% TEXMFCNF is an environment variable saying where to find texmf.cnf. But there are some quirks:
+%%%
+%%%  * TEXMFCNF does not point to texmf.cnf itself, but the dir containing it.
+%%%
+%%%  * Its value can have a : in the end, which means keep searching if not found here.
+%%%
+%%% An example TEXMFCNF setting (on unix-like system) is:
+%%%
+%%% export TEXMFCNF=$HOME/.texlive:
+%%%
+%%% This will search for $HOME/.texlive/texmf.cnf (then search other places if not found there).
+%%%
+%%% I suggest using kpsewhich --all texmf.cnf to test if your settings are successful.
+%
+% Elements gleaned from TeX forums
+% Avoid linebreaks in LaTeX console / log output (uncomment next three lines to apply)
+max_print_line=1000
+error_line=254
+half_error_line=238
+%
+% Adjust/Increase main memory (uncomment only one of the next three lines)
+%% main_memory = 5000000  %% normal default size
+main_memory = 10000000
+%% main_memory = 80000000 %% absolute maxium (source?)
