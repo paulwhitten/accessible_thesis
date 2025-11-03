@@ -52,7 +52,7 @@ jobs:
 
     - name: Release
       if: true
-      uses: softprops/action-gh-release@39ba0b9d81217c984acfad95ddcc7db226387497 # v2.2.1
+      uses: softprops/action-gh-release@0adea5aa98b89355a3ff602e3f2d18bc4d77e7aa # v2.2.1
       with:
         name: Thesis via ${{ join(fromJSON(steps.list.outputs.workflownamestring), ' ') }}
         draft: true
